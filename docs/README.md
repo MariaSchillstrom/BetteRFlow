@@ -1,3 +1,13 @@
 # 1.
 
-## Test för sync
+## Flödet /uppsatt :&#x20;
+
+* GitHub
+* GitBook
+* Jira
+* Blazor App + .NET Web API
+* CORS&#x20;
+*
+
+
+
