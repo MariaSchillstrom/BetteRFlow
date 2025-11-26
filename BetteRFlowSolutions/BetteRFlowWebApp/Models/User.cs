@@ -1,5 +1,4 @@
-﻿// BetteRFlowWebAPI/Models/User.cs (BACKEND)
-namespace BetteRFlowWebAPI.Models
+﻿namespace BetterFlowWebApp.Models
 {
     public enum UserRole
     {
@@ -14,7 +13,7 @@ namespace BetteRFlowWebAPI.Models
         public string Fornamn { get; set; }
         public string Efternamn { get; set; }
         public string Email { get; set; }
-        public string PasswordHash { get; set; }
+        // INGEN PasswordHash här! ← Säkerhet!
         public UserRole Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }

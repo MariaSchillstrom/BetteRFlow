@@ -1,13 +1,4 @@
-# 1.
-
-## Flödet /uppsatt :&#x20;
-
-* GitHub
-* GitBook
-* Jira
-* Blazor App + .NET Web API
-* CORS&#x20;
-*
-
-
-
+# Table of contents
+   
+   * [Teknisk dokumentation](teknisk-dokumentation.md)
+   * [Verktyg](verktyg.md)

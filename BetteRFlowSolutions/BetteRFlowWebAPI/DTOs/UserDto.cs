@@ -1,27 +1,22 @@
-﻿// BetteRFlowWebAPI/Models/User.cs (BACKEND)
-namespace BetteRFlowWebAPI.Models
+﻿// BetteRFlowWebAPI/DTOs/UserDto.cs (BACKEND)
+namespace BetteRFlowWebAPI.DTOs
 {
-    public enum UserRole
-    {
-        BRF,
-        Maklare,
-        Admin
-    }
-
-    public class User
+    public class UserDto
     {
         public int Id { get; set; }
         public string Fornamn { get; set; }
         public string Efternamn { get; set; }
         public string Email { get; set; }
-        public string PasswordHash { get; set; }
-        public UserRole Role { get; set; }
+        // INGEN PasswordHash här! ← Detta är poängen!
+        public string Role { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
         public bool IsActive { get; set; }
         public DateTime? LastLogin { get; set; }
         public int? BrfId { get; set; }
         public string? Firma { get; set; }
         public string? Kundnummer { get; set; }
+
+        // Bonus: Computed property
+        public string FullName => $"{Fornamn} {Efternamn}";
     }
 }
