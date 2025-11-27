@@ -42,8 +42,16 @@ namespace BetteRFlowWebAPI.Controllers
 
             return Ok(userDto);
 
+        }
+
+        // GET: api/user/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDto>> GetUserById(int id)
+        {
+            // TODO: Implementera
             throw new NotImplementedException();
         }
+    
 
         private bool IsValidUser(User updatedUser)
         {
