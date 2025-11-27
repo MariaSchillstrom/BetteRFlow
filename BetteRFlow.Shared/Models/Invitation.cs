@@ -2,5 +2,6 @@
 {
     public class Invitation
     {
+        public int ID { get; set; }
     }
 }

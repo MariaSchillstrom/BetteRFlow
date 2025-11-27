@@ -2,5 +2,6 @@
 {
     public class Customer
     {
+        public int ID { get; set; }
     }
 }

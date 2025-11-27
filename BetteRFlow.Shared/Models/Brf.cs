@@ -2,5 +2,6 @@
 {
     public class Brf
     {
+        public int ID { get; set; }
     }
 }

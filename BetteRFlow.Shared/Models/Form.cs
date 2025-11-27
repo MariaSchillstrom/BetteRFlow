@@ -2,5 +2,6 @@
 {
     public class Form
     {
+        public int ID { get; set; }
     }
 }
