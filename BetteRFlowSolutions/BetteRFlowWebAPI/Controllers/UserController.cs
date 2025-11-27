@@ -1,32 +1,81 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using BetteRFlow.Shared.Models;
+using BetteRFlow.Shared.DTOs;
 
-namespace BetteRFlowWebAPI.Controllers;
-
-[ApiController]
-[Route("[controller]")]
-public class UserController : ControllerBase
+namespace BetteRFlowWebAPI.Controllers
 {
-    private static readonly string[] Summaries = new[]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController : ControllerBase
     {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-    private readonly ILogger<UserController> _logger;
-
-    public UserController(ILogger<UserController> logger)
-    {
-        _logger = logger;
-    }
-
-    [HttpGet(Name = "GetUsers")]
-    public IEnumerable<WeatherForecast> Get()
-    {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        // PUT: api/user/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] User updatedUser)
+        {
+            // STEG 1: Validera input
+            // STEG 1: Validera input
+            if (!IsValidUser(updatedUser))
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+                return BadRequest("Ogiltig användardata");
+            }
+
+            // STEG 2: Kolla att id matchar
+            if (id != updatedUser.Id)
+            {
+                return BadRequest("ID matchar inte");
+            }
+
+            // STEG 3: Uppdatera i databas (hårdkoda för nu)
+            updatedUser.UpdatedAt = DateTime.UtcNow;
+
+            // STEG 4: Konvertera till DTO och returnera
+            var userDto = new UserDto
+            {
+                Id = updatedUser.Id,
+                Fornamn = updatedUser.Fornamn,
+                Efternamn = updatedUser.Efternamn,
+                Email = updatedUser.Email,
+                Role = updatedUser.Role.ToString(),
+                IsActive = updatedUser.IsActive,
+                LastLogin = updatedUser.LastLogin
+            };
+
+            return Ok(userDto);
+
+            throw new NotImplementedException();
+        }
+
+        private bool IsValidUser(User updatedUser)
+        {
+            // Kolla att user inte är null
+            if (updatedUser == null) return false;
+
+            // Kolla att email finns
+            if (string.IsNullOrEmpty(updatedUser.Email)) return false;
+
+            // Kolla att email är giltig
+            if (!IsValidEmail(updatedUser.Email)) return false;  // ← Röd! Finns inte!
+
+            // Kolla att namn finns
+            if (string.IsNullOrEmpty(updatedUser.Fornamn)) return false;
+            if (string.IsNullOrEmpty(updatedUser.Efternamn)) return false;
+
+            return true;
+        }
+
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
     }
 }
+

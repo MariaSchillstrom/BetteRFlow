@@ -6,8 +6,8 @@ namespace BetteRFlow.Shared.Models
     public class User
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
+        public string Fornamn { get; set; }
+        public string Efternamn { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }  // ← KÄNSLIG DATA!
         public UserRole Role { get; set; }
