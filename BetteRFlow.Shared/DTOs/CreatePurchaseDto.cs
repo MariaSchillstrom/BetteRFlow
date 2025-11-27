@@ -1,4 +1,4 @@
-﻿namespace BetteRFlowWebAPI.DTOs
+﻿namespace BetteRFlow.Shared.DTOs
 {
     public class CreatePurchaseDto
     {
