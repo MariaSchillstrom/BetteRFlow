@@ -1,4 +1,4 @@
-﻿namespace BetteRFlowWebAPI.Models
+﻿namespace BetteRFlow.Shared.Models
 {
     public class Purchase
     {

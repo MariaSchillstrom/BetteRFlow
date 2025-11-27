@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetteRFlowWebAPI", "BetteRFlowSolutions\BetteRFlowWebAPI\BetteRFlowWebAPI.csproj", "{301F99A2-C58C-4112-961C-3890FDF4B977}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetteRFlowWebApp", "BetteRFlowSolutions\BetteRFlowWebApp\BetteRFlowWebApp.csproj", "{54773838-5E8C-44BF-AB47-A50AFD817415}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetteRFlow.Shared", "BetteRFlow.Shared\BetteRFlow.Shared.csproj", "{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{301F99A2-C58C-4112-961C-3890FDF4B977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{301F99A2-C58C-4112-961C-3890FDF4B977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{301F99A2-C58C-4112-961C-3890FDF4B977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{301F99A2-C58C-4112-961C-3890FDF4B977}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54773838-5E8C-44BF-AB47-A50AFD817415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54773838-5E8C-44BF-AB47-A50AFD817415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54773838-5E8C-44BF-AB47-A50AFD817415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54773838-5E8C-44BF-AB47-A50AFD817415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
