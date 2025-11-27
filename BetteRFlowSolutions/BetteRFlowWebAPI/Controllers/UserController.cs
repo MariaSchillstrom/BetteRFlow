@@ -8,11 +8,13 @@ namespace BetteRFlowWebAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        // PUT: api/user/5
+        // ============================================
+        // UpdateUser - Uppdatera användare
+        // ============================================
+
         [HttpPut("{id}")]
         public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] User updatedUser)
         {
-            // STEG 1: Validera input
             // STEG 1: Validera input
             if (!IsValidUser(updatedUser))
             {
@@ -41,9 +43,22 @@ namespace BetteRFlowWebAPI.Controllers
             };
 
             return Ok(userDto);
+        }
 
+        // ============================================
+        // GetUserById - Hämta en användare
+        // ============================================
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDto>> GetUserById(int id)
+        {
+            // TODO: Implementera imorgon
             throw new NotImplementedException();
         }
+
+        // ============================================
+        // PRIVATE HELPER-METODER
+        // ============================================
 
         private bool IsValidUser(User updatedUser)
         {
@@ -54,7 +69,7 @@ namespace BetteRFlowWebAPI.Controllers
             if (string.IsNullOrEmpty(updatedUser.Email)) return false;
 
             // Kolla att email är giltig
-            if (!IsValidEmail(updatedUser.Email)) return false;  // ← Röd! Finns inte!
+            if (!IsValidEmail(updatedUser.Email)) return false;
 
             // Kolla att namn finns
             if (string.IsNullOrEmpty(updatedUser.Fornamn)) return false;
@@ -74,8 +89,6 @@ namespace BetteRFlowWebAPI.Controllers
             {
                 return false;
             }
-
         }
     }
 }
-
