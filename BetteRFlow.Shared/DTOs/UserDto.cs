@@ -6,10 +6,10 @@ namespace BetteRFlow.Shared.DTOs
     public class UserDto
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Surename { get; set; }
-        public string Email { get; set; }
-        public UserRole Role { get; set; }
+        public string Fornamn { get; set; }
+        public string Efternamn { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;  // ← String, inte UserRole!
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsActive { get; set; }
