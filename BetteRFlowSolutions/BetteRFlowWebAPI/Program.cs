@@ -1,9 +1,17 @@
+using BetteRFlow.Shared.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add the DbContext BetteRFlowContext
+// Use Sqlite for Development, and SqlServer / Azure for Production
+builder.Services.AddDbContext<BetteRFlowContext>(options =>
+    options.UseSqlite("Data Source=betterflow.db"));
 
 // CORS-konfiguration
 builder.Services.AddCors(options =>

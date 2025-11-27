@@ -2,5 +2,6 @@
 {
     public class PurchaseFastighet
     {
+        public int ID { get; set; }
     }
 }

@@ -2,5 +2,6 @@
 {
     public class Fastighet
     {
+        public int ID { get; set; }
     }
 }
