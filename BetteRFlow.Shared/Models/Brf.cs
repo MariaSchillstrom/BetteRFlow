@@ -1,7 +1,18 @@
-﻿namespace BetteRFlow.Shared.Models
+﻿using BetteRFlow.Shared.Models;
+
+public class Brf
 {
-    public class Brf
-    {
-        public int ID { get; set; }
-    }
+    public int Id { get; set; }
+    public string Namn { get; set; } = string.Empty;
+    public string OrganisationsNummer { get; set; } = string.Empty;
+    public string OrganisationsAdress { get; set; } = string.Empty;
+    public string KontaktEmail { get; set; } = string.Empty;
+    public string? KontaktTelefon { get; set; }
+    public string? Hemsida { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public bool IsActive { get; set; } = true;
+
+    // Navigation properties
+    public ICollection<Fastighet>? Fastigheter { get; set; }
 }
