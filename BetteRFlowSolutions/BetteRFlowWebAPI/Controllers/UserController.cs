@@ -55,7 +55,70 @@ namespace BetteRFlowWebAPI.Controllers
             // TODO: Implementera imorgon
             throw new NotImplementedException();
         }
-    
+
+
+
+
+        // ============================================
+        // GetAllUsers - Hämta alla användare hårdkodat 
+        // ============================================
+
+        // ============================================
+        // GetAllUsers - Hämta alla användare
+        // ============================================
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+        {
+            // STEG 1: Hämta från databas (hårdkoda för nu)
+            var users = new List<User>
+    {
+        new User
+        {
+            Id = 1,
+            Fornamn = "Anna",
+            Efternamn = "Andersson",
+            Email = "anna@example.com",
+            Role = UserRole.Admin,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        },
+        new User
+        {
+            Id = 2,
+            Fornamn = "Kalle",
+            Efternamn = "Karlsson",
+            Email = "kalle@example.com",
+            Role = UserRole.BRF,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        }
+    };
+
+            // STEG 2: Kolla att det finns användare
+            if (users == null || !users.Any())
+            {
+                return Ok(new List<UserDto>()); // Tom lista
+            }
+
+            // STEG 3: Konvertera till DTO
+            var userDtos = users.Select(u => new UserDto
+            {
+                Id = u.Id,
+                Fornamn = u.Fornamn,
+                Efternamn = u.Efternamn,
+                Email = u.Email,
+                Role = u.Role.ToString(),
+                IsActive = u.IsActive,
+                LastLogin = u.LastLogin
+            }).ToList();
+
+            return Ok(userDtos);
+        }
+
+
 
         // ============================================
         // PRIVATE HELPER-METODER
