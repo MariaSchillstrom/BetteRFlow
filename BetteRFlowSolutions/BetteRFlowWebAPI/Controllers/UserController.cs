@@ -52,72 +52,50 @@ namespace BetteRFlowWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
-            // TODO: Implementera imorgon
-            throw new NotImplementedException();
-        }
+            // ============================================
+            // GetUserById - Hämta en användare med ID
+            // ============================================
 
-
-
-
-        // ============================================
-        // GetAllUsers - Hämta alla användare hårdkodat 
-        // ============================================
-
-        // ============================================
-        // GetAllUsers - Hämta alla användare
-        // ============================================
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
-        {
-            // STEG 1: Hämta från databas (hårdkoda för nu)
-            var users = new List<User>
-    {
-        new User
-        {
-            Id = 1,
-            Fornamn = "Anna",
-            Efternamn = "Andersson",
-            Email = "anna@example.com",
-            Role = UserRole.Admin,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        },
-        new User
-        {
-            Id = 2,
-            Fornamn = "Kalle",
-            Efternamn = "Karlsson",
-            Email = "kalle@example.com",
-            Role = UserRole.BRF,
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
-        }
-    };
-
-            // STEG 2: Kolla att det finns användare
-            if (users == null || !users.Any())
+            // STEG 1: Validera id
+            if (id <= 0)
             {
-                return Ok(new List<UserDto>()); // Tom lista
+                return BadRequest("Ogiltigt ID");
             }
 
-            // STEG 3: Konvertera till DTO
-            var userDtos = users.Select(u => new UserDto
+            // STEG 2: Hämta från databas (hårdkoda för nu)
+            // TODO: Senare via repository/DbContext
+            var user = new User
             {
-                Id = u.Id,
-                Fornamn = u.Fornamn,
-                Efternamn = u.Efternamn,
-                Email = u.Email,
-                Role = u.Role.ToString(),
-                IsActive = u.IsActive,
-                LastLogin = u.LastLogin
-            }).ToList();
+                Id = id,
+                Fornamn = "Test",
+                Efternamn = "Testsson",
+                Email = "test@example.com",
+                Role = UserRole.BRF,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
 
-            return Ok(userDtos);
+            // STEG 3: Kolla att user finns
+            if (user == null)
+            {
+                return NotFound($"Användare med ID {id} hittades inte");
+            }
+
+            // STEG 4: Konvertera till DTO
+            var userDto = new UserDto
+            {
+                Id = user.Id,
+                Fornamn = user.Fornamn,
+                Efternamn = user.Efternamn,
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                IsActive = user.IsActive,
+                LastLogin = user.LastLogin
+            };
+
+            return Ok(userDto);
         }
-
 
 
         // ============================================
