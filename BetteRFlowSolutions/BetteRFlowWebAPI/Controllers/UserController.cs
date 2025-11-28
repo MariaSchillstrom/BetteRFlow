@@ -52,10 +52,51 @@ namespace BetteRFlowWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
-            // TODO: Implementera imorgon
-            throw new NotImplementedException();
+            // ============================================
+            // GetUserById - Hämta en användare med ID
+            // ============================================
+
+            // STEG 1: Validera id
+            if (id <= 0)
+            {
+                return BadRequest("Ogiltigt ID");
+            }
+
+            // STEG 2: Hämta från databas (hårdkoda för nu)
+            // TODO: Senare via repository/DbContext
+            var user = new User
+            {
+                Id = id,
+                Fornamn = "Test",
+                Efternamn = "Testsson",
+                Email = "test@example.com",
+                Role = UserRole.BRF,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            // STEG 3: Kolla att user finns
+            if (user == null)
+            {
+                return NotFound($"Användare med ID {id} hittades inte");
+            }
+
+            // STEG 4: Konvertera till DTO
+            var userDto = new UserDto
+            {
+                Id = user.Id,
+                Fornamn = user.Fornamn,
+                Efternamn = user.Efternamn,
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                IsActive = user.IsActive,
+                LastLogin = user.LastLogin
+            };
+
+            return Ok(userDto);
         }
-    
+
 
         // ============================================
         // PRIVATE HELPER-METODER
