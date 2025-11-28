@@ -148,6 +148,40 @@ namespace BetteRFlowWebAPI.Controllers
         }
 
         // ============================================
+        // DeleteUserById - Radera användare
+        // ==========================================
+
+        // ============================================
+        // DeleteUserById - Ta bort en användare
+        // ============================================
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteUserById(int id)
+        {
+            // STEG 1: Validera id
+            if (id <= 0)
+            {
+                return BadRequest("Ogiltigt ID");
+            }
+
+            // STEG 2: Kolla att användaren finns (hårdkoda för nu)
+            // TODO: Senare via repository/DbContext
+            var userExists = true; // Simulerar att användaren finns
+
+            if (!userExists)
+            {
+                return NotFound($"Användare med ID {id} hittades inte");
+            }
+
+            // STEG 3: Ta bort från databas (simulerat för nu)
+            // TODO: Senare: await _context.Users.Remove(user); await _context.SaveChangesAsync();
+
+            // STEG 4: Returnera 204 No Content (standard för lyckad DELETE)
+            return NoContent();
+        }
+
+
+        // ============================================
         // PRIVATE HELPER-METODER
         // ============================================
 
