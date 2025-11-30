@@ -1,27 +1,37 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using BetteRFlow.Shared.Models;
+
 namespace BetteRFlowWebAPI.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class CustomerController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
+    [HttpPut("{id}")]
+public async Task<ActionResult<Customer>> UpdateCustomer(int id, [FromBody] Customer updatedCustomer)
+{
+    // Skriv denna rad (metoden finns inte - blir röd!)
+    if (!IsValidCustomer(updatedCustomer))
     {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-    private readonly ILogger<BrfController> _logger;
-    public CustomerController(ILogger<BrfController> logger)
-    {
-        _logger = logger;
+        return BadRequest("Ogiltig customer-data");
     }
-    [HttpGet]
-    public IEnumerable<WeatherForecast> Get()
-    {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+
+        if (id != updatedCustomer.ID)
         {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-            .ToArray();
+            return BadRequest("ID matchar inte");
+        }
+
+        updatedCustomer.CreatedAt = DateTime.UtcNow;
+
+        return Ok(updatedCustomer);
+
+
+    } 
+
+    private bool IsValidCustomer(Customer updatedCustomer)
+    {
+        if (updatedCustomer == null) return false;
+        if (string.IsNullOrEmpty(updatedCustomer.BusinessName)) return false;
+        if (string.IsNullOrEmpty(updatedCustomer.CustomerNumber)) return false;
+        return true;
     }
 }
