@@ -1,8 +1,9 @@
-﻿namespace BetteRFlow.Shared.Models;
-
-public enum UserRole
+﻿namespace BetteRFlow.Shared.Models
 {
-    BRF,
-    Realtor,
-    Admin
+    public enum UserRole
+    {
+        BRF,
+        Realtor,  // ← LÄGG TILL!
+        Admin
+    }
 }
