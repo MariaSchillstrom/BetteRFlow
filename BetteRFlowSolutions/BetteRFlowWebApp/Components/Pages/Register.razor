@@ -1,0 +1,134 @@
+﻿
+@page "/register"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>Register</PageTitle>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card register-card shadow-lg" style="max-width: 600px; width: 90%;">
+        <div class="card-body p-4">
+            <h3 class="card-title text-center mb-4">Skapa konto</h3>
+
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+                <DataAnnotationsValidator />
+
+                <!-- Jag är en... (Dropdown) -->
+                <div class="form-floating mb-3">
+                    <InputSelect @bind-Value="registerModel.Role" class="form-select" id="role">
+                        <option value="">-- Välj vem du är --</option>
+                        <option value="BRF">BRF-styrelsemedlem</option>
+                        <option value="Maklare">Mäklare</option>
+                    </InputSelect>
+                    <label for="role">Jag är en...</label>
+                    <ValidationMessage For="@(() => registerModel.Role)" />
+                </div>
+
+                <!-- Förnamn -->
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="registerModel.Fornamn" class="form-control" id="fornamn" placeholder="Förnamn" />
+                    <label for="fornamn">Förnamn</label>
+                    <ValidationMessage For="@(() => registerModel.Fornamn)" />
+                </div>
+
+                <!-- Efternamn -->
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="registerModel.Efternamn" class="form-control" id="efternamn" placeholder="Efternamn" />
+                    <label for="efternamn">Efternamn</label>
+                    <ValidationMessage For="@(() => registerModel.Efternamn)" />
+                </div>
+
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="registerModel.Email" class="form-control" id="email" placeholder="Email" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="@(() => registerModel.Email)" />
+                </div>
+
+                <!-- Password -->
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="registerModel.Password" class="form-control" id="password" placeholder="Password" />
+                    <label for="password">Lösenord (minst 6 tecken)</label>
+                    <ValidationMessage For="@(() => registerModel.Password)" />
+                </div>
+
+                <!-- Firma (endast för mäklare) -->
+                @if (registerModel.Role == "Maklare")
+                {
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="registerModel.Firma" class="form-control" id="firma" placeholder="Firma" />
+                        <label for="firma">Firma (valfritt)</label>
+                    </div>
+                }
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary w-100" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    Skapa konto
+                </button>
+            </EditForm>
+
+            <!-- Error message -->
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+
+            <!-- Success message -->
+            @if (success)
+            {
+                <div class="alert alert-success mt-3">
+                    Konto skapat! Omdirigerar till inloggning...
+                </div>
+            }
+
+            <!-- Login link -->
+            <div class="text-center mt-3">
+                <p>Har du redan ett konto? <a href="/login">Logga in här</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public RegisterDto registerModel = new();
+    private string errorMessage = "";
+    private bool success = false;
+    private bool isSubmitting = false;
+
+    private async Task HandleRegister()
+    {
+        isSubmitting = true;
+        errorMessage = "";
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                success = true;
+                await Task.Delay(1500);
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Kunde inte skapa konto: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+}
+
+

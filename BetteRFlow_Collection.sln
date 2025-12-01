@@ -1,10 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetteRFlowWebAPI", "BetteRFlowSolutions\BetteRFlowWebAPI\BetteRFlowWebAPI.csproj", "{301F99A2-C58C-4112-961C-3890FDF4B977}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35303.130
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlowWebAPI", "BetteRFlowSolutions\BetteRFlowWebAPI\BetteRFlowWebAPI.csproj", "{301F99A2-C58C-4112-961C-3890FDF4B977}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetteRFlowWebApp", "BetteRFlowSolutions\BetteRFlowWebApp\BetteRFlowWebApp.csproj", "{54773838-5E8C-44BF-AB47-A50AFD817415}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlowWebApp", "BetteRFlowSolutions\BetteRFlowWebApp\BetteRFlowWebApp.csproj", "{54773838-5E8C-44BF-AB47-A50AFD817415}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetteRFlow.Shared", "BetteRFlow.Shared\BetteRFlow.Shared.csproj", "{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlow.Shared", "BetteRFlow.Shared\BetteRFlow.Shared.csproj", "{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +27,8 @@ Global
 		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
