@@ -10,7 +10,7 @@
         <div class="card-body p-4">
             <h3 class="card-title text-center mb-4">Skapa konto</h3>
 
-            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister" FormName="RegisterForm">
                 <DataAnnotationsValidator />
 
                 <!-- Jag är en... (Dropdown) -->
