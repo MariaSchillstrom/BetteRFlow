@@ -10,13 +10,12 @@
         <div class="card-body p-4">
             <h3 class="card-title text-center mb-4">Skapa konto</h3>
 
-            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister" FormName="RegisterForm">
                 <DataAnnotationsValidator />
 
                 <!-- Jag är en... (Dropdown) -->
                 <div class="form-floating mb-3">
-                    <InputSelect @bind-Value="registerModel.Role" class="form-select" id="role">
-                        <option value="">-- Välj vem du är --</option>
+                    <InputSelect @bind-Value="registerModel.Role" class="form-select" id="role">                        
                         <option value="BRF">BRF-styrelsemedlem</option>
                         <option value="Maklare">Mäklare</option>
                     </InputSelect>
@@ -94,20 +93,24 @@
 </div>
 
 @code {
-    private RegisterDto registerModel = new();
+    [SupplyParameterFromForm(FormName = "RegisterForm")]
+    private RegisterDto registerModel { get; set; } = new();
+    
     private string errorMessage = "";
     private bool success = false;
     private bool isSubmitting = false;
-
+    
     private async Task HandleRegister()
     {
+        Console.WriteLine("HandleRegister körs!");
+        
         isSubmitting = true;
         errorMessage = "";
-
+        
         try
         {
             var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
-
+            
             if (response.IsSuccessStatusCode)
             {
                 success = true;
@@ -128,7 +131,6 @@
         {
             isSubmitting = false;
         }
-    }
+    }  
 }
-
 
