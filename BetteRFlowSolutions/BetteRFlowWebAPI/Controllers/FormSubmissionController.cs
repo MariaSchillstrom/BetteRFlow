@@ -1,27 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-namespace BetteRFlowWebAPI.Controllers;
-[ApiController]
-[Route("[controller]")]
-public class FormSubmissionController : ControllerBase
+using BetteRFlow.Shared.Models;
+
+namespace BetteRFlowWebAPI.Controllers
 {
-    private static readonly string[] Summaries = new[]
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FormSubmissionController : ControllerBase
     {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-    private readonly ILogger<BrfController> _logger;
-    public FormSubmissionController(ILogger<BrfController> logger)
-    {
-        _logger = logger;
-    }
-    [HttpGet]
-    public IEnumerable<WeatherForecast> Get()
-    {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        [HttpGet]
+        public IEnumerable<FormSubmission> GetAllFormSubmissions()
         {
-            Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        })
-            .ToArray();
+            // TODO: Implementera senare
+            return new List<FormSubmission>();
+        }
     }
 }
