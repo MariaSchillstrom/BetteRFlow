@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BetteRFlow.Shared.Models;
 using BetteRFlow.Shared.DTOs;
+using BetteRFlow.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BetteRFlowWebAPI.Controllers
 {
@@ -8,76 +10,54 @@ namespace BetteRFlowWebAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        // ============================================
-        // UpdateUser - Uppdatera användare
-        // ============================================
+        private readonly BetteRFlowContext _context;
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] User updatedUser)
+        public UserController(BetteRFlowContext context)
         {
-            // STEG 1: Validera input
-            if (!IsValidUser(updatedUser))
-            {
-                return BadRequest("Ogiltig användardata");
-            }
-
-            // STEG 2: Kolla att id matchar
-            if (id != updatedUser.Id)
-            {
-                return BadRequest("ID matchar inte");
-            }
-
-            // STEG 3: Uppdatera i databas (hårdkoda för nu)
-            updatedUser.UpdatedAt = DateTime.UtcNow;
-
-            // STEG 4: Konvertera till DTO och returnera
-            var userDto = new UserDto
-            {
-                Id = updatedUser.Id,
-                Fornamn = updatedUser.Fornamn,
-                Efternamn = updatedUser.Efternamn,
-                Email = updatedUser.Email,
-                Role = updatedUser.Role.ToString(),
-                IsActive = updatedUser.IsActive,
-                LastLogin = updatedUser.LastLogin
-            };
-
-            return Ok(userDto);
+            _context = context;
         }
 
-        // ============================================
-        // GetUserById - Hämta en användare
-        // ============================================
+        // GET: api/user
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+        {
+            var users = await _context.Users.ToListAsync();
 
+            if (users == null || !users.Any())
+            {
+                return Ok(new List<UserDto>());
+            }
+
+            var userDtos = users.Select(user => new UserDto
+            {
+                Id = user.Id,
+                Fornamn = user.Fornamn,
+                Efternamn = user.Efternamn,
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                IsActive = user.IsActive,
+                LastLogin = user.LastLogin
+            });
+
+            return Ok(userDtos);
+        }
+
+        // GET: api/user/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUserById(int id)
         {
-            // STEG 1: Validera id
             if (id <= 0)
             {
                 return BadRequest("Ogiltigt ID");
             }
 
-            // STEG 2: Hämta från databas (hårdkoda för nu)
-            var user = new User
-            {
-                Id = id,
-                Fornamn = "Test",
-                Efternamn = "Testsson",
-                Email = "test@example.com",
-                Role = UserRole.BRF,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
+            var user = await _context.Users.FindAsync(id);
 
-            // STEG 3: Kolla att user finns
             if (user == null)
             {
                 return NotFound($"Användare med ID {id} hittades inte");
             }
 
-            // STEG 4: Konvertera till DTO
             var userDto = new UserDto
             {
                 Id = user.Id,
@@ -92,99 +72,71 @@ namespace BetteRFlowWebAPI.Controllers
             return Ok(userDto);
         }
 
-        // ============================================
-        // GetAllUsers - Hämta alla användare
-        // ============================================
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+        // PUT: api/user/{id}
+        [HttpPut("{id}")]
+        public async Task<ActionResult<UserDto>> UpdateUser(int id, [FromBody] User updatedUser)
         {
-            // STEG 1: Hämta från databas (hårdkoda för nu)
-            var users = new List<User>
+            if (!IsValidUser(updatedUser))
             {
-                new User
-                {
-                    Id = 1,
-                    Fornamn = "Anna",
-                    Efternamn = "Andersson",
-                    Email = "anna@example.com",
-                    Role = UserRole.Admin,
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                },
-                new User
-                {
-                    Id = 2,
-                    Fornamn = "Kalle",
-                    Efternamn = "Karlsson",
-                    Email = "kalle@example.com",
-                    Role = UserRole.BRF,
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                }
-            };
-
-            // STEG 2: Kolla att det finns användare
-            if (users == null || !users.Any())
-            {
-                return Ok(new List<UserDto>());
+                return BadRequest("Ogiltig användardata");
             }
 
-            // STEG 3: Konvertera till DTO
-            var userDtos = users.Select(u => new UserDto
+            if (id != updatedUser.Id)
             {
-                Id = u.Id,
-                Fornamn = u.Fornamn,
-                Efternamn = u.Efternamn,
-                Email = u.Email,
-                Role = u.Role.ToString(),
-                IsActive = u.IsActive,
-                LastLogin = u.LastLogin
-            }).ToList();
+                return BadRequest("ID matchar inte");
+            }
 
-            return Ok(userDtos);
+            var user = await _context.Users.FindAsync(id);
+
+            if (user == null)
+            {
+                return NotFound($"Användare med ID {id} hittades inte");
+            }
+
+            user.Fornamn = updatedUser.Fornamn;
+            user.Efternamn = updatedUser.Efternamn;
+            user.Email = updatedUser.Email;
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            var userDto = new UserDto
+            {
+                Id = user.Id,
+                Fornamn = user.Fornamn,
+                Efternamn = user.Efternamn,
+                Email = user.Email,
+                Role = user.Role.ToString(),
+                IsActive = user.IsActive,
+                LastLogin = user.LastLogin
+            };
+
+            return Ok(userDto);
         }
 
-        // ============================================
-        // DeleteUserById - Radera användare
-        // ==========================================
-
-        // ============================================
-        // DeleteUserById - Ta bort en användare
-        // ============================================
-
+        // DELETE: api/user/{id}
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUserById(int id)
         {
-            // STEG 1: Validera id
             if (id <= 0)
             {
                 return BadRequest("Ogiltigt ID");
             }
 
-            // STEG 2: Kolla att användaren finns (hårdkoda för nu)
-            // TODO: Senare via repository/DbContext
-            var userExists = true; // Simulerar att användaren finns
+            var user = await _context.Users.FindAsync(id);
 
-            if (!userExists)
+            if (user == null)
             {
                 return NotFound($"Användare med ID {id} hittades inte");
             }
 
-            // STEG 3: Ta bort från databas (simulerat för nu)
-            // TODO: Senare: await _context.Users.Remove(user); await _context.SaveChangesAsync();
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
 
-            // STEG 4: Returnera 204 No Content (standard för lyckad DELETE)
             return NoContent();
         }
 
-
-        // ============================================
-        // PRIVATE HELPER-METODER
-        // ============================================
-
+        // Helper methods
         private bool IsValidUser(User updatedUser)
         {
             if (updatedUser == null) return false;
