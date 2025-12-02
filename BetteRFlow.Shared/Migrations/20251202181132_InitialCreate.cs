@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BetteRFlow.Shared.Data.Migrations
+namespace BetteRFlow.Shared.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -15,36 +15,36 @@ namespace BetteRFlow.Shared.Data.Migrations
                 name: "Brfs",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Namn = table.Column<string>(type: "TEXT", nullable: false),
+                    OrganisationsNummer = table.Column<string>(type: "TEXT", nullable: false),
+                    OrganisationsAdress = table.Column<string>(type: "TEXT", nullable: false),
+                    KontaktEmail = table.Column<string>(type: "TEXT", nullable: false),
+                    KontaktTelefon = table.Column<string>(type: "TEXT", nullable: true),
+                    Hemsida = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Brfs", x => x.ID);
+                    table.PrimaryKey("PK_Brfs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BusinessName = table.Column<string>(type: "TEXT", nullable: false),
+                    CustomerNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Fastigheter",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Fastigheter", x => x.ID);
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -122,13 +122,31 @@ namespace BetteRFlow.Shared.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Fastigheter",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BrfId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fastigheter", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Fastigheter_Brfs_BrfId",
+                        column: x => x.BrfId,
+                        principalTable: "Brfs",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Surname = table.Column<string>(type: "TEXT", nullable: false),
+                    Fornamn = table.Column<string>(type: "TEXT", nullable: false),
+                    Efternamn = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     PasswordHash = table.Column<string>(type: "TEXT", nullable: false),
                     Role = table.Column<int>(type: "INTEGER", nullable: false),
@@ -137,30 +155,43 @@ namespace BetteRFlow.Shared.Data.Migrations
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     LastLogin = table.Column<DateTime>(type: "TEXT", nullable: true),
                     BrfId = table.Column<int>(type: "INTEGER", nullable: true),
-                    RealtorID = table.Column<int>(type: "INTEGER", nullable: true)
+                    Firma = table.Column<string>(type: "TEXT", nullable: true),
+                    RealtorId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Realtors_RealtorID",
-                        column: x => x.RealtorID,
+                        name: "FK_Users_Brfs_BrfId",
+                        column: x => x.BrfId,
+                        principalTable: "Brfs",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Users_Realtors_RealtorId",
+                        column: x => x.RealtorId,
                         principalTable: "Realtors",
                         principalColumn: "ID");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RealtorID",
+                name: "IX_Fastigheter_BrfId",
+                table: "Fastigheter",
+                column: "BrfId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_BrfId",
                 table: "Users",
-                column: "RealtorID");
+                column: "BrfId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_RealtorId",
+                table: "Users",
+                column: "RealtorId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Brfs");
-
             migrationBuilder.DropTable(
                 name: "Customers");
 
@@ -184,6 +215,9 @@ namespace BetteRFlow.Shared.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Brfs");
 
             migrationBuilder.DropTable(
                 name: "Realtors");
