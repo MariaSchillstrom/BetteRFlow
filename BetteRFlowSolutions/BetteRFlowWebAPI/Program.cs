@@ -1,4 +1,4 @@
-using BetteRFlow.Shared.Data;
+﻿using BetteRFlow.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,10 +8,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Add the DbContext BetteRFlowContext
-// Use Sqlite for Development, and SqlServer / Azure for Production
+// Add DbContext with SQLite
 builder.Services.AddDbContext<BetteRFlowContext>(options =>
-    options.UseSqlite("Data Source="));
+    options.UseSqlite("Data Source=betterflow.db"));  // ← FIXA DENNA!
 
 // CORS-konfiguration
 builder.Services.AddCors(options =>
@@ -19,7 +18,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowBlazorClient", policy =>
     {
         policy
-            .WithOrigins("https://localhost:7026") // Blazor-appens URL
+            .WithOrigins("https://localhost:7026")
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -36,7 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("AllowBlazorClient"); // Viktigt: mellan UseRouting och UseAuthorization
+app.UseCors("AllowBlazorClient");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
