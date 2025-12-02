@@ -1,0 +1,6 @@
+@BetteRFlowWebAPI_HostAddress = http://localhost:7007
+
+GET {{BetteRFlowWebAPI_HostAddress}}/login/
+Accept: application/json
+
+###
