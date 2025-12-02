@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BetteRFlow.Shared.Data.Migrations
+namespace BetteRFlow.Shared.Migrations
 {
     [DbContext(typeof(BetteRFlowContext))]
     partial class BetteRFlowContextModelSnapshot : ModelSnapshot
@@ -17,24 +17,24 @@ namespace BetteRFlow.Shared.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
-            modelBuilder.Entity("BetteRFlow.Shared.Models.Brf", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Brfs");
-                });
-
             modelBuilder.Entity("BetteRFlow.Shared.Models.Customer", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ID");
+                    b.Property<string>("BusinessName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CustomerNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Customers");
                 });
@@ -45,7 +45,12 @@ namespace BetteRFlow.Shared.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("BrfId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("BrfId");
 
                     b.ToTable("Fastigheter");
                 });
@@ -136,7 +141,18 @@ namespace BetteRFlow.Shared.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Efternamn")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Firma")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Fornamn")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -146,21 +162,59 @@ namespace BetteRFlow.Shared.Data.Migrations
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("RealtorID")
+                    b.Property<int?>("RealtorId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Role")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Surname")
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrfId");
+
+                    b.HasIndex("RealtorId");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Brf", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Hemsida")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("KontaktEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("KontaktTelefon")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Namn")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OrganisationsAdress")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OrganisationsNummer")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -169,18 +223,34 @@ namespace BetteRFlow.Shared.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RealtorID");
+                    b.ToTable("Brfs");
+                });
 
-                    b.ToTable("Users");
+            modelBuilder.Entity("BetteRFlow.Shared.Models.Fastighet", b =>
+                {
+                    b.HasOne("Brf", null)
+                        .WithMany("Fastigheter")
+                        .HasForeignKey("BrfId");
                 });
 
             modelBuilder.Entity("BetteRFlow.Shared.Models.User", b =>
                 {
+                    b.HasOne("Brf", "Brf")
+                        .WithMany()
+                        .HasForeignKey("BrfId");
+
                     b.HasOne("BetteRFlow.Shared.Models.Realtor", "Realtor")
                         .WithMany()
-                        .HasForeignKey("RealtorID");
+                        .HasForeignKey("RealtorId");
+
+                    b.Navigation("Brf");
 
                     b.Navigation("Realtor");
+                });
+
+            modelBuilder.Entity("Brf", b =>
+                {
+                    b.Navigation("Fastigheter");
                 });
 #pragma warning restore 612, 618
         }
