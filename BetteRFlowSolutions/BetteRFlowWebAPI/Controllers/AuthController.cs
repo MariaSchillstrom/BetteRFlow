@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BetteRFlow.Shared.Models;
 using BetteRFlow.Shared.DTOs;
+using Microsoft.EntityFrameworkCore;
+using BetteRFlow.Shared.Data;
 
 namespace BetteRFlowWebAPI.Controllers
 {
@@ -8,6 +10,13 @@ namespace BetteRFlowWebAPI.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
+        private readonly BetteRFlowContext _context;
+
+        public AuthController(BetteRFlowContext context)
+        {
+            _context = context;
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
         {
@@ -17,7 +26,7 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Konvertera "Maklare" (från UI) → UserRole.Realtor (i kod)
-            UserRole userRole = registerDto.Role == "Realtor" ? UserRole.Realtor : UserRole.BRF;
+            UserRole userRole = registerDto.Role == "Maklare" ? UserRole.Realtor : UserRole.BRF;
 
             var user = new User
             {
@@ -32,7 +41,8 @@ namespace BetteRFlowWebAPI.Controllers
                 UpdatedAt = DateTime.UtcNow
             };
 
-            user.Id = 1; // Simulera
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
 
             var userDto = new UserDto
             {
@@ -55,17 +65,14 @@ namespace BetteRFlowWebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Hårdkodat för test
-            var user = new User
+            // Hämta user från databas
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
+
+            if (user == null)
             {
-                Id = 1,
-                Fornamn = "Test",
-                Efternamn = "Testsson",
-                Email = loginDto.Email,
-                PasswordHash = HashPassword("test123"),
-                Role = UserRole.BRF,
-                IsActive = true
-            };
+                return Unauthorized("Fel email eller lösenord");
+            }
 
             if (!VerifyPassword(loginDto.Password, user.PasswordHash))
             {
@@ -73,6 +80,7 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             user.LastLogin = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
 
             var userDto = new UserDto
             {
@@ -90,14 +98,12 @@ namespace BetteRFlowWebAPI.Controllers
 
         private string HashPassword(string password)
         {
-            return password; // TILLFÄLLIGT
+            return password; // Just nu 
         }
 
         private bool VerifyPassword(string password, string hash)
         {
-            return password == hash; // TILLFÄLLIGT
+            return password == hash; // Just nu 
         }
     }
 }
-
-
