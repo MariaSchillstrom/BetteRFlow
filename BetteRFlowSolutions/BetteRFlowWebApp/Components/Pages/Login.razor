@@ -1,0 +1,65 @@
+﻿@page "/login"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using BetteRFlow.Shared.DTOs
+
+<PageTitle>Log in</PageTitle>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card login-card shadow-lg" style="max-width: 1000px; width: 70%;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Log in</h3>
+            
+            <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+                <DataAnnotationsValidator />
+                
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="loginModel.Email" class="form-control" id="email" placeholder="Email" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="@(() => loginModel.Email)" />
+                </div>
+                
+                <div class="form-floating mb-4">
+                    <InputText type="password" @bind-Value="loginModel.Password" class="form-control" id="password" placeholder="Password" />
+                    <label for="password">Password</label>
+                    <ValidationMessage For="@(() => loginModel.Password)" />
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100">Log in</button>
+            </EditForm>
+            
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginDto loginModel = new();
+    private string errorMessage = "";
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var user = await response.Content.ReadFromJsonAsync<UserDto>();
+                // TODO: Spara token/session
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Fel email eller lösenord";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+    }
+}
