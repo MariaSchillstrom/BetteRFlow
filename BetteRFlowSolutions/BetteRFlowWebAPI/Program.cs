@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 // Add the DbContext BetteRFlowContext
 // Use Sqlite for Development, and SqlServer / Azure for Production
 builder.Services.AddDbContext<BetteRFlowContext>(options =>
-    options.UseSqlite("Data Source=betterflow.db"));
+    options.UseSqlite("Data Source="));
 
 // CORS-konfiguration
 builder.Services.AddCors(options =>
@@ -42,3 +42,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
