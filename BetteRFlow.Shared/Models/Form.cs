@@ -1,7 +1,7 @@
 ﻿using BetteRFlow.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace BetteRFlowShared.Models;
+namespace BetteRFlow.Shared.Models;
 
 public class Form
 {

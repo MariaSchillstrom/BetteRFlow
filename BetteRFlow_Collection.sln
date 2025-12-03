@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlowWebAPI", "BetteRFlowSolutions\BetteRFlowWebAPI\BetteRFlowWebAPI.csproj", "{301F99A2-C58C-4112-961C-3890FDF4B977}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlowWebApp", "BetteRFlowSolutions\BetteRFlowWebApp\BetteRFlowWebApp.csproj", "{54773838-5E8C-44BF-AB47-A50AFD817415}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlow.Shared", "BetteRFlow.Shared\BetteRFlow.Shared.csproj", "{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlowWebAPI", "BetterFlowWebAPI\BetteRFlowWebAPI.csproj", "{DC0A9D32-6367-4F3C-82B0-936A9897D766}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetteRFlowWebApp", "BetteRFlowWebApp\BetteRFlowWebApp.csproj", "{F4389261-7A11-4A48-862F-432465528E53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,20 +15,23 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{301F99A2-C58C-4112-961C-3890FDF4B977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{301F99A2-C58C-4112-961C-3890FDF4B977}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{301F99A2-C58C-4112-961C-3890FDF4B977}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{301F99A2-C58C-4112-961C-3890FDF4B977}.Release|Any CPU.Build.0 = Release|Any CPU
-		{54773838-5E8C-44BF-AB47-A50AFD817415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{54773838-5E8C-44BF-AB47-A50AFD817415}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{54773838-5E8C-44BF-AB47-A50AFD817415}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{54773838-5E8C-44BF-AB47-A50AFD817415}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7F87788E-8E93-4D2C-BFAB-640FD857F4B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC0A9D32-6367-4F3C-82B0-936A9897D766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC0A9D32-6367-4F3C-82B0-936A9897D766}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC0A9D32-6367-4F3C-82B0-936A9897D766}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC0A9D32-6367-4F3C-82B0-936A9897D766}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4389261-7A11-4A48-862F-432465528E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4389261-7A11-4A48-862F-432465528E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4389261-7A11-4A48-862F-432465528E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4389261-7A11-4A48-862F-432465528E53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C5EB258-2C0B-4EA8-8B2B-8D67505B6031}
 	EndGlobalSection
 EndGlobal

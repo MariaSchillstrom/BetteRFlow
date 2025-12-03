@@ -19,8 +19,9 @@
     <Folder Include="Models\" />
   </ItemGroup>
 
-  <ItemGroup>
-	  <ProjectReference Include="..\BetteRFlow.Shared\BetteRFlow.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\BetteRFlow.Shared\BetteRFlow.Shared.csproj" />
+	</ItemGroup>
+
 
 </Project>
