@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BetteRFlow.Shared.Migrations
 {
     [DbContext(typeof(BetteRFlowContext))]
-    [Migration("20251202181132_InitialCreate")]
+    [Migration("20251203120857_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

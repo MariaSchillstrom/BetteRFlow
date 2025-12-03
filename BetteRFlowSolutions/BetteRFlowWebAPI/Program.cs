@@ -10,7 +10,8 @@ builder.Services.AddSwaggerGen();
 
 // Add DbContext with SQLite
 builder.Services.AddDbContext<BetteRFlowContext>(options =>
-    options.UseSqlite("Data Source=betterflow.db"));  // ← FIXA DENNA!
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // CORS-konfiguration
 builder.Services.AddCors(options =>
