@@ -419,3 +419,7 @@ FodyWeavers.xsd
 #Rider Files
 *.idea
 /.idea/
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
