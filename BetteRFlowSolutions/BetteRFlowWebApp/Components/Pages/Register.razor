@@ -11,10 +11,9 @@
         <div class="card-body p-4">
             <h3 class="card-title text-center mb-4">Skapa konto</h3>
 
-            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleSubmit">
                 <DataAnnotationsValidator />
 
-                <!-- Jag är en... (Dropdown) -->
                 <!-- Jag är en... (Dropdown) -->
                 <div class="form-floating mb-3">
                     <InputSelect @bind-Value="registerModel.Role" class="form-select" id="role">
@@ -95,25 +94,34 @@
     </div>
 </div>
 
-
-        @code {
-        private RegisterDto registerModel { get; set; } = new();
+@code {
+    private RegisterDto registerModel { get; set; } = new();
 
     private string errorMessage = "";
     private bool success = false;
     private bool isSubmitting = false;
+    private bool isUpdate = false; // Set this to true if editing an existing BRF
 
-    private async Task HandleRegister()
+    private async Task HandleSubmit()
     {
-        Console.WriteLine("HandleRegister körs!");
-
         isSubmitting = true;
         errorMessage = "";
         bool shouldNavigate = false;
 
         try
         {
-            var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+            HttpResponseMessage response;
+
+            if (isUpdate)
+            {
+                // Update existing BRF
+                response = await Http.PutAsJsonAsync($"api/brf/{registerModel.Id}", registerModel);
+            }
+            else
+            {
+                // Register new
+                response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -124,7 +132,7 @@
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                errorMessage = $"Kunde inte skapa konto: {error}";
+                errorMessage = $"Kunde inte spara: {error}";
             }
         }
         catch (Exception ex)
@@ -138,7 +146,7 @@
 
         if (shouldNavigate)
         {
-            Navigation.NavigateTo("/login");
+            Navigation.NavigateTo(isUpdate ? "/brf/overview" : "/login");
         }
     }
 }
