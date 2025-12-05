@@ -14,4 +14,8 @@
     <ProjectReference Include="..\..\BetteRFlow.Shared\BetteRFlow.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\NewFolder\" />
+  </ItemGroup>
+
 </Project>
