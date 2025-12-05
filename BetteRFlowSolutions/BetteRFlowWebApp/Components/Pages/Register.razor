@@ -123,6 +123,10 @@
                 errorMessage = $"Kunde inte skapa konto: {error}";
             }
         }
+        catch (Microsoft.AspNetCore.Components.NavigationException)
+        {
+            // NavigationException är normalt vid NavigateTo() - ignorera
+        }
         catch (Exception ex)
         {
             errorMessage = $"Ett fel uppstod: {ex.Message}";
@@ -131,6 +135,5 @@
         {
             isSubmitting = false;
         }
-    }  
+    }
 }
-
