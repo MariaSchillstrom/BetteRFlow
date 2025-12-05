@@ -10,7 +10,7 @@
         <div class="card-body">
             <h3 class="card-title text-center mb-4">Log in</h3>
             
-            <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+            <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin" FormName="LoginForm">
                 <DataAnnotationsValidator />
                 
                 <div class="form-floating mb-3">
