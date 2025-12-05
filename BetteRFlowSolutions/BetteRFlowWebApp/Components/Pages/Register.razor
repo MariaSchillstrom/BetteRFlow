@@ -100,7 +100,6 @@
     private string errorMessage = "";
     private bool success = false;
     private bool isSubmitting = false;
-    private bool isUpdate = false; // Set this to true if editing an existing BRF
 
     private async Task HandleSubmit()
     {
@@ -110,18 +109,8 @@
 
         try
         {
-            HttpResponseMessage response;
-
-            if (isUpdate)
-            {
-                // Update existing BRF
-                response = await Http.PutAsJsonAsync($"api/brf/{registerModel.Id}", registerModel);
-            }
-            else
-            {
-                // Register new
-                response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
-            }
+            // Register new user
+            var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
 
             if (response.IsSuccessStatusCode)
             {
@@ -132,7 +121,7 @@
             else
             {
                 var error = await response.Content.ReadAsStringAsync();
-                errorMessage = $"Kunde inte spara: {error}";
+                errorMessage = $"Kunde inte skapa konto: {error}";
             }
         }
         catch (Exception ex)
@@ -146,7 +135,7 @@
 
         if (shouldNavigate)
         {
-            Navigation.NavigateTo(isUpdate ? "/brf/overview" : "/login");
+            Navigation.NavigateTo("/login");
         }
     }
 }
