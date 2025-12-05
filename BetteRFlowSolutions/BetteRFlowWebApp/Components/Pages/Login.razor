@@ -37,11 +37,14 @@
 </div>
 
 @code {
-    private LoginDto loginModel = new();
+    [SupplyParameterFromForm(FormName = "LoginForm")]
+    private LoginDto loginModel { get; set; } = new();
+
     private string errorMessage = "";
 
     private async Task HandleLogin()
     {
+
         try
         {
             var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
