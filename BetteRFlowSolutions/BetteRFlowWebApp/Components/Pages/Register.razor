@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@rendermode InteractiveServer
 @using BetteRFlow.Shared.DTOs
 @inject HttpClient Http
 @inject NavigationManager Navigation
@@ -10,12 +11,14 @@
         <div class="card-body p-4">
             <h3 class="card-title text-center mb-4">Skapa konto</h3>
 
-            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister" FormName="RegisterForm">
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleRegister">
                 <DataAnnotationsValidator />
 
                 <!-- Jag är en... (Dropdown) -->
+                <!-- Jag är en... (Dropdown) -->
                 <div class="form-floating mb-3">
-                    <InputSelect @bind-Value="registerModel.Role" class="form-select" id="role">                        
+                    <InputSelect @bind-Value="registerModel.Role" class="form-select" id="role">
+                        <option value="">Välj roll...</option>
                         <option value="BRF">BRF-styrelsemedlem</option>
                         <option value="Maklare">Mäklare</option>
                     </InputSelect>
@@ -92,9 +95,9 @@
     </div>
 </div>
 
-@code {
-    [SupplyParameterFromForm(FormName = "RegisterForm")]
-    private RegisterDto registerModel { get; set; } = new();
+
+        @code {
+        private RegisterDto registerModel { get; set; } = new();
 
     private string errorMessage = "";
     private bool success = false;
