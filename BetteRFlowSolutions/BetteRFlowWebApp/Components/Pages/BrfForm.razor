@@ -1,0 +1,454 @@
+﻿@page "/Brf"
+@rendermode InteractiveServer
+@using BetteRFlow.Shared.DTOs
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>BRF Formulär</PageTitle>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">BRF Formulär</h3>
+            <p class="text-muted text-center mb-4">Fyll i uppgifter om din BRF. Fält markerade med * är obligatoriska.</p>
+
+            <EditForm Model="@formModel" OnValidSubmit="@HandleSubmit">
+                <DataAnnotationsValidator />
+
+                <!-- Grunduppgifter -->
+                <h4 class="mt-4 mb-3">Grunduppgifter</h4>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Fastighet" class="form-control" id="fastighet" placeholder="Fastighet" />
+                    <label for="fastighet">Fastighet *</label>
+                    <ValidationMessage For="@(() => formModel.Fastighet)" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Organisationsnummer" class="form-control" id="organisationsnummer" placeholder="Organisationsnummer" />
+                    <label for="organisationsnummer">Organisationsnummer *</label>
+                    <ValidationMessage For="@(() => formModel.Organisationsnummer)" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.BrfNamn" class="form-control" id="brfNamn" placeholder="Föreningens namn" />
+                    <label for="brfNamn">Föreningens namn *</label>
+                    <ValidationMessage For="@(() => formModel.BrfNamn)" />
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.Byggnadsår" class="form-control" id="byggnadsår" placeholder="Byggnadsår" />
+                    <label for="byggnadsår">Byggnadsår</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.AntalLägenheter" class="form-control" id="antalLägenheter" placeholder="Antal lägenheter" />
+                    <label for="antalLägenheter">Antal lägenheter</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <InputCheckbox @bind-Value="formModel.ÄktaBrf" class="form-check-input" id="äktaBrf" />
+                    <label class="form-check-label" for="äktaBrf">Äkta BRF</label>
+                </div>
+
+                <!-- Förvaltning -->
+                <h4 class="mt-4 mb-3">Förvaltning</h4>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.EkonomiskFörvaltare" class="form-control" id="ekonomiskFörvaltare" placeholder="Ekonomisk förvaltare" />
+                    <label for="ekonomiskFörvaltare">Ekonomisk förvaltare</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.FastighetsFörvaltare" class="form-control" id="fastighetsFörvaltare" placeholder="Fastighetsförvaltare" />
+                    <label for="fastighetsFörvaltare">Fastighetsförvaltare</label>
+                </div>
+
+                <!-- Medlemskap -->
+                <h4 class="mt-4 mb-3">Medlemskap</h4>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.MedlemskapsRutin" class="form-control" id="medlemskapsRutin" placeholder="Medlemskapsrutin" />
+                    <label for="medlemskapsRutin">Medlemskapsrutin</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <InputCheckbox @bind-Value="formModel.JuridiskPersonFårFörvärva" class="form-check-input" id="juridiskPersonFårFörvärva" />
+                    <label class="form-check-label" for="juridiskPersonFårFörvärva">Juridisk person får förvärva</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="formModel.JuridiskPersonKommentar" class="form-control" id="juridiskPersonKommentar" placeholder="Kommentar" style="height: 100px" />
+                    <label for="juridiskPersonKommentar">Kommentar juridisk person</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.BeslutOmMedlemskap" class="form-control" id="beslutOmMedlemskap" placeholder="Beslut om medlemskap" />
+                    <label for="beslutOmMedlemskap">Beslut om medlemskap</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.MedlemsansökanSkickasTill" class="form-control" id="medlemsansökanSkickasTill" placeholder="Medlemsansökan skickas till" />
+                    <label for="medlemsansökanSkickasTill">Medlemsansökan skickas till</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <InputCheckbox @bind-Value="formModel.DelatÄgande" class="form-check-input" id="delatÄgande" />
+                    <label class="form-check-label" for="delatÄgande">Delat ägande tillåtet</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.MinstaAndel" class="form-control" id="minstaAndel" placeholder="Minsta andel" />
+                    <label for="minstaAndel">Minsta andel vid delat ägande</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.Överlåtelseavgift" class="form-control" id="överlåtelseavgift" placeholder="Överlåtelseavgift" step="0.01" />
+                    <label for="överlåtelseavgift">Överlåtelseavgift (kr)</label>
+                </div>
+
+                <!-- Månadsavgift -->
+                <h4 class="mt-4 mb-3">Månadsavgift inkluderar</h4>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.AvgiftInnefattarVärme" class="form-check-input" id="avgiftVärme" />
+                    <label class="form-check-label" for="avgiftVärme">Värme</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.AvgiftInnefattarVarmvatten" class="form-check-input" id="avgiftVarmvatten" />
+                    <label class="form-check-label" for="avgiftVarmvatten">Varmvatten</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.AvgiftInnefattarKallvatten" class="form-check-input" id="avgiftKallvatten" />
+                    <label class="form-check-label" for="avgiftKallvatten">Kallvatten</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.AvgiftInnefattarKabelTV" class="form-check-input" id="avgiftKabelTV" />
+                    <label class="form-check-label" for="avgiftKabelTV">Kabel-TV</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.AvgiftInnefattarBredband" class="form-check-input" id="avgiftBredband" />
+                    <label class="form-check-label" for="avgiftBredband">Bredband</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.AvgiftInnefattarHemförsäkring" class="form-check-input" id="avgiftHemförsäkring" />
+                    <label class="form-check-label" for="avgiftHemförsäkring">Hemförsäkring</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.AvgiftInnefattarKällare" class="form-check-input" id="avgiftKällare" />
+                    <label class="form-check-label" for="avgiftKällare">Källare</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.AvgiftInnefattarAnnat" class="form-control" id="avgiftAnnat" placeholder="Annat" />
+                    <label for="avgiftAnnat">Annat som ingår i avgift</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.SenasteAvgiftsförändring" class="form-control" id="senasteAvgiftsförändring" placeholder="Senaste avgiftsförändring" />
+                    <label for="senasteAvgiftsförändring">Senaste avgiftsförändring</label>
+                </div>
+
+                <!-- Bredband och teknik -->
+                <h4 class="mt-4 mb-3">Bredband och teknik</h4>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Bredbandsleverantör" class="form-control" id="bredbandsleverantör" placeholder="Bredbandsleverantör" />
+                    <label for="bredbandsleverantör">Bredbandsleverantör</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Bredbandshastighet" class="form-control" id="bredbandshastighet" placeholder="Bredbandshastighet" />
+                    <label for="bredbandshastighet">Bredbandshastighet</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.BredbandKundservice" class="form-control" id="bredbandKundservice" placeholder="Bredband kundservice" />
+                    <label for="bredbandKundservice">Bredband kundservice</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Uppvärmning" class="form-control" id="uppvärmning" placeholder="Uppvärmning" />
+                    <label for="uppvärmning">Uppvärmning</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Ventilation" class="form-control" id="ventilation" placeholder="Ventilation" />
+                    <label for="ventilation">Ventilation</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Elavtal" class="form-control" id="elavtal" placeholder="Elavtal" />
+                    <label for="elavtal">Elavtal</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="formModel.ElavtalKommentar" class="form-control" id="elavtalKommentar" placeholder="Kommentar" style="height: 100px" />
+                    <label for="elavtalKommentar">Kommentar elavtal</label>
+                </div>
+
+                <!-- Parkering -->
+                <h4 class="mt-4 mb-3">Parkering</h4>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.AntalGarageplatser" class="form-control" id="antalGarageplatser" placeholder="Antal garageplatser" />
+                    <label for="antalGarageplatser">Antal garageplatser</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.AntalParkeringsplatser" class="form-control" id="antalParkeringsplatser" placeholder="Antal parkeringsplatser" />
+                    <label for="antalParkeringsplatser">Antal parkeringsplatser</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.AntalLaddplatser" class="form-control" id="antalLaddplatser" placeholder="Antal laddplatser" />
+                    <label for="antalLaddplatser">Antal laddplatser</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.FriHöjdGarage" class="form-control" id="friHöjdGarage" placeholder="Fri höjd garage" step="0.01" />
+                    <label for="friHöjdGarage">Fri höjd garage (meter)</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <InputCheckbox @bind-Value="formModel.ElplintarPåMark" class="form-check-input" id="elplintarPåMark" />
+                    <label class="form-check-label" for="elplintarPåMark">Elplintar på markparkering</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.KostnadParkeringsplats" class="form-control" id="kostnadParkeringsplats" placeholder="Kostnad parkeringsplats" step="0.01" />
+                    <label for="kostnadParkeringsplats">Kostnad parkeringsplats (kr/mån)</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.KostnadGarageplats" class="form-control" id="kostnadGarageplats" placeholder="Kostnad garageplats" step="0.01" />
+                    <label for="kostnadGarageplats">Kostnad garageplats (kr/mån)</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputNumber @bind-Value="formModel.KostnadGarageplatsElektricitet" class="form-control" id="kostnadGarageplatsElektricitet" placeholder="Kostnad elektricitet" step="0.01" />
+                    <label for="kostnadGarageplatsElektricitet">Kostnad garageplats med elektricitet (kr/mån)</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Laddkostnad" class="form-control" id="laddkostnad" placeholder="Laddkostnad" />
+                    <label for="laddkostnad">Laddkostnad</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.ParkeringKontakt" class="form-control" id="parkeringKontakt" placeholder="Kontakt parkering" />
+                    <label for="parkeringKontakt">Kontakt för parkering</label>
+                </div>
+
+                <!-- Gemensamma utrymmen -->
+                <h4 class="mt-4 mb-3">Gemensamma utrymmen</h4>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.Cykelförråd" class="form-check-input" id="cykelförråd" />
+                    <label class="form-check-label" for="cykelförråd">Cykelförråd</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.Barnvagnsförråd" class="form-check-input" id="barnvagnsförråd" />
+                    <label class="form-check-label" for="barnvagnsförråd">Barnvagnsförråd</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.Gästlägenhet" class="form-check-input" id="gästlägenhet" />
+                    <label class="form-check-label" for="gästlägenhet">Gästlägenhet</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.Tvättstuga" class="form-check-input" id="tvättstuga" />
+                    <label class="form-check-label" for="tvättstuga">Tvättstuga</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.Bastu" class="form-check-input" id="bastu" />
+                    <label class="form-check-label" for="bastu">Bastu</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.Gym" class="form-check-input" id="gym" />
+                    <label class="form-check-label" for="gym">Gym</label>
+                </div>
+
+                <div class="form-check mb-2">
+                    <InputCheckbox @bind-Value="formModel.Festlokal" class="form-check-input" id="festlokal" />
+                    <label class="form-check-label" for="festlokal">Festlokal</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.GemensammaUtrymmennAnnat" class="form-control" id="gemensammaUtrymmennAnnat" placeholder="Annat" />
+                    <label for="gemensammaUtrymmennAnnat">Andra gemensamma utrymmen</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.ExtraLokaler" class="form-control" id="extraLokaler" placeholder="Extra lokaler" />
+                    <label for="extraLokaler">Extra lokaler</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="formModel.ExtraLokalerKommentar" class="form-control" id="extraLokalerKommentar" placeholder="Kommentar" style="height: 100px" />
+                    <label for="extraLokalerKommentar">Kommentar extra lokaler</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.StädningGemensamma" class="form-control" id="städningGemensamma" placeholder="Städning gemensamma utrymmen" />
+                    <label for="städningGemensamma">Städning av gemensamma utrymmen</label>
+                </div>
+
+                <!-- Nycklar och överlämning -->
+                <h4 class="mt-4 mb-3">Nycklar och överlämning</h4>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.NyckelÖverlämning" class="form-control" id="nyckelÖverlämning" placeholder="Nyckelöverlämning" />
+                    <label for="nyckelÖverlämning">Nyckelöverlämning</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="formModel.VadSkasÖverlämnas" class="form-control" id="vadSkasÖverlämnas" placeholder="Vad ska överlämnas" style="height: 100px" />
+                    <label for="vadSkasÖverlämnas">Vad ska överlämnas</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.AdressNyckelÖverlämning" class="form-control" id="adressNyckelÖverlämning" placeholder="Adress" />
+                    <label for="adressNyckelÖverlämning">Adress för nyckelöverlämning</label>
+                </div>
+
+                <!-- Andrahandsuthyrning -->
+                <h4 class="mt-4 mb-3">Andrahandsuthyrning</h4>
+
+                <div class="form-check mb-3">
+                    <InputCheckbox @bind-Value="formModel.AndrahandsuthyrningKrävergodkännande" class="form-check-input" id="andrahandsuthyrningKrävergodkännande" />
+                    <label class="form-check-label" for="andrahandsuthyrningKrävergodkännande">Kräver godkännande</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.AndrahandsuthyrningAvgift" class="form-control" id="andrahandsuthyrningAvgift" placeholder="Avgift" />
+                    <label for="andrahandsuthyrningAvgift">Avgift för andrahandsuthyrning</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.AndrahandsuthyrningAnsökanTill" class="form-control" id="andrahandsuthyrningAnsökanTill" placeholder="Ansökan till" />
+                    <label for="andrahandsuthyrningAnsökanTill">Ansökan skickas till</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.AndrahandsuthyrningVillkorUrl" class="form-control" id="andrahandsuthyrningVillkorUrl" placeholder="URL till villkor" />
+                    <label for="andrahandsuthyrningVillkorUrl">Länk till villkor</label>
+                </div>
+
+                <!-- Reparationer -->
+                <h4 class="mt-4 mb-3">Reparationer och energi</h4>
+
+                <div class="form-floating mb-3">
+                    <InputTextArea @bind-Value="formModel.PlanerardeReparationer" class="form-control" id="planerardeReparationer" placeholder="Planerade reparationer" style="height: 100px" />
+                    <label for="planerardeReparationer">Planerade reparationer</label>
+                </div>
+
+                <div class="form-check mb-3">
+                    <InputCheckbox @bind-Value="formModel.Energideklaration" class="form-check-input" id="energideklaration" />
+                    <label class="form-check-label" for="energideklaration">Energideklaration finns</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.EnergideklarationDatum" class="form-control" id="energideklarationDatum" placeholder="Datum" />
+                    <label for="energideklarationDatum">Datum för energideklaration</label>
+                </div>
+
+                <!-- Kontakt -->
+                <h4 class="mt-4 mb-3">Kontaktinformation</h4>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.KontaktEmail" class="form-control" id="kontaktEmail" placeholder="Email" type="email" />
+                    <label for="kontaktEmail">Kontakt email</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.KontaktTelefon" class="form-control" id="kontaktTelefon" placeholder="Telefon" />
+                    <label for="kontaktTelefon">Kontakt telefon</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="formModel.Hemsida" class="form-control" id="hemsida" placeholder="Hemsida" type="url" />
+                    <label for="hemsida">Hemsida</label>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary w-100 mt-4" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    Skicka formulär
+                </button>
+            </EditForm>
+
+            <!-- Error message -->
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                    <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+
+            <!-- Success message -->
+            @if (success)
+            {
+                    <div class="alert alert-success mt-3">
+                        Formulär skickat! Omdirigerar...
+                    </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private FormDto formModel { get; set; } = new();
+
+    private string errorMessage = "";
+    private bool success = false;
+    private bool isSubmitting = false;
+
+    private async Task HandleSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = "";
+        bool shouldNavigate = false;
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/form", formModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                success = true;
+                shouldNavigate = true;
+                await Task.Delay(1500);
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Kunde inte spara formulär: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+
+        if (shouldNavigate)
+        {
+            Navigation.NavigateTo("/"); // Eller "/brf/overview"
+        }
+    }
+}
