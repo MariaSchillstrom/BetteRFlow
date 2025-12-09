@@ -1,6 +1,7 @@
 # Table of contents
 
-* [BetterFlow](README.md)
+* [Förord](README.md)
+* [Table of contents](table-of-contents.md)
 * [Table of contents](<README (1).md>)
 * [Teknisk dokumentation](teknisk-dokumentation/README.md)
   * [1. Inledning](teknisk-dokumentation/1.-inledning.md)
@@ -11,5 +12,3 @@
   * [6. Flöden](teknisk-dokumentation/6.-floden.md)
 * [Verktyg](verktyg/README.md)
   * [Page 1](verktyg/page-1.md)
-* [Untitled](untitled.md)
-* [Untitled](untitled-1.md)
