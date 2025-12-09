@@ -1,9 +1,3 @@
----
-cover: .gitbook/assets/brf.jpg
-coverY: 0
-coverHeight: 359
----
-
 # Förord
 
 Denna tekniska rapport är en del av examensarbetet för utbildningen .NET-Utvecklare vid Campus Mölndal. Rapporten beskriver utvecklingen av BetteRFlow, en webbapplikation för att effektivisera informationsflödet mellan bostadsrättsföreningar och mäklare.
