@@ -1,6 +1,6 @@
 # Table of contents
 
-### Teknisk dokumentation
+### Innehållsförteckning
 
 #### 1. Inledning
 
