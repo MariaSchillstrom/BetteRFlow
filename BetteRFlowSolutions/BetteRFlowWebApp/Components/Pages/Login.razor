@@ -1,7 +1,11 @@
 ﻿@page "/login"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@using System.Text.Json.Serialization
 @using BetteRFlow.Shared.DTOs
+@inject IJSRuntime JS
+@rendermode InteractiveServer
+
 
 <PageTitle>Log in</PageTitle>
 
@@ -9,25 +13,26 @@
     <div class="card login-card shadow-lg" style="max-width: 1000px; width: 70%;">
         <div class="card-body">
             <h3 class="card-title text-center mb-4">Log in</h3>
-            
+
             <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin" FormName="LoginForm">
-                <DataAnnotationsValidator />
-                
+                <DataAnnotationsValidator/>
+
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="loginModel.Email" class="form-control" id="email" placeholder="Email" />
+                    <InputText @bind-Value="loginModel.Email" class="form-control" id="email" placeholder="Email"/>
                     <label for="email">Email</label>
-                    <ValidationMessage For="@(() => loginModel.Email)" />
+                    <ValidationMessage For="@(() => loginModel.Email)"/>
                 </div>
-                
+
                 <div class="form-floating mb-4">
-                    <InputText type="password" @bind-Value="loginModel.Password" class="form-control" id="password" placeholder="Password" />
+                    <InputText type="password" @bind-Value="loginModel.Password" class="form-control" id="password"
+                               placeholder="Password"/>
                     <label for="password">Password</label>
-                    <ValidationMessage For="@(() => loginModel.Password)" />
+                    <ValidationMessage For="@(() => loginModel.Password)"/>
                 </div>
-                
+
                 <button type="submit" class="btn btn-primary w-100">Log in</button>
             </EditForm>
-            
+
             @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="alert alert-danger mt-3">@errorMessage</div>
@@ -37,15 +42,18 @@
 </div>
 
 @code {
+
     [SupplyParameterFromForm(FormName = "LoginForm")]
     private LoginDto loginModel { get; set; } = new();
 
     private string errorMessage = "";
+    private UserDto? loggedInUser;
+    private bool shouldSetLocalStorage = false;
+    private bool hasRendered = false;
 
     private async Task HandleLogin()
     {
         errorMessage = "";
-        bool shouldNavigate = false;
 
         try
         {
@@ -54,8 +62,9 @@
             if (response.IsSuccessStatusCode)
             {
                 var user = await response.Content.ReadFromJsonAsync<UserDto>();
-                // TODO: Spara token/session
-                shouldNavigate = true;
+                loggedInUser = user;
+                shouldSetLocalStorage = true;
+                StateHasChanged(); // Force re-render
             }
             else
             {
@@ -66,10 +75,30 @@
         {
             errorMessage = $"Ett fel uppstod: {ex.Message}";
         }
+    }
 
-        if (shouldNavigate)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
+            hasRendered = true;
+        }
+
+        if (shouldSetLocalStorage && loggedInUser != null && hasRendered)
+        {
+            var jsonObject = System.Text.Json.JsonSerializer.Serialize(new
+            {
+                name = loggedInUser.Fornamn,
+                email = loggedInUser.Email,
+                role = loggedInUser.Role
+            });
+
+            await JS.InvokeVoidAsync("localStorage.setItem", "user", jsonObject);
+            shouldSetLocalStorage = false;
             Navigation.NavigateTo("/");
         }
     }
+
 }
+
+
