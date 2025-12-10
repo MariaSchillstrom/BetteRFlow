@@ -1,1 +1,39 @@
-<mxGraphModel><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel>
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7">
+  <diagram id="c0KLtCf0I8nuVmZ8f9TM" name="Sida-1">
+    <mxGraphModel dx="2066" dy="1047" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="To-yMqO30GbovSutI0gf-5" edge="1" parent="1" source="To-yMqO30GbovSutI0gf-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="795" y="340" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="To-yMqO30GbovSutI0gf-11" connectable="0" parent="To-yMqO30GbovSutI0gf-5" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=14;" value="HTTP/REST" vertex="1">
+          <mxGeometry relative="1" x="0.0061" y="4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="To-yMqO30GbovSutI0gf-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="Presentation Layer&lt;div&gt;(Blazor Web App)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;div&gt;- User Interface&lt;/div&gt;&lt;div&gt;-Input Validation&lt;/div&gt;&lt;div&gt;-State Management&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="144" width="230" x="680" y="86" as="geometry" />
+        </mxCell>
+        <mxCell id="To-yMqO30GbovSutI0gf-8" edge="1" parent="1" source="To-yMqO30GbovSutI0gf-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="795" y="585" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="To-yMqO30GbovSutI0gf-12" connectable="0" parent="To-yMqO30GbovSutI0gf-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontStyle=1;fontSize=15;" value="Entity Framework Core" vertex="1">
+          <mxGeometry relative="1" x="0.1093" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="To-yMqO30GbovSutI0gf-6" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Application Layer&lt;div&gt;(ASP.NET Core Web API)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;div&gt;- Controllers&lt;/div&gt;&lt;div&gt;- Business Logic&lt;/div&gt;&lt;div&gt;- API Endpoints&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="141" width="230" x="680" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="To-yMqO30GbovSutI0gf-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Data Layer&lt;div&gt;(SQLite)&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Databas&lt;/span&gt;&lt;div&gt;- Data Persistence&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="230" x="680" y="585" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

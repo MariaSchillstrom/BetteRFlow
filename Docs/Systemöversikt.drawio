@@ -1,0 +1,80 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7">
+  <diagram name="Page-1" id="5f0bae14-7c28-e335-631c-24af17079c00">
+    <mxGraphModel dx="2018" dy="798" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="flNZfimqZck4-COmc_H0-7" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;MÄKLARE&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="490" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-8" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;BRF-MEDLEM&lt;/b&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="300" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-17" edge="1" parent="1" source="flNZfimqZck4-COmc_H0-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="455" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-18" connectable="0" parent="flNZfimqZck4-COmc_H0-17" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;HTTPS&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.0833" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-15" parent="1" style="shape=partialRectangle;whiteSpace=wrap;html=1;bottom=1;right=1;left=1;top=0;fillColor=none;routingCenterX=-0.5;" value="" vertex="1">
+          <mxGeometry height="60" width="190" x="360" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-23" parent="1" style="fillColor=none;strokeColor=#DD3522;verticalAlign=top;fontStyle=0;fontColor=#DD3522;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;ANVÄNDARE&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="150" width="360" x="275" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-24" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;Pages&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;- Register.razor&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;- Login.Razor&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;-BrfForm.razor&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="280" x="315" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-30" edge="1" parent="1" source="flNZfimqZck4-COmc_H0-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="550" />
+              <mxPoint x="460" y="550" />
+            </Array>
+            <mxPoint x="460" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-35" connectable="0" parent="flNZfimqZck4-COmc_H0-30" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;b&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;REST API Calls&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry relative="1" x="0.0519" y="-4" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-26" parent="1" style="fillColor=none;strokeColor=#DD3522;verticalAlign=top;fontStyle=0;fontColor=#DD3522;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 15px; color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;BetterFlowWebapp (Blazor)&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;Port: 7026 (HTTPS)&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="360" x="280" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-31" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fontStyle=1;fontSize=15;" value="Controllers&lt;div&gt;- AuthController&lt;/div&gt;&lt;div&gt;- UserController&lt;/div&gt;&lt;div&gt;- BrfController&lt;/div&gt;&lt;div&gt;- FormSubmissionController&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="280" x="320" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-37" edge="1" parent="1" source="flNZfimqZck4-COmc_H0-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-39" connectable="0" parent="flNZfimqZck4-COmc_H0-37" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="&lt;b&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;Entity Framework Core&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1143" y="3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-34" parent="1" style="fillColor=none;strokeColor=#DD3522;verticalAlign=top;fontStyle=0;fontColor=#DD3522;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 15px; color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;BetterFlowWebAPI (SP.NET Core)&lt;/b&gt;&lt;/font&gt;&lt;div&gt;&lt;font color=&quot;#000000&quot;&gt;&lt;span style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;Port: 7007 (HTTPS)&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px; color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="360" x="290" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-38" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 15px;&quot;&gt;&lt;b&gt;Users&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="50" width="70" x="330" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-40" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;Brfs&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="70" x="430" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-41" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 15px;&quot;&gt;Forms&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="50" width="70" x="530" y="990" as="geometry" />
+        </mxCell>
+        <mxCell id="flNZfimqZck4-COmc_H0-42" parent="1" style="fillColor=none;strokeColor=#DD3522;verticalAlign=top;fontStyle=0;fontColor=#DD3522;whiteSpace=wrap;html=1;" value="&lt;div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 15px; color: rgb(0, 0, 0);&quot;&gt;&lt;b&gt;Database (SQLite)&lt;/b&gt;&lt;/font&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="360" x="310" y="930" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
