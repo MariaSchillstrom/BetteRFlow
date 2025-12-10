@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Untitled](README.md)
+* [BetteRFlow](README.md)
 * [Table of contents](<README (1).md>)
 * [Teknisk Rapport](teknisk-rapport/README.md)
   * [1. Inledning](teknisk-rapport/1.-inledning.md)
@@ -13,7 +13,6 @@
   * [8. Lokal körning](teknisk-rapport/8.-lokal-korning.md)
   * [9. Framtida utveckling](teknisk-rapport/9.-framtida-utveckling.md)
   * [10. Problem & lösningar](teknisk-rapport/10.-problem-and-losningar.md)
-  * [11. Framtida utveckling](teknisk-rapport/11.-framtida-utveckling.md)
-  * [12. Bilder](teknisk-rapport/12.-bilder.md)
+  * [11. Referenser](teknisk-rapport/11.-referenser.md)
 * [Verktygspresentation](verktyg/README.md)
   * [BetteRFlow – Verktygspresentation](verktyg/page-1.md)
