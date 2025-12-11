@@ -27,7 +27,35 @@ namespace BetteRFlowWebAPI.Controllers
         {
             try
             {
+                // 1. Skapa BRF med obligatoriska fält
+                // 1. Skapa BRF med obligatoriska fält
+                var brf = new Brf
+                {
+                    Namn = formDto.BrfNamn,
+                    OrganisationsNummer = formDto.Organisationsnummer,   // rätt versalisering
+                    OrganisationsAdress = formDto.StyrelseAdress         // mappar till rätt fält
+                };
+
+                _context.Brfs.Add(brf);
+                await _context.SaveChangesAsync();
+
+                // 2. Skapa FormSubmission och koppla till BRF
                 var formSubmission = new FormSubmission
+                {
+                    BrfId = brf.Id,  // koppla till BRF
+                    BrfNamn = formDto.BrfNamn,
+                    Organisationsnummer = formDto.Organisationsnummer,
+                    StyrelseAdress = formDto.StyrelseAdress,
+                    Fastighet = formDto.Fastighet,
+                    SubmittedAt = DateTime.UtcNow
+                };
+
+                _context.FormSubmissions.Add(formSubmission);
+                await _context.SaveChangesAsync();
+
+
+                {
+                    var FormSubmission = new FormSubmission
                 {
                     // Grunduppgifter
                     Fastighet = formDto.Fastighet,
@@ -125,6 +153,7 @@ namespace BetteRFlowWebAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = "Formulär sparat!", id = formSubmission.Id });
+            }
             }
             catch (Exception ex)
             {

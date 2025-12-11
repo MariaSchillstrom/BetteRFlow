@@ -23,12 +23,16 @@ public class Form
     [Required(ErrorMessage = "Organisationsnummer är obligatoriskt")]
     public string Organisationsnummer { get; set; } = string.Empty;
 
+    public string StyrelseAdress { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Föreningens namn är obligatoriskt")]
     public string BrfNamn { get; set; } = string.Empty;
 
     public int? Byggnadsår { get; set; }
     public int? AntalLägenheter { get; set; }
     public bool ÄktaBrf { get; set; }
+
+    public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
 
     // Förvaltning
     public string EkonomiskFörvaltare { get; set; } = string.Empty;

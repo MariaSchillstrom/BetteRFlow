@@ -6,9 +6,13 @@ namespace BetteRFlow.Shared.Models
     {
         public int Id { get; set; }
 
+        public int BrfId { get; set; }      // <-- Lägg till detta
+        public Brf? Brf { get; set; }
+
         // Grunduppgifter
         public string Fastighet { get; set; } = string.Empty;
         public string Organisationsnummer { get; set; } = string.Empty;
+        public string StyrelseAdress { get; set; } = string.Empty;
         public string BrfNamn { get; set; } = string.Empty;
         public int? Byggnadsår { get; set; }
         public int? AntalLägenheter { get; set; }

@@ -4,15 +4,19 @@ namespace BetteRFlow.Shared.DTOs
 {
     public class FormDto
     {
-        // Grunduppgifter
-        [Required(ErrorMessage = "Fastighet är obligatorisk")]
-        public string Fastighet { get; set; } = string.Empty;
+        // Grunduppgifter BRF (Organisationen)
+        [Required(ErrorMessage = "Föreningens namn är obligatoriskt")]
+        public string BrfNamn { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Organisationsnummer är obligatoriskt")]
         public string Organisationsnummer { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Föreningens namn är obligatoriskt")]
-        public string BrfNamn { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Styrelsens adress är obligatorisk")]
+        public string StyrelseAdress { get; set; } = string.Empty;
+
+        // Grunduppgifter Fastighet (Den fysiska byggnaden)
+        [Required(ErrorMessage = "Fastighet är obligatorisk")]
+        public string Fastighet { get; set; } = string.Empty;
 
         public int? Byggnadsår { get; set; }
         public int? AntalLägenheter { get; set; }
