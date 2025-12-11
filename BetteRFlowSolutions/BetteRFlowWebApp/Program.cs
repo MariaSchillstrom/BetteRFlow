@@ -1,4 +1,4 @@
-using BetteRFlowWebApp.Components;
+﻿using BetteRFlowWebApp.Components;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,10 +9,10 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 
-// L�gg till HttpClient H�R (innan app.Build())
+// Lägg till HttpClient HÄR (innan app.Build())
 builder.Services.AddScoped(sp => new HttpClient
 {
-    BaseAddress = new Uri("http://localhost:5146/") // Notera "/" i slutet
+    BaseAddress = new Uri("https://localhost:7007")  // ← Ändra till 7007!
 });
 
 var app = builder.Build();
