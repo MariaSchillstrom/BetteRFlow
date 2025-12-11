@@ -42,29 +42,49 @@
 </div>
 
 @code {
-
     [SupplyParameterFromForm(FormName = "LoginForm")]
     private LoginDto loginModel { get; set; } = new();
-
     private string errorMessage = "";
     private UserDto? loggedInUser;
-    private bool shouldSetLocalStorage = false;
-    private bool hasRendered = false;
+    private bool shouldNavigate = false;
+    private string navigateUrl = "";
 
     private async Task HandleLogin()
     {
         errorMessage = "";
-
         try
         {
             var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
-
             if (response.IsSuccessStatusCode)
             {
                 var user = await response.Content.ReadFromJsonAsync<UserDto>();
                 loggedInUser = user;
-                shouldSetLocalStorage = true;
-                StateHasChanged(); // Force re-render
+
+                // Spara i localStorage
+                var jsonObject = System.Text.Json.JsonSerializer.Serialize(new
+                {
+                    name = user.Fornamn,
+                    email = user.Email,
+                    role = user.Role
+                });
+                await JS.InvokeVoidAsync("localStorage.setItem", "user", jsonObject);
+
+                // Sätt navigation baserat på roll
+                if (user.Role == "BRF")
+                {
+                    navigateUrl = "/brf";
+                }
+                else if (user.Role == "Maklare")
+                {
+                    navigateUrl = "/maklare";
+                }
+                else
+                {
+                    navigateUrl = "/";
+                }
+
+                shouldNavigate = true;
+                StateHasChanged();
             }
             else
             {
@@ -79,26 +99,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (shouldNavigate)
         {
-            hasRendered = true;
-        }
-
-        if (shouldSetLocalStorage && loggedInUser != null && hasRendered)
-        {
-            var jsonObject = System.Text.Json.JsonSerializer.Serialize(new
-            {
-                name = loggedInUser.Fornamn,
-                email = loggedInUser.Email,
-                role = loggedInUser.Role
-            });
-
-            await JS.InvokeVoidAsync("localStorage.setItem", "user", jsonObject);
-            shouldSetLocalStorage = false;
-            Navigation.NavigateTo("/");
+            shouldNavigate = false;
+            await Task.Delay(100); // Ge localStorage tid att spara
+            Navigation.NavigateTo(navigateUrl, forceLoad: true);
         }
     }
-
 }
-
 

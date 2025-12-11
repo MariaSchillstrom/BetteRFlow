@@ -1,6 +1,8 @@
 ﻿@page "/Brf"
 @rendermode InteractiveServer
 @using BetteRFlow.Shared.DTOs
+@using System.Text.Json
+@inject IJSRuntime JS
 @inject HttpClient Http
 @inject NavigationManager Navigation
 
@@ -9,6 +11,14 @@
 <div class="container mt-4">
     <div class="card">
         <div class="card-body">
+
+            @if (!string.IsNullOrEmpty(userName))
+            {
+                <div class="alert alert-info">
+                    <strong>Välkommen @userName!</strong> Du är inloggad som @UserRole.
+                </div>
+            }
+
             <h3 class="card-title text-center mb-4">BRF Formulär</h3>
             <p class="text-muted text-center mb-4">Fyll i uppgifter om din BRF. Fält markerade med * är obligatoriska.</p>
 
@@ -385,7 +395,7 @@
                 <button type="submit" class="btn btn-primary w-100 mt-4" disabled="@isSubmitting">
                     @if (isSubmitting)
                     {
-                            <span class="spinner-border spinner-border-sm me-2"></span>
+                        <span class="spinner-border spinner-border-sm me-2"></span>
                     }
                     Skicka formulär
                 </button>
@@ -394,15 +404,15 @@
             <!-- Error message -->
             @if (!string.IsNullOrEmpty(errorMessage))
             {
-                    <div class="alert alert-danger mt-3">@errorMessage</div>
+                <div class="alert alert-danger mt-3">@errorMessage</div>
             }
 
             <!-- Success message -->
             @if (success)
             {
-                    <div class="alert alert-success mt-3">
-                        Formulär skickat! Omdirigerar...
-                    </div>
+                <div class="alert alert-success mt-3">
+                    Formulär skickat! Omdirigerar...
+                </div>
             }
         </div>
     </div>
@@ -410,10 +420,43 @@
 
 @code {
     private FormDto formModel { get; set; } = new();
-
     private string errorMessage = "";
     private bool success = false;
     private bool isSubmitting = false;
+
+    private string userName = "";
+    private string userEmail = "";
+    private string UserRole = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "user");
+
+                if (!string.IsNullOrEmpty(userJson))
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var user = JsonSerializer.Deserialize<Dictionary<string, string>>(userJson, options);
+
+                    if (user != null)
+                    {
+                        userName = user.ContainsKey("name") ? user["name"] : "";
+                        userEmail = user.ContainsKey("email") ? user["email"] : "";
+                        UserRole = user.ContainsKey("role") ? user["role"] : "";
+                    }
+                }
+
+                await InvokeAsync(StateHasChanged);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fel: {ex.Message}");
+            }
+        }
+    }
 
     private async Task HandleSubmit()
     {
@@ -448,7 +491,10 @@
 
         if (shouldNavigate)
         {
-            Navigation.NavigateTo("/"); // Eller "/brf/overview"
+            Navigation.NavigateTo("/");
         }
     }
 }
+<div class="text-center mt-3">
+    <a href="/" class="btn btn-secondary">Tillbaka till startsidan</a>
+</div>
