@@ -1,0 +1,55 @@
+﻿@page "/maklare"
+@rendermode InteractiveServer
+@using System.Text.Json
+@inject IJSRuntime JS
+
+<PageTitle>Mäklare</PageTitle>
+
+<div class="container mt-4">
+    @if (!string.IsNullOrEmpty(userName))
+    {
+        <div class="alert alert-success">
+            <strong>Välkommen @userName!</strong> Du är inloggad som mäklare.
+        </div>
+    }
+
+    <h1>Mäklarsida</h1>
+    <p>Här kommer mäklarens funktioner...</p>
+</div>
+
+@code {
+    private string userName = "";
+    private string userEmail = "";
+    private string userRole = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "user");
+
+                if (!string.IsNullOrEmpty(userJson))
+                {
+                    var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var user = JsonSerializer.Deserialize<Dictionary<string, string>>(userJson, options);
+
+                    if (user != null)
+                    {
+                        userName = user.ContainsKey("name") ? user["name"] : "";
+                        userEmail = user.ContainsKey("email") ? user["email"] : "";
+                        userRole = user.ContainsKey("role") ? user["role"] : "";
+
+                        // ÄNDRING HÄR - använd InvokeAsync
+                        await InvokeAsync(StateHasChanged);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fel: {ex.Message}");
+            }
+        }
+    }
+}
