@@ -3,7 +3,9 @@
     public int Id { get; set; }
     public string Namn { get; set; } = string.Empty;
     public string OrganisationsNummer { get; set; } = string.Empty;
-    public string OrganisationsAdress { get; set; } = string.Empty;
+    public string Gatuadress { get; set; }
+    public string Postnummer { get; set; }
+    public string Ort { get; set; }
     public string KontaktEmail { get; set; } = string.Empty;
     public string? KontaktTelefon { get; set; }
     public string? Hemsida { get; set; }
