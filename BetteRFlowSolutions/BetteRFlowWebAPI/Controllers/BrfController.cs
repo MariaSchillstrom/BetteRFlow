@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using BetteRFlow.Shared.Models;
 using BetteRFlow.Shared.DTOs;
+using BetteRFlow.Shared.Data;
 
 namespace BetteRFlowWebAPI.Controllers
 {
@@ -8,10 +10,123 @@ namespace BetteRFlowWebAPI.Controllers
     [Route("api/[controller]")]
     public class BrfController : ControllerBase
     {
+        private readonly BetteRFlowContext _context;
+
+        // ============================================
+        // KONSTRUKTOR - Dependency Injection
+        // ============================================
+        public BrfController(BetteRFlowContext context)
+        {
+            _context = context;
+        }
+
+        // ============================================
+        // CreateBrf - Skapa ny BRF
+        // ============================================
+        [HttpPost]
+        public async Task<ActionResult<BrfDto>> CreateBrf([FromBody] Brf newBrf)
+        {
+            // STEG 1: Validera input
+            if (!IsValidBrf(newBrf))
+            {
+                return BadRequest("Ogiltig BRF-data");
+            }
+
+            // STEG 2: Sätt tidsstämplar
+            newBrf.CreatedAt = DateTime.UtcNow;
+            newBrf.UpdatedAt = DateTime.UtcNow;
+            newBrf.IsActive = true;
+
+            // STEG 3: Spara i databas
+            _context.Brfs.Add(newBrf);
+            await _context.SaveChangesAsync();
+
+            // STEG 4: Konvertera till DTO och returnera
+            var brfDto = new BrfDto
+            {
+                Id = newBrf.Id,
+                Namn = newBrf.Namn,
+                OrganisationsNummer = newBrf.OrganisationsNummer,
+                Gatuadress = newBrf.Gatuadress,
+                KontaktEmail = newBrf.KontaktEmail,
+                KontaktTelefon = newBrf.KontaktTelefon,
+                Hemsida = newBrf.Hemsida
+            };
+
+            return CreatedAtAction(nameof(GetBrfById), new { id = brfDto.Id }, brfDto);
+        }
+
+        // ============================================
+        // GetBrfById - Hämta en BRF
+        // ============================================
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BrfDto>> GetBrfById(int id)
+        {
+            // STEG 1: Validera id
+            if (id <= 0)
+            {
+                return BadRequest("Ogiltigt ID");
+            }
+
+            // STEG 2: Hämta från databas
+            var brf = await _context.Brfs.FindAsync(id);
+
+            // STEG 3: Kolla att BRF finns
+            if (brf == null)
+            {
+                return NotFound($"BRF med ID {id} hittades inte");
+            }
+
+            // STEG 4: Konvertera till DTO
+            var brfDto = new BrfDto
+            {
+                Id = brf.Id,
+                Namn = brf.Namn,
+                OrganisationsNummer = brf.OrganisationsNummer,
+                Gatuadress = brf.Gatuadress,
+                KontaktEmail = brf.KontaktEmail,
+                KontaktTelefon = brf.KontaktTelefon,
+                Hemsida = brf.Hemsida
+            };
+
+            return Ok(brfDto);
+        }
+
+        // ============================================
+        // GetAllBrfs - Hämta alla BRF:er
+        // ============================================
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<BrfDto>>> GetAllBrfs()
+        {
+            // STEG 1: Hämta från databas (bara aktiva)
+            var brfs = await _context.Brfs
+                .Where(b => b.IsActive)
+                .ToListAsync();
+
+            // STEG 2: Kolla att det finns BRF:er
+            if (!brfs.Any())
+            {
+                return Ok(new List<BrfDto>());
+            }
+
+            // STEG 3: Konvertera till DTO
+            var brfDtos = brfs.Select(b => new BrfDto
+            {
+                Id = b.Id,
+                Namn = b.Namn,
+                OrganisationsNummer = b.OrganisationsNummer,
+                Gatuadress   = b.Gatuadress,
+                KontaktEmail = b.KontaktEmail,
+                KontaktTelefon = b.KontaktTelefon,
+                Hemsida = b.Hemsida
+            }).ToList();
+
+            return Ok(brfDtos);
+        }
+
         // ============================================
         // UpdateBrf - Uppdatera BRF
         // ============================================
-
         [HttpPut("{id}")]
         public async Task<ActionResult<BrfDto>> UpdateBrf(int id, [FromBody] Brf updatedBrf)
         {
@@ -27,136 +142,44 @@ namespace BetteRFlowWebAPI.Controllers
                 return BadRequest("ID matchar inte");
             }
 
-            // STEG 3: Uppdatera i databas (hårdkoda för nu)
-            updatedBrf.UpdatedAt = DateTime.UtcNow;
+            // STEG 3: Hämta befintlig BRF från databas
+            var existingBrf = await _context.Brfs.FindAsync(id);
 
-            // STEG 4: Konvertera till DTO och returnera
-            var brfDto = new BrfDto
-            {
-                Id = updatedBrf.Id,
-                Namn = updatedBrf.Namn,
-                OrganisationsNummer = updatedBrf.OrganisationsNummer,
-                OrganisationsAdress = updatedBrf.OrganisationsAdress,
-                KontaktEmail = updatedBrf.KontaktEmail,
-                KontaktTelefon = updatedBrf.KontaktTelefon,
-                Hemsida = updatedBrf.Hemsida
-            };
-
-            return Ok(brfDto);
-        }
-
-        // ============================================
-        // GetBrfById - Hämta en BRF
-        // ============================================
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BrfDto>> GetBrfById(int id)
-        {
-            // STEG 1: Validera id
-            if (id <= 0)
-            {
-                return BadRequest("Ogiltigt ID");
-            }
-
-            // STEG 2: Hämta från databas (hårdkoda för nu)
-            var brf = new Brf
-            {
-                Id = id,
-                Namn = "BRF Testgatan",
-                OrganisationsNummer = "123456-7890",
-                OrganisationsAdress = "Testgatan 1, Stockholm",
-                KontaktEmail = "test@brftest.se",
-                KontaktTelefon = "070-1234567",
-                Hemsida = "https://brftest.se",
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            // STEG 3: Kolla att BRF finns
-            if (brf == null)
+            if (existingBrf == null)
             {
                 return NotFound($"BRF med ID {id} hittades inte");
             }
 
-            // STEG 4: Konvertera till DTO
+            // STEG 4: Uppdatera fält
+            existingBrf.Namn = updatedBrf.Namn;
+            existingBrf.OrganisationsNummer = updatedBrf.OrganisationsNummer;
+            existingBrf.Gatuadress = updatedBrf.Gatuadress;
+            existingBrf.KontaktEmail = updatedBrf.KontaktEmail;
+            existingBrf.KontaktTelefon = updatedBrf.KontaktTelefon;
+            existingBrf.Hemsida = updatedBrf.Hemsida;
+            existingBrf.UpdatedAt = DateTime.UtcNow;
+
+            // STEG 5: Spara i databas
+            await _context.SaveChangesAsync();
+
+            // STEG 6: Konvertera till DTO och returnera
             var brfDto = new BrfDto
             {
-                Id = brf.Id,
-                Namn = brf.Namn,
-                OrganisationsNummer = brf.OrganisationsNummer,
-                OrganisationsAdress = brf.OrganisationsAdress,
-                KontaktEmail = brf.KontaktEmail,
-                KontaktTelefon = brf.KontaktTelefon,
-                Hemsida = brf.Hemsida
+                Id = existingBrf.Id,
+                Namn = existingBrf.Namn,
+                OrganisationsNummer = existingBrf.OrganisationsNummer,
+                Gatuadress = existingBrf.Gatuadress,
+                KontaktEmail = existingBrf.KontaktEmail,
+                KontaktTelefon = existingBrf.KontaktTelefon,
+                Hemsida = existingBrf.Hemsida
             };
 
             return Ok(brfDto);
-        }
-
-        // ============================================
-        // GetAllBrfs - Hämta alla BRF:er
-        // ============================================
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<BrfDto>>> GetAllBrfs()
-        {
-            // STEG 1: Hämta från databas (hårdkoda för nu)
-            var brfs = new List<Brf>
-            {
-                new Brf
-                {
-                    Id = 1,
-                    Namn = "BRF Rosendal",
-                    OrganisationsNummer = "769630-6856",
-                    OrganisationsAdress = "Rosvägen 1, Uppsala",
-                    KontaktEmail = "styrelsen@brfrosendal.se",
-                    KontaktTelefon = "018-123456",
-                    Hemsida = "https://brfrosendal.se",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                },
-                new Brf
-                {
-                    Id = 2,
-                    Namn = "BRF Solbacken",
-                    OrganisationsNummer = "556789-1234",
-                    OrganisationsAdress = "Solvägen 10, Stockholm",
-                    KontaktEmail = "info@brfsolbacken.se",
-                    KontaktTelefon = "08-987654",
-                    Hemsida = "https://brfsolbacken.se",
-                    IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                }
-            };
-
-            // STEG 2: Kolla att det finns BRF:er
-            if (brfs == null || !brfs.Any())
-            {
-                return Ok(new List<BrfDto>());
-            }
-
-            // STEG 3: Konvertera till DTO
-            var brfDtos = brfs.Select(b => new BrfDto
-            {
-                Id = b.Id,
-                Namn = b.Namn,
-                OrganisationsNummer = b.OrganisationsNummer,
-                OrganisationsAdress = b.OrganisationsAdress,
-                KontaktEmail = b.KontaktEmail,
-                KontaktTelefon = b.KontaktTelefon,
-                Hemsida = b.Hemsida
-            }).ToList();
-
-            return Ok(brfDtos);
         }
 
         // ============================================
         // DeleteBrfById - Ta bort en BRF
         // ============================================
-
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteBrfById(int id)
         {
@@ -166,17 +189,17 @@ namespace BetteRFlowWebAPI.Controllers
                 return BadRequest("Ogiltigt ID");
             }
 
-            // STEG 2: Kolla att BRF:en finns (hårdkoda för nu)
-            // TODO: Senare via repository/DbContext
-            var brfExists = true; // Simulerar att BRF:en finns
+            // STEG 2: Hämta BRF från databas
+            var brf = await _context.Brfs.FindAsync(id);
 
-            if (!brfExists)
+            if (brf == null)
             {
                 return NotFound($"BRF med ID {id} hittades inte");
             }
 
-            // STEG 3: Ta bort från databas (simulerat för nu)
-            // TODO: Senare: await _context.Brfs.Remove(brf); await _context.SaveChangesAsync();
+            // STEG 3: Ta bort från databas
+            _context.Brfs.Remove(brf);
+            await _context.SaveChangesAsync();
 
             // STEG 4: Returnera 204 No Content (standard för lyckad DELETE)
             return NoContent();
@@ -186,13 +209,13 @@ namespace BetteRFlowWebAPI.Controllers
         // PRIVATE HELPER-METODER
         // ============================================
 
-        private bool IsValidBrf(Brf updatedBrf)
+        private bool IsValidBrf(Brf brf)
         {
-            if (updatedBrf == null) return false;
-            if (string.IsNullOrEmpty(updatedBrf.Namn)) return false;
-            if (string.IsNullOrEmpty(updatedBrf.OrganisationsNummer)) return false;
-            if (string.IsNullOrEmpty(updatedBrf.KontaktEmail)) return false;
-            if (!IsValidEmail(updatedBrf.KontaktEmail)) return false;
+            if (brf == null) return false;
+            if (string.IsNullOrEmpty(brf.Namn)) return false;
+            if (string.IsNullOrEmpty(brf.OrganisationsNummer)) return false;
+            if (string.IsNullOrEmpty(brf.KontaktEmail)) return false;
+            if (!IsValidEmail(brf.KontaktEmail)) return false;
             return true;
         }
 

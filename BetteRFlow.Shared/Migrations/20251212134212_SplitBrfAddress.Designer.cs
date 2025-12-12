@@ -3,6 +3,7 @@ using System;
 using BetteRFlow.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BetteRFlow.Shared.Migrations
 {
     [DbContext(typeof(BetteRFlowContext))]
-    partial class BetteRFlowContextModelSnapshot : ModelSnapshot
+    [Migration("20251212134212_SplitBrfAddress")]
+    partial class SplitBrfAddress
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
@@ -45,7 +48,12 @@ namespace BetteRFlow.Shared.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("BrfId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ID");
+
+                    b.HasIndex("BrfId");
 
                     b.ToTable("Fastigheter");
                 });
@@ -716,6 +724,13 @@ namespace BetteRFlow.Shared.Migrations
                     b.ToTable("Brfs");
                 });
 
+            modelBuilder.Entity("BetteRFlow.Shared.Models.Fastighet", b =>
+                {
+                    b.HasOne("Brf", null)
+                        .WithMany("Fastigheter")
+                        .HasForeignKey("BrfId");
+                });
+
             modelBuilder.Entity("BetteRFlow.Shared.Models.Form", b =>
                 {
                     b.HasOne("Brf", "Brf")
@@ -746,6 +761,11 @@ namespace BetteRFlow.Shared.Migrations
                     b.Navigation("Brf");
 
                     b.Navigation("Realtor");
+                });
+
+            modelBuilder.Entity("Brf", b =>
+                {
+                    b.Navigation("Fastigheter");
                 });
 #pragma warning restore 612, 618
         }
