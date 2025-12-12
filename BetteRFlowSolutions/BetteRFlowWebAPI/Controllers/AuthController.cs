@@ -25,8 +25,23 @@ namespace BetteRFlowWebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Konvertera "Maklare" (från UI) → UserRole.Realtor (i kod)
-            UserRole userRole = registerDto.Role == "Maklare" ? UserRole.Realtor : UserRole.BRF;
+            // Kolla om det finns några användare i databasen
+            bool isFirstUser = !await _context.Users.AnyAsync();
+
+            // Första användaren blir ALLTID Admin
+            UserRole userRole;
+            if (isFirstUser)
+            {
+                userRole = UserRole.Admin;
+            }
+            else if (registerDto.Role == "Maklare" || registerDto.Role == "Realtor")
+            {
+                userRole = UserRole.Realtor;
+            }
+            else
+            {
+                userRole = UserRole.BRF;
+            }
 
             var user = new User
             {
@@ -65,7 +80,6 @@ namespace BetteRFlowWebAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Hämta user från databas
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
@@ -98,12 +112,12 @@ namespace BetteRFlowWebAPI.Controllers
 
         private string HashPassword(string password)
         {
-            return password; // Just nu 
+            return password;
         }
 
         private bool VerifyPassword(string password, string hash)
         {
-            return password == hash; // Just nu 
+            return password == hash;
         }
     }
 }
