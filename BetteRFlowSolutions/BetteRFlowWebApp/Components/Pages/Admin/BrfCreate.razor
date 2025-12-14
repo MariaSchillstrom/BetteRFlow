@@ -1,6 +1,8 @@
 ﻿@page "/admin/brf/create"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
+@rendermode InteractiveServer
 @using BetteRFlow.Shared.DTOs
 
 <div class="container mt-4">
@@ -16,9 +18,9 @@
         <div class="alert alert-success">BRF skapad! Omdirigerar...</div>
     }
 
-    <EditForm Model="@brfDto" OnValidSubmit="HandleSubmit">
-        <DataAnnotationsValidator /> 
-        <ValidationSummary /> 
+    <EditForm Model="@brfDto" OnValidSubmit="HandleSubmit" FormName="BrfCreateForm">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
         <div class="mb-3">
             <label class="form-label">Föreningens namn *</label>
@@ -82,19 +84,27 @@
 </div>
 
 @code {
-    private BrfDto brfDto = new BrfDto();
+    [SupplyParameterFromForm(FormName = "BrfCreateForm")]
+    private BrfDto brfDto { get; set; } = new BrfDto();
+
     private bool isSubmitting = false;
     private bool success = false;
     private string errorMessage = "";
 
     private async Task HandleSubmit()
     {
+        await JS.InvokeVoidAsync("console.log", "=== HandleSubmit STARTAR ===");
+
         isSubmitting = true;
         errorMessage = "";
 
         try
         {
-            var response = await Http.PostAsJsonAsync("https://localhost:7007/api/brf", brfDto);
+            await JS.InvokeVoidAsync("console.log", "Skapar POST till API...");
+
+            var response = await Http.PostAsJsonAsync("https://localhost:7007/api/Brf", brfDto);
+
+            await JS.InvokeVoidAsync("console.log", "Response:", response.StatusCode);
 
             if (response.IsSuccessStatusCode)
             {
@@ -110,6 +120,7 @@
         }
         catch (Exception ex)
         {
+            await JS.InvokeVoidAsync("console.log", "EXCEPTION:", ex.Message);
             errorMessage = $"Ett fel uppstod: {ex.Message}";
         }
         finally
