@@ -1,5 +1,41 @@
-﻿<h3>AdminDashboard</h3>
+﻿@page "/admin"
+@inject NavigationManager Navigation
+
+<div class="container mt-4">
+    <h2>Admin Dashboard</h2>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">BRF-hantering</h5>
+                    <p class="card-text">Skapa och hantera BRF:er</p>
+                    <button class="btn btn-primary" @onclick="GoToCreateBrf">Skapa ny BRF</button>
+                    <button class="btn btn-secondary ms-2" @onclick="GoToBrfList">Visa alla BRF:er</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Formulär</h5>
+                    <p class="card-text">Se inskickade formulär från BRF:er</p>
+                    <button class="btn btn-info">Visa formulär</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    private void GoToCreateBrf()
+    {
+        Navigation.NavigateTo("/admin/brf/create");
+    }
 
+    private void GoToBrfList()
+    {
+        Navigation.NavigateTo("/admin/brf");
+    }
 }

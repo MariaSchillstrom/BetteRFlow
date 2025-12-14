@@ -1,5 +1,125 @@
-﻿<h3>BrfCreate</h3>
+﻿@page "/admin/brf/create"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@using BetteRFlow.Shared.DTOs
+
+<div class="container mt-4">
+    <h3>Skapa ny BRF</h3>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    @if (success)
+    {
+        <div class="alert alert-success">BRF skapad! Omdirigerar...</div>
+    }
+
+    <EditForm Model="@brfDto" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator /> 
+        <ValidationSummary /> 
+
+        <div class="mb-3">
+            <label class="form-label">Föreningens namn *</label>
+            <InputText @bind-Value="brfDto.Namn" class="form-control" placeholder="Brf Solbacken" />
+            <ValidationMessage For="@(() => brfDto.Namn)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Organisationsnummer *</label>
+            <InputText @bind-Value="brfDto.OrganisationsNummer" class="form-control" placeholder="123456-7890" />
+            <ValidationMessage For="@(() => brfDto.OrganisationsNummer)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Gatuadress *</label>
+            <InputText @bind-Value="brfDto.Gatuadress" class="form-control" placeholder="Storgatan 5" />
+            <ValidationMessage For="@(() => brfDto.Gatuadress)" />
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Postnummer *</label>
+                <InputText @bind-Value="brfDto.Postnummer" class="form-control" placeholder="11122" />
+                <ValidationMessage For="@(() => brfDto.Postnummer)" />
+            </div>
+
+            <div class="col-md-8 mb-3">
+                <label class="form-label">Ort *</label>
+                <InputText @bind-Value="brfDto.Ort" class="form-control" placeholder="Stockholm" />
+                <ValidationMessage For="@(() => brfDto.Ort)" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Kontakt-email *</label>
+            <InputText @bind-Value="brfDto.KontaktEmail" class="form-control" type="email" placeholder="info@brfsolbacken.se" />
+            <ValidationMessage For="@(() => brfDto.KontaktEmail)" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Telefon</label>
+            <InputText @bind-Value="brfDto.KontaktTelefon" class="form-control" placeholder="08-123 456 78" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Hemsida</label>
+            <InputText @bind-Value="brfDto.Hemsida" class="form-control" placeholder="https://www.brfsolbacken.se" />
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                @if (isSubmitting)
+                {
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                }
+                Skapa BRF
+            </button>
+            <button type="button" class="btn btn-secondary" @onclick="Cancel">Avbryt</button>
+        </div>
+    </EditForm>
+</div>
 
 @code {
+    private BrfDto brfDto = new BrfDto();
+    private bool isSubmitting = false;
+    private bool success = false;
+    private string errorMessage = "";
 
+    private async Task HandleSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = "";
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("https://localhost:7007/api/brf", brfDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                success = true;
+                await Task.Delay(1500);
+                Navigation.NavigateTo("/admin/brf");
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Kunde inte skapa BRF: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/admin");
+    }
 }
