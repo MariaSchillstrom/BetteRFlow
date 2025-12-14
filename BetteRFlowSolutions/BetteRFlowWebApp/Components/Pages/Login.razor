@@ -1,11 +1,9 @@
 ﻿@page "/login"
 @inject HttpClient Http
 @inject NavigationManager Navigation
-@using System.Text.Json.Serialization
 @using BetteRFlow.Shared.DTOs
 @inject IJSRuntime JS
 @rendermode InteractiveServer
-
 
 <PageTitle>Log in</PageTitle>
 
@@ -13,26 +11,25 @@
     <div class="card login-card shadow-lg" style="max-width: 1000px; width: 70%;">
         <div class="card-body">
             <h3 class="card-title text-center mb-4">Log in</h3>
-
+            
             <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin" FormName="LoginForm">
-                <DataAnnotationsValidator/>
-
+                <DataAnnotationsValidator />
+                
                 <div class="form-floating mb-3">
-                    <InputText @bind-Value="loginModel.Email" class="form-control" id="email" placeholder="Email"/>
+                    <InputText @bind-Value="loginModel.Email" class="form-control" id="email" placeholder="Email" />
                     <label for="email">Email</label>
-                    <ValidationMessage For="@(() => loginModel.Email)"/>
+                    <ValidationMessage For="@(() => loginModel.Email)" />
                 </div>
-
+                
                 <div class="form-floating mb-4">
-                    <InputText type="password" @bind-Value="loginModel.Password" class="form-control" id="password"
-                               placeholder="Password"/>
+                    <InputText type="password" @bind-Value="loginModel.Password" class="form-control" id="password" placeholder="Password" />
                     <label for="password">Password</label>
-                    <ValidationMessage For="@(() => loginModel.Password)"/>
+                    <ValidationMessage For="@(() => loginModel.Password)" />
                 </div>
-
+                
                 <button type="submit" class="btn btn-primary w-100">Log in</button>
             </EditForm>
-
+            
             @if (!string.IsNullOrEmpty(errorMessage))
             {
                 <div class="alert alert-danger mt-3">@errorMessage</div>
@@ -44,47 +41,54 @@
 @code {
     [SupplyParameterFromForm(FormName = "LoginForm")]
     private LoginDto loginModel { get; set; } = new();
+    
     private string errorMessage = "";
-    private UserDto? loggedInUser;
-    private bool shouldNavigate = false;
-    private string navigateUrl = "";
 
     private async Task HandleLogin()
     {
         errorMessage = "";
+        
         try
         {
-            var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+            var response = await Http.PostAsJsonAsync("https://localhost:7007/api/Auth/login", loginModel);
+            
             if (response.IsSuccessStatusCode)
             {
                 var user = await response.Content.ReadFromJsonAsync<UserDto>();
-                loggedInUser = user;
-
-                // Spara i localStorage
-                var jsonObject = System.Text.Json.JsonSerializer.Serialize(new
+                
+                if (user != null)
                 {
-                    name = user.Fornamn,
-                    email = user.Email,
-                    role = user.Role
-                });
-                await JS.InvokeVoidAsync("localStorage.setItem", "user", jsonObject);
-
-                // Sätt navigation baserat på roll
-                if (user.Role == "BRF")
-                {
-                    navigateUrl = "/brf";
+                    // Spara i localStorage FÖRST
+                    var jsonObject = System.Text.Json.JsonSerializer.Serialize(new
+                    {
+                        name = user.Fornamn,
+                        email = user.Email,
+                        role = user.Role
+                    });
+                    
+                    await JS.InvokeVoidAsync("localStorage.setItem", "user", jsonObject);
+                    
+                    // VÄNTA så localStorage hinner spara
+                    await Task.Delay(200);
+                    
+                    // Navigera baserat på roll
+                    if (user.Role == "Admin")
+                    {
+                        Navigation.NavigateTo("/admin", forceLoad: true);
+                    }
+                    else if (user.Role == "BRF")
+                    {
+                        Navigation.NavigateTo("/brf", forceLoad: true);
+                    }
+                    else if (user.Role == "Realtor")
+                    {
+                        Navigation.NavigateTo("/maklare", forceLoad: true);
+                    }
+                    else
+                    {
+                        Navigation.NavigateTo("/", forceLoad: true);
+                    }
                 }
-                else if (user.Role == "Maklare")
-                {
-                    navigateUrl = "/maklare";
-                }
-                else
-                {
-                    navigateUrl = "/";
-                }
-
-                shouldNavigate = true;
-                StateHasChanged();
             }
             else
             {
@@ -96,15 +100,4 @@
             errorMessage = $"Ett fel uppstod: {ex.Message}";
         }
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (shouldNavigate)
-        {
-            shouldNavigate = false;
-            await Task.Delay(100); // Ge localStorage tid att spara
-            Navigation.NavigateTo(navigateUrl, forceLoad: true);
-        }
-    }
 }
-
