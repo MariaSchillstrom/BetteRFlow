@@ -88,12 +88,9 @@ _(Den stora felsökningsdelen)_
 
 ### Verktygspresentation&#x20;
 
-* 12.1 Syfte
-* 12.2 Målgrupp
-* 12.3 Översikt
-* 12.4 Funktioner
-* 12.5 Roller
-* 12.6 Fördelar
-* 12.7 Scenario
-* 12.8 Sammanfattning
-
+1. Syfte och målgrupp
+2. Översikt av verktyg
+3. Huvudverktyg
+4. Roller och fördelar med verktygen&#x20;
+5. Scenario- Hur verktygen samarbetar
+6. Sammanfattning
