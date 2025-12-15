@@ -17,20 +17,24 @@ namespace BetteRFlowWebAPI.Controllers
             _context = context;
         }
 
-        [HttpPost("register")]
+       [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
+        
             // Kolla om det finns några användare i databasen
             bool isFirstUser = !await _context.Users.AnyAsync();
-
+        
             // Första användaren blir ALLTID Admin
             UserRole userRole;
             if (isFirstUser)
+            {
+                userRole = UserRole.Admin;
+            }
+            else if (registerDto.Role == "Admin")
             {
                 userRole = UserRole.Admin;
             }
@@ -42,7 +46,7 @@ namespace BetteRFlowWebAPI.Controllers
             {
                 userRole = UserRole.BRF;
             }
-
+        
             var user = new User
             {
                 Fornamn = registerDto.Fornamn,
@@ -55,10 +59,10 @@ namespace BetteRFlowWebAPI.Controllers
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
-
+        
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
+        
             var userDto = new UserDto
             {
                 Id = user.Id,
@@ -68,7 +72,7 @@ namespace BetteRFlowWebAPI.Controllers
                 Role = user.Role.ToString(),
                 IsActive = user.IsActive
             };
-
+        
             return Ok(userDto);
         }
 

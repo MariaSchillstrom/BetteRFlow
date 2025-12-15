@@ -1,0 +1,118 @@
+﻿@page "/registerAdmin"
+@rendermode InteractiveServer
+@using BetteRFlow.Shared.DTOs
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>Register Admin</PageTitle>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card register-card shadow-lg" style="max-width: 600px; width: 90%;">
+        <div class="card-body p-4">
+            <h3 class="card-title text-center mb-4">Skapa Admin-konto</h3>
+
+            <EditForm Model="@registerModel" OnValidSubmit="@HandleSubmit">
+                <DataAnnotationsValidator />
+
+                <!-- Förnamn -->
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="registerModel.Fornamn" class="form-control" id="fornamn" placeholder="Förnamn" />
+                    <label for="fornamn">Förnamn</label>
+                    <ValidationMessage For="@(() => registerModel.Fornamn)" />
+                </div>
+
+                <!-- Efternamn -->
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="registerModel.Efternamn" class="form-control" id="efternamn" placeholder="Efternamn" />
+                    <label for="efternamn">Efternamn</label>
+                    <ValidationMessage For="@(() => registerModel.Efternamn)" />
+                </div>
+
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="registerModel.Email" class="form-control" id="email" placeholder="Email" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="@(() => registerModel.Email)" />
+                </div>
+
+                <!-- Password -->
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="registerModel.Password" class="form-control" id="password" placeholder="Password" />
+                    <label for="password">Lösenord (minst 6 tecken)</label>
+                    <ValidationMessage For="@(() => registerModel.Password)" />
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="btn btn-primary w-100" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                    }
+                    Skapa Admin-konto
+                </button>
+            </EditForm>
+
+            <!-- Error message -->
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+
+            <!-- Success message -->
+            @if (success)
+            {
+                <div class="alert alert-success mt-3">
+                    Admin-konto skapat! Omdirigerar till inloggning...
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private RegisterDto registerModel { get; set; } = new() 
+    { 
+        Role = "Admin",
+    };
+
+    private string errorMessage = "";
+    private bool success = false;
+    private bool isSubmitting = false;
+
+    private async Task HandleSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = "";
+        bool shouldNavigate = false;
+
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                success = true;
+                shouldNavigate = true;
+                await Task.Delay(1500);
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Kunde inte skapa konto: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+
+        if (shouldNavigate)
+        {
+            Navigation.NavigateTo("/login");
+        }
+    }
+}
