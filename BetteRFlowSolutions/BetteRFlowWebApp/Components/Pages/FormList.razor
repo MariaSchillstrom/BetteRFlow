@@ -1,0 +1,121 @@
+﻿@page "/formList"
+@rendermode InteractiveServer
+@using BetteRFlow.Shared.DTOs
+@using BetteRFlow.Shared.Models
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<PageTitle>Inskickade Formulär</PageTitle>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Inskickade BRF Formulär</h3>
+
+            @if (isLoading)
+            {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Laddar...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Hämtar formulär...</p>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>@errorMessage
+                </div>
+            }
+            else if (forms == null || !forms.Any())
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle-fill me-2"></i>Inga formulär har skickats in ännu.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>BRF Namn</th>
+                                <th>Fastighet</th>
+                                <th>Organisationsnummer</th>
+                                <th>Antal Lägenheter</th>
+                                <th>Byggnadsår</th>
+                                <th>Åtgärder</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var form in forms)
+                            {
+                                <tr>
+                                    <td>@form.BrfNamn</td>
+                                    <td>@form.Fastighet</td>
+                                    <td>@form.Organisationsnummer</td>
+                                    <td>@form.AntalLägenheter</td>
+                                    <td>@form.Byggnadsår</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" @onclick="() => ViewDetails(form.Id)">
+                                            <i class="bi bi-eye me-1"></i>Visa
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="text-center mt-3">
+                <a href="/" class="btn btn-secondary">Tillbaka till startsidan</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Form>? forms;
+    private bool isLoading = true;
+    private string errorMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadForms();
+    }
+
+    private async Task LoadForms()
+    {
+        isLoading = true;
+        errorMessage = "";
+
+        try
+        {
+            var response = await Http.GetAsync("api/formsubmission");
+
+            if (response.IsSuccessStatusCode)
+            {
+                forms = await response.Content.ReadFromJsonAsync<List<Form>>();
+            }
+            else
+            {
+                errorMessage = $"Kunde inte hämta formulär. Status: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Ett fel uppstod: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void ViewDetails(int formId)
+    {
+        Navigation.NavigateTo($"/forms/{formId}");
+    }
+}

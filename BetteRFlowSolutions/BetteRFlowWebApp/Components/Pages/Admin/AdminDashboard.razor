@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Formulär</h5>
                     <p class="card-text">Se inskickade formulär från BRF:er</p>
-                    <button class="btn btn-info">Visa formulär</button>
+                    <button class="btn btn-info" @onclick="GoToFormList">Visa formulär</button>
                 </div>
             </div>
         </div>
@@ -40,4 +40,10 @@
     {
         Navigation.NavigateTo("/admin/brf");
     }
+
+    private void GoToFormList()
+    {
+        Navigation.NavigateTo("/formList");
+    }
+
 }

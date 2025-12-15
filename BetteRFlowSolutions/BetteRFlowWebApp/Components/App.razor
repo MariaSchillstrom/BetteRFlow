@@ -26,5 +26,15 @@
     
     <!-- MudBlazor JS -->
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
-</body>
+    
+    <script>
+    // Only clear localStorage on the first app load (not on navigation)
+    if (!sessionStorage.getItem('appInitialized')) {
+        if (!window.location.pathname.startsWith('/login')) {
+            localStorage.removeItem('user');
+        }
+        sessionStorage.setItem('appInitialized', 'true');
+    }
+</script>
+    </body>
 </html>

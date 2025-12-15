@@ -1,12 +1,18 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@rendermode InteractiveServer
+@inject IJSRuntime JS
+@using System.Text.Json
+@inject NavigationManager Navigation
+        
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BetteRFlow</a>
     </div>
 </div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+<input type="checkbox" title="Navigation menu" class="navbar-toggler"/>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+<div class="nav-scrollable">
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -14,55 +20,116 @@
             </NavLink>
         </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="register">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Register
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
-            </NavLink>
-        </div>
-
-        @if (UserRole == "Admin")
+        @if (string.IsNullOrEmpty(UserRole))
         {
             <div class="nav-item px-3">
-                <NavLink class="nav-link" href="admin">
-                    <span class="bi bi-shield-lock" aria-hidden="true"></span> Admin
+                <NavLink class="nav-link" href="register">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Register
                 </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="login">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Login
+                </NavLink>
+            </div>
+        }
+        else if (UserRole == "Admin")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin">Admin Dashboard</NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin/brf/create">Create BRF</NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin/brf">List BRF</NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="formList">List Forms</NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <a class="nav-link" href="#" @onclick="Logout">Log Out</a>
+            </div>
+        }
+        else if (UserRole == "BRF")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="brf-form">BRF Form</NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <a class="nav-link" href="#" @onclick="Logout">Log Out</a>
+            </div>
+        }
+        else if (UserRole == "Realtor")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="formList">See Forms</NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="request-form">Request Form</NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <a class="nav-link" href="#" @onclick="Logout">Log Out</a>
             </div>
         }
     </nav>
 </div>
 
-@inject IJSRuntime JS
-@using System.Text.Json
-
 @code {
     private string UserRole = "";
 
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserRole();
+    }
+    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            try
-            {
-                var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "user");
-                if (!string.IsNullOrEmpty(userJson))
-                {
-                    var user = JsonSerializer.Deserialize<Dictionary<string, string>>(userJson,
-                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                    if (user != null && user.ContainsKey("role"))
-                    {
-                        UserRole = user["role"];
-                        await InvokeAsync(StateHasChanged);
-                    }
-                }
-            }
-            catch { }
+            // Double-check in case localStorage was set during navigation
+            await Task.Delay(100);
+            await LoadUserRole();
         }
     }
+
+    private async Task LoadUserRole()
+    {
+        try
+        {
+            var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "user");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                var user = JsonSerializer.Deserialize<Dictionary<string, string>>(userJson,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                if (user != null && user.ContainsKey("role"))
+                {
+                    UserRole = user["role"];
+                    await InvokeAsync(StateHasChanged);
+                }
+            }
+            else
+            {
+                UserRole = "";
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch
+        {
+            UserRole = "";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task Logout()
+    {
+        await JS.InvokeVoidAsync("localStorage.removeItem", "user");
+        UserRole = "";
+        await InvokeAsync(StateHasChanged);
+        
+        // Navigate to home with force reload to reset the app
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+
 }

@@ -44,7 +44,7 @@
     
     private string errorMessage = "";
 
-    private async Task HandleLogin()
+   private async Task HandleLogin()
     {
         errorMessage = "";
         
@@ -58,7 +58,6 @@
                 
                 if (user != null)
                 {
-                    // Spara i localStorage FÖRST
                     var jsonObject = System.Text.Json.JsonSerializer.Serialize(new
                     {
                         name = user.Fornamn,
@@ -68,26 +67,14 @@
                     
                     await JS.InvokeVoidAsync("localStorage.setItem", "user", jsonObject);
                     
-                    // VÄNTA så localStorage hinner spara
-                    await Task.Delay(200);
-                    
-                    // Navigera baserat på roll
-                    if (user.Role == "Admin")
+                    // Navigate based on role with force reload (this reloads the app)
+                    Navigation.NavigateTo(user.Role switch
                     {
-                        Navigation.NavigateTo("/admin", forceLoad: true);
-                    }
-                    else if (user.Role == "BRF")
-                    {
-                        Navigation.NavigateTo("/brf", forceLoad: true);
-                    }
-                    else if (user.Role == "Realtor")
-                    {
-                        Navigation.NavigateTo("/maklare", forceLoad: true);
-                    }
-                    else
-                    {
-                        Navigation.NavigateTo("/", forceLoad: true);
-                    }
+                        "Admin" => "/admin",
+                        "BRF" => "/brf",
+                        "Realtor" => "/maklare",
+                        _ => "/"
+                    }, forceLoad: true);
                 }
             }
             else
