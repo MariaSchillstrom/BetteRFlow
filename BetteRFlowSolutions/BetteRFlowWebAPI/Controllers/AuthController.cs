@@ -3,6 +3,7 @@ using BetteRFlow.Shared.Models;
 using BetteRFlow.Shared.DTOs;
 using Microsoft.EntityFrameworkCore;
 using BetteRFlow.Shared.Data;
+using BCrypt;
 
 namespace BetteRFlowWebAPI.Controllers
 {
@@ -116,12 +117,12 @@ namespace BetteRFlowWebAPI.Controllers
 
         private string HashPassword(string password)
         {
-            return password;
+            return BCrypt.Net.BCrypt.HashPassword(password);  // ✅ Hashar!
         }
 
         private bool VerifyPassword(string password, string hash)
         {
-            return password == hash;
+            return BCrypt.Net.BCrypt.Verify(password, hash);  // ✅ Verifierar hash!
         }
     }
 }
