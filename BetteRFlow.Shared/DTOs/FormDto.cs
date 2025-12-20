@@ -4,6 +4,8 @@ namespace BetteRFlow.Shared.DTOs
 {
     public class FormDto
     {
+        public int? Id { get; set; }
+
         // Grunduppgifter
         [Required(ErrorMessage = "Fastighet är obligatorisk")]
         public string Fastighet { get; set; } = string.Empty;

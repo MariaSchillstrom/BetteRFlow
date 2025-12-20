@@ -2,6 +2,7 @@
 using BetteRFlow.Shared.Models;
 using BetteRFlow.Shared.DTOs;
 using BetteRFlow.Shared.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BetteRFlowWebAPI.Controllers
 {
@@ -22,6 +23,103 @@ namespace BetteRFlowWebAPI.Controllers
             return _context.FormSubmissions.ToList();
         }
 
+        [HttpGet("search")]
+        public async Task<ActionResult<List<FormDto>>> SearchBrf([FromQuery] string? searchTerm)
+        {
+            try
+            {
+                IQueryable<FormSubmission> query = _context.FormSubmissions;
+
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    query = query.Where(f =>
+                        (f.BrfNamn != null && f.BrfNamn.Contains(searchTerm)) ||
+                        (f.Fastighet != null && f.Fastighet.Contains(searchTerm)) ||
+                        (f.Organisationsnummer != null && f.Organisationsnummer.Contains(searchTerm))
+                    );
+                }
+
+                var results = await query.ToListAsync();
+
+                var formDtos = results.Select(f => new FormDto
+                {
+                    Id = f.Id,
+                    Fastighet = f.Fastighet,
+                    Organisationsnummer = f.Organisationsnummer,
+                    BrfNamn = f.BrfNamn,
+                    Byggnadsår = f.Byggnadsår,
+                    AntalLägenheter = f.AntalLägenheter,
+                    ÄktaBrf = f.ÄktaBrf,
+                    EkonomiskFörvaltare = f.EkonomiskFörvaltare,
+                    FastighetsFörvaltare = f.FastighetsFörvaltare,
+                    MedlemskapsRutin = f.MedlemskapsRutin,
+                    JuridiskPersonFårFörvärva = f.JuridiskPersonFårFörvärva,
+                    JuridiskPersonKommentar = f.JuridiskPersonKommentar,
+                    BeslutOmMedlemskap = f.BeslutOmMedlemskap,
+                    MedlemsansökanSkickasTill = f.MedlemsansökanSkickasTill,
+                    DelatÄgande = f.DelatÄgande,
+                    MinstaAndel = f.MinstaAndel,
+                    Överlåtelseavgift = f.Överlåtelseavgift,
+                    AvgiftInnefattarVärme = f.AvgiftInnefattarVärme,
+                    AvgiftInnefattarVarmvatten = f.AvgiftInnefattarVarmvatten,
+                    AvgiftInnefattarKallvatten = f.AvgiftInnefattarKallvatten,
+                    AvgiftInnefattarKabelTV = f.AvgiftInnefattarKabelTV,
+                    AvgiftInnefattarBredband = f.AvgiftInnefattarBredband,
+                    AvgiftInnefattarHemförsäkring = f.AvgiftInnefattarHemförsäkring,
+                    AvgiftInnefattarKällare = f.AvgiftInnefattarKällare,
+                    AvgiftInnefattarAnnat = f.AvgiftInnefattarAnnat,
+                    SenasteAvgiftsförändring = f.SenasteAvgiftsförändring,
+                    Bredbandsleverantör = f.Bredbandsleverantör,
+                    Bredbandshastighet = f.Bredbandshastighet,
+                    BredbandKundservice = f.BredbandKundservice,
+                    Uppvärmning = f.Uppvärmning,
+                    Ventilation = f.Ventilation,
+                    Elavtal = f.Elavtal,
+                    ElavtalKommentar = f.ElavtalKommentar,
+                    AntalGarageplatser = f.AntalGarageplatser,
+                    AntalParkeringsplatser = f.AntalParkeringsplatser,
+                    AntalLaddplatser = f.AntalLaddplatser,
+                    FriHöjdGarage = f.FriHöjdGarage,
+                    ElplintarPåMark = f.ElplintarPåMark,
+                    KostnadParkeringsplats = f.KostnadParkeringsplats,
+                    KostnadGarageplats = f.KostnadGarageplats,
+                    KostnadGarageplatsElektricitet = f.KostnadGarageplatsElektricitet,
+                    Laddkostnad = f.Laddkostnad,
+                    ParkeringKontakt = f.ParkeringKontakt,
+                    Cykelförråd = f.Cykelförråd,
+                    Barnvagnsförråd = f.Barnvagnsförråd,
+                    Gästlägenhet = f.Gästlägenhet,
+                    Tvättstuga = f.Tvättstuga,
+                    Bastu = f.Bastu,
+                    Gym = f.Gym,
+                    Festlokal = f.Festlokal,
+                    GemensammaUtrymmennAnnat = f.GemensammaUtrymmennAnnat,
+                    ExtraLokaler = f.ExtraLokaler,
+                    ExtraLokalerKommentar = f.ExtraLokalerKommentar,
+                    StädningGemensamma = f.StädningGemensamma,
+                    NyckelÖverlämning = f.NyckelÖverlämning,
+                    VadSkasÖverlämnas = f.VadSkasÖverlämnas,
+                    AdressNyckelÖverlämning = f.AdressNyckelÖverlämning,
+                    AndrahandsuthyrningKrävergodkännande = f.AndrahandsuthyrningKrävergodkännande,
+                    AndrahandsuthyrningAvgift = f.AndrahandsuthyrningAvgift,
+                    AndrahandsuthyrningAnsökanTill = f.AndrahandsuthyrningAnsökanTill,
+                    AndrahandsuthyrningVillkorUrl = f.AndrahandsuthyrningVillkorUrl,
+                    PlanerardeReparationer = f.PlanerardeReparationer,
+                    Energideklaration = f.Energideklaration,
+                    EnergideklarationDatum = f.EnergideklarationDatum,
+                    KontaktEmail = f.KontaktEmail,
+                    KontaktTelefon = f.KontaktTelefon,
+                    Hemsida = f.Hemsida
+                }).ToList();
+
+                return Ok(formDtos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateFormSubmission([FromBody] FormDto formDto)
         {
@@ -29,19 +127,14 @@ namespace BetteRFlowWebAPI.Controllers
             {
                 var formSubmission = new FormSubmission
                 {
-                    // Grunduppgifter
                     Fastighet = formDto.Fastighet,
                     Organisationsnummer = formDto.Organisationsnummer,
                     BrfNamn = formDto.BrfNamn,
                     Byggnadsår = formDto.Byggnadsår,
                     AntalLägenheter = formDto.AntalLägenheter,
                     ÄktaBrf = formDto.ÄktaBrf,
-
-                    // Förvaltning
                     EkonomiskFörvaltare = formDto.EkonomiskFörvaltare,
                     FastighetsFörvaltare = formDto.FastighetsFörvaltare,
-
-                    // Medlemskap
                     MedlemskapsRutin = formDto.MedlemskapsRutin,
                     JuridiskPersonFårFörvärva = formDto.JuridiskPersonFårFörvärva,
                     JuridiskPersonKommentar = formDto.JuridiskPersonKommentar,
@@ -50,8 +143,6 @@ namespace BetteRFlowWebAPI.Controllers
                     DelatÄgande = formDto.DelatÄgande,
                     MinstaAndel = formDto.MinstaAndel,
                     Överlåtelseavgift = formDto.Överlåtelseavgift,
-
-                    // Månadsavgift
                     AvgiftInnefattarVärme = formDto.AvgiftInnefattarVärme,
                     AvgiftInnefattarVarmvatten = formDto.AvgiftInnefattarVarmvatten,
                     AvgiftInnefattarKallvatten = formDto.AvgiftInnefattarKallvatten,
@@ -61,8 +152,6 @@ namespace BetteRFlowWebAPI.Controllers
                     AvgiftInnefattarKällare = formDto.AvgiftInnefattarKällare,
                     AvgiftInnefattarAnnat = formDto.AvgiftInnefattarAnnat,
                     SenasteAvgiftsförändring = formDto.SenasteAvgiftsförändring,
-
-                    // Bredband och teknik
                     Bredbandsleverantör = formDto.Bredbandsleverantör,
                     Bredbandshastighet = formDto.Bredbandshastighet,
                     BredbandKundservice = formDto.BredbandKundservice,
@@ -70,8 +159,6 @@ namespace BetteRFlowWebAPI.Controllers
                     Ventilation = formDto.Ventilation,
                     Elavtal = formDto.Elavtal,
                     ElavtalKommentar = formDto.ElavtalKommentar,
-
-                    // Parkering
                     AntalGarageplatser = formDto.AntalGarageplatser,
                     AntalParkeringsplatser = formDto.AntalParkeringsplatser,
                     AntalLaddplatser = formDto.AntalLaddplatser,
@@ -82,8 +169,6 @@ namespace BetteRFlowWebAPI.Controllers
                     KostnadGarageplatsElektricitet = formDto.KostnadGarageplatsElektricitet,
                     Laddkostnad = formDto.Laddkostnad,
                     ParkeringKontakt = formDto.ParkeringKontakt,
-
-                    // Gemensamma utrymmen
                     Cykelförråd = formDto.Cykelförråd,
                     Barnvagnsförråd = formDto.Barnvagnsförråd,
                     Gästlägenhet = formDto.Gästlägenhet,
@@ -95,29 +180,19 @@ namespace BetteRFlowWebAPI.Controllers
                     ExtraLokaler = formDto.ExtraLokaler,
                     ExtraLokalerKommentar = formDto.ExtraLokalerKommentar,
                     StädningGemensamma = formDto.StädningGemensamma,
-
-                    // Nycklar och överlämning
                     NyckelÖverlämning = formDto.NyckelÖverlämning,
                     VadSkasÖverlämnas = formDto.VadSkasÖverlämnas,
                     AdressNyckelÖverlämning = formDto.AdressNyckelÖverlämning,
-
-                    // Andrahandsuthyrning
                     AndrahandsuthyrningKrävergodkännande = formDto.AndrahandsuthyrningKrävergodkännande,
                     AndrahandsuthyrningAvgift = formDto.AndrahandsuthyrningAvgift,
                     AndrahandsuthyrningAnsökanTill = formDto.AndrahandsuthyrningAnsökanTill,
                     AndrahandsuthyrningVillkorUrl = formDto.AndrahandsuthyrningVillkorUrl,
-
-                    // Reparationer
                     PlanerardeReparationer = formDto.PlanerardeReparationer,
                     Energideklaration = formDto.Energideklaration,
                     EnergideklarationDatum = formDto.EnergideklarationDatum,
-
-                    // Kontakt
                     KontaktEmail = formDto.KontaktEmail,
                     KontaktTelefon = formDto.KontaktTelefon,
                     Hemsida = formDto.Hemsida,
-
-                    // Metadata
                     SubmittedAt = DateTime.UtcNow
                 };
 
