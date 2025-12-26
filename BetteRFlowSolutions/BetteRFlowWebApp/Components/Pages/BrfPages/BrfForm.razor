@@ -1,4 +1,4 @@
-﻿@page "/Brf"
+﻿@page "/brf-form"
 @rendermode InteractiveServer
 @using BetteRFlow.Shared.DTOs
 @using System.Text.Json
@@ -19,9 +19,48 @@
                 </div>
             }
 
-            <h3 class="card-title text-center mb-4">BRF Formulär</h3>
-            <p class="text-muted text-center mb-4">Fyll i uppgifter om din BRF. Fält markerade med * är obligatoriska.</p>
+            @* VALKNAPPAR - Visa om formuläret inte är öppet *@
+            @if (!showForm)
+            {
+                <h3 class="text-center mb-4">BRF-hantering</h3>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Nytt formulär</h5>
+                                <p class="card-text">Skapa ett helt nytt BRF-formulär</p>
+                                <button class="btn btn-primary" @onclick="CreateNewForm">Skapa nytt formulär</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Uppdatera uppgifter</h5>
+                                <p class="card-text">Uppdatera ditt befintliga BRF-formulär</p>
+                                <button class="btn btn-secondary" @onclick="LoadExistingForm">Uppdatera uppgifter</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
+            @* FORMULÄRET - Visa om showForm är true *@
+            @if (showForm)
+            {
+                <h3 class="card-title text-center mb-4">
+                    @if (isEditMode)
+                    {
+                        <text>Uppdatera BRF-formulär</text>
+                    }
+                    else
+                    {
+                        <text>Nytt BRF-formulär</text>
+                    }
+                </h3>
+                <p class="text-muted text-center mb-4">Fyll i uppgifter om din BRF. Fält markerade med * är obligatoriska.</p>
+
+            
             <EditForm Model="@formModel" OnValidSubmit="@HandleSubmit">
                 <DataAnnotationsValidator />
 
@@ -414,6 +453,8 @@
                     Formulär skickat! Omdirigerar...
                 </div>
             }
+            }
+
         </div>
     </div>
 </div>
@@ -428,6 +469,10 @@
     private string userEmail = "";
     private string UserRole = "";
 
+    // NYA VARIABLER
+    private bool showForm = false;
+    private bool isEditMode = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -435,12 +480,10 @@
             try
             {
                 var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "user");
-
                 if (!string.IsNullOrEmpty(userJson))
                 {
                     var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
                     var user = JsonSerializer.Deserialize<Dictionary<string, string>>(userJson, options);
-
                     if (user != null)
                     {
                         userName = user.ContainsKey("name") ? user["name"] : "";
@@ -448,7 +491,6 @@
                         UserRole = user.ContainsKey("role") ? user["role"] : "";
                     }
                 }
-
                 await InvokeAsync(StateHasChanged);
             }
             catch (Exception ex)
@@ -461,7 +503,6 @@
     private async Task HandleSubmit()
     {
         await JS.InvokeVoidAsync("console.log", "=== HandleSubmit START ===");
-
         isSubmitting = true;
         errorMessage = "";
         bool shouldNavigate = false;
@@ -469,9 +510,7 @@
         try
         {
             await JS.InvokeVoidAsync("console.log", "Försöker POST till api/formsubmission");
-
             var response = await Http.PostAsJsonAsync("api/formsubmission", formModel);
-
             await JS.InvokeVoidAsync("console.log", "POST klar, status:", response.StatusCode);
 
             if (response.IsSuccessStatusCode)
@@ -502,7 +541,35 @@
             Navigation.NavigateTo("/");
         }
     }
+
+    // NYA METODER
+    private void CreateNewForm()
+    {
+        formModel = new FormDto();
+        isEditMode = false;
+        showForm = true;
+    }
+
+    private async Task LoadExistingForm()
+    {
+        isEditMode = true;
+        showForm = true;
+
+        try
+        {
+            var response = await Http.GetAsync("api/formsubmission/search");
+            if (response.IsSuccessStatusCode)
+            {
+                var forms = await response.Content.ReadFromJsonAsync<List<FormDto>>();
+                if (forms != null && forms.Any())
+                {
+                    formModel = forms.First();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fel: {ex.Message}");
+        }
+    }
 }
-<div class="text-center mt-3">
-    <a href="/" class="btn btn-secondary">Tillbaka till startsidan</a>
-</div>
