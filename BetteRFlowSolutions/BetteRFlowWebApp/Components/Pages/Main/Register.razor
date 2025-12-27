@@ -19,7 +19,7 @@
                     <InputSelect @bind-Value="registerModel.Role" class="form-select" id="role">
                         <option value="">Välj roll...</option>
                         <option value="BRF">BRF-styrelsemedlem</option>
-                        <option value="Maklare">Mäklare</option>
+                        <option value="Realtor">Mäklare</option>
                     </InputSelect>
                     <label for="role">Jag är en...</label>
                     <ValidationMessage For="@(() => registerModel.Role)" />
@@ -54,7 +54,7 @@
                 </div>
 
                 <!-- Firma (endast för mäklare) -->
-                @if (registerModel.Role == "Maklare")
+                @if (registerModel.Role == "Realtor")
                 {
                     <div class="form-floating mb-3">
                         <InputText @bind-Value="registerModel.Firma" class="form-control" id="firma" placeholder="Firma" />

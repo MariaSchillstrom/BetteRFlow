@@ -1,6 +1,6 @@
 ﻿namespace BetteRFlow.Shared.DTOs
 {
-    public class FastighetDto
+    public class PurchaseDto
     {
     }
 }
