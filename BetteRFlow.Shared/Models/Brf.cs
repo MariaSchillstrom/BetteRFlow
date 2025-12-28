@@ -15,5 +15,5 @@ public class Brf
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public bool IsActive { get; set; } = true;
 
-    
+    public ICollection<FormSubmission>? FormSubmissions { get; set; }
 }

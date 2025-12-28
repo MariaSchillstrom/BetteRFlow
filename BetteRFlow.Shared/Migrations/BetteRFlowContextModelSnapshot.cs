@@ -362,6 +362,9 @@ namespace BetteRFlow.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("BrfId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("BrfNamn")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -523,16 +526,41 @@ namespace BetteRFlow.Shared.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BrfId");
+
                     b.ToTable("FormSubmissions");
                 });
 
             modelBuilder.Entity("BetteRFlow.Shared.Models.Purchase", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ID");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FormSubmissionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormSubmissionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Purchases");
                 });
@@ -678,6 +706,34 @@ namespace BetteRFlow.Shared.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BetteRFlow.Shared.Models.FormSubmission", b =>
+                {
+                    b.HasOne("Brf", "Brf")
+                        .WithMany("FormSubmissions")
+                        .HasForeignKey("BrfId");
+
+                    b.Navigation("Brf");
+                });
+
+            modelBuilder.Entity("BetteRFlow.Shared.Models.Purchase", b =>
+                {
+                    b.HasOne("BetteRFlow.Shared.Models.FormSubmission", "FormSubmission")
+                        .WithMany()
+                        .HasForeignKey("FormSubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BetteRFlow.Shared.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FormSubmission");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BetteRFlow.Shared.Models.User", b =>
                 {
                     b.HasOne("Brf", "Brf")
@@ -691,6 +747,11 @@ namespace BetteRFlow.Shared.Migrations
                     b.Navigation("Brf");
 
                     b.Navigation("Realtor");
+                });
+
+            modelBuilder.Entity("Brf", b =>
+                {
+                    b.Navigation("FormSubmissions");
                 });
 #pragma warning restore 612, 618
         }
