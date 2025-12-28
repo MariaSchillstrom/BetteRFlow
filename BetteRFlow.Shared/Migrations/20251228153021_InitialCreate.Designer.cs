@@ -11,52 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BetteRFlow.Shared.Migrations
 {
     [DbContext(typeof(BetteRFlowContext))]
-    [Migration("20251205113918_AddFormFields")]
-    partial class AddFormFields
+    [Migration("20251228153021_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
-
-            modelBuilder.Entity("BetteRFlow.Shared.Models.Customer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("BusinessName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CustomerNumber")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Customers");
-                });
-
-            modelBuilder.Entity("BetteRFlow.Shared.Models.Fastighet", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BrfId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("BrfId");
-
-                    b.ToTable("Fastigheter");
-                });
 
             modelBuilder.Entity("BetteRFlow.Shared.Models.Form", b =>
                 {
@@ -321,46 +283,289 @@ namespace BetteRFlow.Shared.Migrations
 
             modelBuilder.Entity("BetteRFlow.Shared.Models.FormSubmission", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ID");
+                    b.Property<string>("AdressNyckelÖverlämning")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AndrahandsuthyrningAnsökanTill")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AndrahandsuthyrningAvgift")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("AndrahandsuthyrningKrävergodkännande")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AndrahandsuthyrningVillkorUrl")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("AntalGarageplatser")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AntalLaddplatser")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AntalLägenheter")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AntalParkeringsplatser")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AvgiftInnefattarAnnat")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("AvgiftInnefattarBredband")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AvgiftInnefattarHemförsäkring")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AvgiftInnefattarKabelTV")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AvgiftInnefattarKallvatten")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AvgiftInnefattarKällare")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AvgiftInnefattarVarmvatten")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("AvgiftInnefattarVärme")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Barnvagnsförråd")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Bastu")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BeslutOmMedlemskap")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("BredbandKundservice")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Bredbandshastighet")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Bredbandsleverantör")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("BrfId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("BrfNamn")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("Byggnadsår")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Cykelförråd")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("DelatÄgande")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EkonomiskFörvaltare")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Elavtal")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ElavtalKommentar")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ElplintarPåMark")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Energideklaration")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EnergideklarationDatum")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExtraLokaler")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExtraLokalerKommentar")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Fastighet")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FastighetsFörvaltare")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Festlokal")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("FriHöjdGarage")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GemensammaUtrymmennAnnat")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Gym")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("Gästlägenhet")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Hemsida")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("JuridiskPersonFårFörvärva")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("JuridiskPersonKommentar")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("KontaktEmail")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("KontaktTelefon")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("KostnadGarageplats")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("KostnadGarageplatsElektricitet")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal?>("KostnadParkeringsplats")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Laddkostnad")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MedlemsansökanSkickasTill")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MedlemskapsRutin")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MinstaAndel")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NyckelÖverlämning")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Organisationsnummer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ParkeringKontakt")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PlanerardeReparationer")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SenasteAvgiftsförändring")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StädningGemensamma")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("SubmittedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Tvättstuga")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Uppvärmning")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VadSkasÖverlämnas")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Ventilation")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ÄktaBrf")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal?>("Överlåtelseavgift")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrfId");
 
                     b.ToTable("FormSubmissions");
                 });
 
-            modelBuilder.Entity("BetteRFlow.Shared.Models.Invitation", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Invitations");
-                });
-
             modelBuilder.Entity("BetteRFlow.Shared.Models.Purchase", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ID");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FormSubmissionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FormSubmissionId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Purchases");
-                });
-
-            modelBuilder.Entity("BetteRFlow.Shared.Models.PurchaseFastighet", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("PurchaseFastigheter");
                 });
 
             modelBuilder.Entity("BetteRFlow.Shared.Models.Realtor", b =>
@@ -379,7 +584,7 @@ namespace BetteRFlow.Shared.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Realtors");
+                    b.ToTable("Realtor");
                 });
 
             modelBuilder.Entity("BetteRFlow.Shared.Models.User", b =>
@@ -446,6 +651,10 @@ namespace BetteRFlow.Shared.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Gatuadress")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Hemsida")
                         .HasColumnType("TEXT");
 
@@ -463,11 +672,15 @@ namespace BetteRFlow.Shared.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OrganisationsAdress")
+                    b.Property<string>("OrganisationsNummer")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OrganisationsNummer")
+                    b.Property<string>("Ort")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Postnummer")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -477,13 +690,6 @@ namespace BetteRFlow.Shared.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Brfs");
-                });
-
-            modelBuilder.Entity("BetteRFlow.Shared.Models.Fastighet", b =>
-                {
-                    b.HasOne("Brf", null)
-                        .WithMany("Fastigheter")
-                        .HasForeignKey("BrfId");
                 });
 
             modelBuilder.Entity("BetteRFlow.Shared.Models.Form", b =>
@@ -499,6 +705,34 @@ namespace BetteRFlow.Shared.Migrations
                         .IsRequired();
 
                     b.Navigation("Brf");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BetteRFlow.Shared.Models.FormSubmission", b =>
+                {
+                    b.HasOne("Brf", "Brf")
+                        .WithMany("FormSubmissions")
+                        .HasForeignKey("BrfId");
+
+                    b.Navigation("Brf");
+                });
+
+            modelBuilder.Entity("BetteRFlow.Shared.Models.Purchase", b =>
+                {
+                    b.HasOne("BetteRFlow.Shared.Models.FormSubmission", "FormSubmission")
+                        .WithMany()
+                        .HasForeignKey("FormSubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BetteRFlow.Shared.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FormSubmission");
 
                     b.Navigation("User");
                 });
@@ -520,7 +754,7 @@ namespace BetteRFlow.Shared.Migrations
 
             modelBuilder.Entity("Brf", b =>
                 {
-                    b.Navigation("Fastigheter");
+                    b.Navigation("FormSubmissions");
                 });
 #pragma warning restore 612, 618
         }
