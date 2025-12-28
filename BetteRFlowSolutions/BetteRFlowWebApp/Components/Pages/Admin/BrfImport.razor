@@ -1,0 +1,64 @@
+﻿@page "/admin/brf/import"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<h3>Importera BRF:er från Excel</h3>
+
+<InputFile OnChange="OnFileSelected" accept=".xlsx" />
+<button class="btn btn-primary mt-2" @onclick="UploadFile" disabled="@(selectedFile == null || isUploading)">
+    @if (isUploading)
+    {
+        <span>Laddar upp...</span>
+    }
+    else
+    {
+        <span>Ladda upp fil</span>
+    }
+</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-info mt-3">@message</div>
+}
+
+@code {
+    private IBrowserFile? selectedFile;
+    private bool isUploading = false;
+    private string message = "";
+
+    private void OnFileSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+        message = $"Vald fil: {selectedFile.Name}";
+    }
+
+    private async Task UploadFile()
+    {
+        if (selectedFile == null) return;
+
+        isUploading = true;
+        message = "Laddar upp...";
+
+        try
+        {
+            using var content = new MultipartFormDataContent();
+            using var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 10485760));
+
+            content.Add(fileContent, "file", selectedFile.Name);
+
+            var response = await Http.PostAsync("api/brfimport/upload", content);
+            var result = await response.Content.ReadAsStringAsync();
+
+            message = response.IsSuccessStatusCode ? result : $"Fel: {result}";
+        }
+        catch (Exception ex)
+        {
+            message = $"Error: {ex.Message}";
+        }
+        finally
+        {
+            isUploading = false;
+        }
+    }
+}
