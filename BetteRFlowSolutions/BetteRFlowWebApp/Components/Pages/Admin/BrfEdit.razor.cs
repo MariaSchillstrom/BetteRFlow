@@ -31,7 +31,7 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
                 {
                     brfDto = new BrfDto
                     {
-                        Namn = brf.Namn,
+                        BrfNamn = brf.BrfNamn,
                         OrganisationsNummer = brf.OrganisationsNummer,
                         Gatuadress = brf.Gatuadress,
                         Postnummer = brf.Postnummer,

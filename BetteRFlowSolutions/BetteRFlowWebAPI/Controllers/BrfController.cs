@@ -45,7 +45,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDto = new BrfDto
             {
                 Id = newBrf.Id,
-                Namn = newBrf.Namn,
+                BrfNamn = newBrf.BrfNamn,
                 OrganisationsNummer = newBrf.OrganisationsNummer,
                 Gatuadress = newBrf.Gatuadress,
                 KontaktEmail = newBrf.KontaktEmail,
@@ -81,7 +81,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDto = new BrfDto
             {
                 Id = brf.Id,
-                Namn = brf.Namn,
+                BrfNamn = brf.BrfNamn,
                 OrganisationsNummer = brf.OrganisationsNummer,
                 Gatuadress = brf.Gatuadress,
                 KontaktEmail = brf.KontaktEmail,
@@ -113,7 +113,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDtos = brfs.Select(b => new BrfDto
             {
                 Id = b.Id,
-                Namn = b.Namn,
+                BrfNamn = b.BrfNamn,
                 OrganisationsNummer = b.OrganisationsNummer,
                 Gatuadress   = b.Gatuadress,
                 KontaktEmail = b.KontaktEmail,
@@ -151,7 +151,7 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // STEG 4: Uppdatera fält
-            existingBrf.Namn = updatedBrf.Namn;
+            existingBrf.BrfNamn = updatedBrf.BrfNamn;
             existingBrf.OrganisationsNummer = updatedBrf.OrganisationsNummer;
             existingBrf.Gatuadress = updatedBrf.Gatuadress;
             existingBrf.KontaktEmail = updatedBrf.KontaktEmail;
@@ -166,7 +166,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDto = new BrfDto
             {
                 Id = existingBrf.Id,
-                Namn = existingBrf.Namn,
+                BrfNamn = existingBrf.BrfNamn,
                 OrganisationsNummer = existingBrf.OrganisationsNummer,
                 Gatuadress = existingBrf.Gatuadress,
                 KontaktEmail = existingBrf.KontaktEmail,
@@ -212,7 +212,7 @@ namespace BetteRFlowWebAPI.Controllers
         private bool IsValidBrf(Brf brf)
         {
             if (brf == null) return false;
-            if (string.IsNullOrEmpty(brf.Namn)) return false;
+            if (string.IsNullOrEmpty(brf.BrfNamn)) return false;
             if (string.IsNullOrEmpty(brf.OrganisationsNummer)) return false;
             if (string.IsNullOrEmpty(brf.KontaktEmail)) return false;
             if (!IsValidEmail(brf.KontaktEmail)) return false;

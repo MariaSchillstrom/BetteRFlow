@@ -1,7 +1,7 @@
 ﻿public class BrfDto
 {
     public int Id { get; set; }
-    public string Namn { get; set; } = string.Empty;
+    public string BrfNamn { get; set; } = string.Empty;
     public string OrganisationsNummer { get; set; } = string.Empty;
     public string Gatuadress { get; set; }
     public string Postnummer { get; set; }
