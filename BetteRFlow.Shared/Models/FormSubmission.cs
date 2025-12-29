@@ -5,14 +5,26 @@ namespace BetteRFlow.Shared.Models
     public class FormSubmission
     {
         public int Id { get; set; }
-
         public int? BrfId { get; set; }
         public Brf? Brf { get; set; }
 
-        // Grunduppgifter
-        public string Fastighet { get; set; } = string.Empty;
-        public string Organisationsnummer { get; set; } = string.Empty;
-        public string BrfNamn { get; set; } = string.Empty;
+        // 🏢 FASTIGHET
+        public string Fastighetsbeteckning { get; set; } = string.Empty;
+        public string Fastighetsadress { get; set; } = string.Empty;
+        public string FastighetsPostnummer { get; set; } = string.Empty;
+        public string FastighetsOrt { get; set; } = string.Empty;
+
+        // 🏛️ FÖRENING
+        public string ForeningensNamn { get; set; } = string.Empty;
+        public string? Kortnamn { get; set; }
+        public string OrganisationsNummer { get; set; } = string.Empty;
+        public string Gatuadress { get; set; } = string.Empty;
+        public string Postnummer { get; set; } = string.Empty;
+        public string Ort { get; set; } = string.Empty;
+        public string KontaktEmail { get; set; } = string.Empty;
+        public string? KontaktTelefon { get; set; }
+        public string? Hemsida { get; set; }
+
         public int? Byggnadsår { get; set; }
         public int? AntalLägenheter { get; set; }
         public bool ÄktaBrf { get; set; }
@@ -92,10 +104,7 @@ namespace BetteRFlow.Shared.Models
         public bool Energideklaration { get; set; }
         public string EnergideklarationDatum { get; set; } = string.Empty;
 
-        // Kontakt
-        public string KontaktEmail { get; set; } = string.Empty;
-        public string KontaktTelefon { get; set; } = string.Empty;
-        public string Hemsida { get; set; } = string.Empty;
+       
 
         // Metadata
         public DateTime SubmittedAt { get; set; }

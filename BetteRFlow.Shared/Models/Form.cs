@@ -16,15 +16,35 @@ public class Form
     public int UserId { get; set; }
     public User? User { get; set; }
 
-    // Grunduppgifter
-    [Required(ErrorMessage = "Fastighet är obligatorisk")]
-    public string Fastighet { get; set; } = string.Empty;
+    // 🏢 FASTIGHET
+    [Required(ErrorMessage = "Fastighetsbeteckning är obligatorisk")]
+    public string Fastighetsbeteckning { get; set; } = string.Empty;
+
+    public string Fastighetsadress { get; set; } = string.Empty;
+    public string FastighetsPostnummer { get; set; } = string.Empty;
+    public string FastighetsOrt { get; set; } = string.Empty;
+
+    // 🏛️ FÖRENING
+    [Required(ErrorMessage = "Föreningens juridiska namn är obligatoriskt")]
+    public string ForeningensNamn { get; set; } = string.Empty;
+
+    public string? Kortnamn { get; set; }
 
     [Required(ErrorMessage = "Organisationsnummer är obligatoriskt")]
-    public string Organisationsnummer { get; set; } = string.Empty;
+    public string OrganisationsNummer { get; set; } = string.Empty;  // MED S!
 
-    [Required(ErrorMessage = "Föreningens namn är obligatoriskt")]
-    public string BrfNamn { get; set; } = string.Empty;
+    public string Gatuadress { get; set; } = string.Empty;
+    public string Postnummer { get; set; } = string.Empty;
+    public string Ort { get; set; } = string.Empty;
+
+
+    // Kontakt (matchar Brf)
+    public string KontaktEmail { get; set; } = string.Empty;
+    public string? KontaktTelefon { get; set; }
+    public string? Hemsida { get; set; }
+
+
+
 
     public int? Byggnadsår { get; set; }
     public int? AntalLägenheter { get; set; }
@@ -104,9 +124,7 @@ public class Form
     public string PlanerardeReparationer { get; set; } = string.Empty;
     public bool Energideklaration { get; set; }
     public string EnergideklarationDatum { get; set; } = string.Empty;
+}
 
     // Kontakt
-    public string KontaktEmail { get; set; } = string.Empty;
-    public string KontaktTelefon { get; set; } = string.Empty;
-    public string Hemsida { get; set; } = string.Empty;
-}
+   

@@ -33,9 +33,9 @@ namespace BetteRFlowWebAPI.Controllers
                 if (!string.IsNullOrEmpty(searchTerm))
                 {
                     query = query.Where(f =>
-                        (f.BrfNamn != null && f.BrfNamn.Contains(searchTerm)) ||
-                        (f.Fastighet != null && f.Fastighet.Contains(searchTerm)) ||
-                        (f.Organisationsnummer != null && f.Organisationsnummer.Contains(searchTerm))
+                        (f.ForeningensNamn != null && f.ForeningensNamn.Contains(searchTerm)) ||
+                        (f.Fastighetsbeteckning != null && f.Fastighetsbeteckning.Contains(searchTerm)) ||
+                        (f.OrganisationsNummer != null && f.OrganisationsNummer.Contains(searchTerm))
                     );
                 }
 
@@ -44,9 +44,16 @@ namespace BetteRFlowWebAPI.Controllers
                 var formDtos = results.Select(f => new FormDto
                 {
                     Id = f.Id,
-                    Fastighet = f.Fastighet,
-                    Organisationsnummer = f.Organisationsnummer,
-                    BrfNamn = f.BrfNamn,
+                    Fastighetsbeteckning = f.Fastighetsbeteckning,
+                    Fastighetsadress = f.Fastighetsadress,
+                    FastighetsPostnummer = f.FastighetsPostnummer,
+                    FastighetsOrt = f.FastighetsOrt,
+                    OrganisationsNummer = f.OrganisationsNummer,
+                    ForeningensNamn = f.ForeningensNamn,
+                    Kortnamn = f.Kortnamn,
+                    Gatuadress = f.Gatuadress,
+                    Postnummer = f.Postnummer,
+                    Ort = f.Ort,
                     Byggnadsår = f.Byggnadsår,
                     AntalLägenheter = f.AntalLägenheter,
                     ÄktaBrf = f.ÄktaBrf,
@@ -127,9 +134,16 @@ namespace BetteRFlowWebAPI.Controllers
             {
                 var formSubmission = new FormSubmission
                 {
-                    Fastighet = formDto.Fastighet,
-                    Organisationsnummer = formDto.Organisationsnummer,
-                    BrfNamn = formDto.BrfNamn,
+                    Fastighetsbeteckning = formDto.Fastighetsbeteckning,
+                    Fastighetsadress = formDto.Fastighetsadress,
+                    FastighetsPostnummer = formDto.FastighetsPostnummer,
+                    FastighetsOrt = formDto.FastighetsOrt,
+                    OrganisationsNummer = formDto.OrganisationsNummer,
+                    ForeningensNamn = formDto.ForeningensNamn,
+                    Kortnamn = formDto.Kortnamn,
+                    Gatuadress = formDto.Gatuadress,
+                    Postnummer = formDto.Postnummer,
+                    Ort = formDto.Ort,
                     Byggnadsår = formDto.Byggnadsår,
                     AntalLägenheter = formDto.AntalLägenheter,
                     ÄktaBrf = formDto.ÄktaBrf,

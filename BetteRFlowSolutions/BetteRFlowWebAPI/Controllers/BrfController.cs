@@ -45,7 +45,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDto = new BrfDto
             {
                 Id = newBrf.Id,
-                BrfNamn = newBrf.BrfNamn,
+                ForeningensNamn = newBrf.ForeningensNamn,
                 OrganisationsNummer = newBrf.OrganisationsNummer,
                 Gatuadress = newBrf.Gatuadress,
                 KontaktEmail = newBrf.KontaktEmail,
@@ -81,7 +81,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDto = new BrfDto
             {
                 Id = brf.Id,
-                BrfNamn = brf.BrfNamn,
+                ForeningensNamn = brf.ForeningensNamn,
                 OrganisationsNummer = brf.OrganisationsNummer,
                 Gatuadress = brf.Gatuadress,
                 KontaktEmail = brf.KontaktEmail,
@@ -113,7 +113,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDtos = brfs.Select(b => new BrfDto
             {
                 Id = b.Id,
-                BrfNamn = b.BrfNamn,
+                ForeningensNamn = b.ForeningensNamn,
                 OrganisationsNummer = b.OrganisationsNummer,
                 Gatuadress   = b.Gatuadress,
                 KontaktEmail = b.KontaktEmail,
@@ -151,7 +151,7 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // STEG 4: Uppdatera fält
-            existingBrf.BrfNamn = updatedBrf.BrfNamn;
+            existingBrf.ForeningensNamn = updatedBrf.ForeningensNamn;
             existingBrf.OrganisationsNummer = updatedBrf.OrganisationsNummer;
             existingBrf.Gatuadress = updatedBrf.Gatuadress;
             existingBrf.KontaktEmail = updatedBrf.KontaktEmail;
@@ -166,7 +166,7 @@ namespace BetteRFlowWebAPI.Controllers
             var brfDto = new BrfDto
             {
                 Id = existingBrf.Id,
-                BrfNamn = existingBrf.BrfNamn,
+                ForeningensNamn = existingBrf.ForeningensNamn,
                 OrganisationsNummer = existingBrf.OrganisationsNummer,
                 Gatuadress = existingBrf.Gatuadress,
                 KontaktEmail = existingBrf.KontaktEmail,
@@ -212,7 +212,7 @@ namespace BetteRFlowWebAPI.Controllers
         private bool IsValidBrf(Brf brf)
         {
             if (brf == null) return false;
-            if (string.IsNullOrEmpty(brf.BrfNamn)) return false;
+            if (string.IsNullOrEmpty(brf.ForeningensNamn)) return false;
             if (string.IsNullOrEmpty(brf.OrganisationsNummer)) return false;
             if (string.IsNullOrEmpty(brf.KontaktEmail)) return false;
             if (!IsValidEmail(brf.KontaktEmail)) return false;
