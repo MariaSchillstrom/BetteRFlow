@@ -23,7 +23,9 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
         private void GoToImport()
         {
             Navigation.NavigateTo("/admin/brf/import");
+
         }
+        private void GoToAvvikelser() => Navigation.NavigateTo("/admin/avvikelser");
     }
 }
 

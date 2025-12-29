@@ -5,6 +5,7 @@
 
 <div class="container mt-4">
     <h2>Admin Dashboard</h2>
+
     <div class="row mt-4">
         <div class="col-md-6">
             <div class="card">
@@ -20,19 +21,6 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Formulär</h5>
-                    <p class="card-text">Se inskickade formulär från BRF:er</p>
-                    <button class="btn btn-info" @onclick="GoToFormList">Visa formulär</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- NY RAD FÖR IMPORT -->
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body">
                     <h5 class="card-title">Importera BRF:er</h5>
                     <p class="card-text">Ladda upp Excel-fil med BRF-data</p>
                     <button class="btn btn-success" @onclick="GoToImport">Importera från Excel</button>
@@ -40,4 +28,32 @@
             </div>
         </div>
     </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Formulär</h5>
+                    <p class="card-text">Se inskickade formulär från BRF:er</p>
+                    <button class="btn btn-info" @onclick="GoToFormList">Visa formulär</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                        Granska avvikelser
+                    </h5>
+                    <p class="card-text">
+                        Granska och godkänn/avvisa avvikelser mellan grunddata och inskickade formulär.
+                    </p>
+                    <button class="btn btn-warning" @onclick="GoToAvvikelser">Till avvikelser</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
