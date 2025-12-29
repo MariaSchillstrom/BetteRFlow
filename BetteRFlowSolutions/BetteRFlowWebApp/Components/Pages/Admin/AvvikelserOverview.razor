@@ -1,0 +1,132 @@
+﻿@page "/admin/avvikelser"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+<PageTitle>Avvikelser - Granskning</PageTitle>
+
+<div class="container mt-4">
+    <h3>Avvikelser att granska</h3>
+
+    @if (isLoading)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-2">Laddar avvikelser...</p>
+        </div>
+    }
+    else if (avvikelser == null || !avvikelser.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-check-circle me-2"></i>Inga ogranskade avvikelser!
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>BRF</th>
+                            <th>Fält</th>
+                            <th>Grunddata</th>
+                            <th>Formulär</th>
+                            <th>Datum</th>
+                            <th>Åtgärd</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var avvikelse in avvikelser)
+                        {
+                            <tr>
+                                <td>@avvikelse.BrfNamn</td>
+                                <td><strong>@avvikelse.Faltnamn</strong></td>
+                                <td><span class="badge bg-secondary">@avvikelse.VardeGrunddata</span></td>
+                                <td><span class="badge bg-warning">@avvikelse.VardeFormular</span></td>
+                                <td>@avvikelse.SkapadDatum.ToString("yyyy-MM-dd HH:mm")</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success me-1" @onclick="() => Godkann(avvikelse.Id)">
+                                        ✓ Godkänn
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" @onclick="() => Avvisa(avvikelse.Id)">
+                                        ✗ Avvisa
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<AvvikelseDto>? avvikelser;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAvvikelser();
+    }
+
+    private async Task LoadAvvikelser()
+    {
+        isLoading = true;
+        try
+        {
+            avvikelser = await Http.GetFromJsonAsync<List<AvvikelseDto>>("https://localhost:7007/api/avvikelser/ogranskade");
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("console.error", "Fel vid laddning:", ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task Godkann(int avvikelseId)
+    {
+        try
+        {
+            var response = await Http.PostAsync($"https://localhost:7007/api/avvikelser/{avvikelseId}/godkann", null);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadAvvikelser();
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("console.error", ex.Message);
+        }
+    }
+
+    private async Task Avvisa(int avvikelseId)
+    {
+        try
+        {
+            var response = await Http.PostAsync($"https://localhost:7007/api/avvikelser/{avvikelseId}/avvisa", null);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadAvvikelser();
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("console.error", ex.Message);
+        }
+    }
+
+    public class AvvikelseDto
+    {
+        public int Id { get; set; }
+        public string BrfNamn { get; set; } = "";
+        public string Faltnamn { get; set; } = "";
+        public string VardeGrunddata { get; set; } = "";
+        public string VardeFormular { get; set; } = "";
+        public DateTime SkapadDatum { get; set; }
+    }
+}
