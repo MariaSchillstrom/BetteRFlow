@@ -3,6 +3,7 @@ using System;
 using BetteRFlow.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BetteRFlow.Shared.Migrations
 {
     [DbContext(typeof(BetteRFlowContext))]
-    partial class BetteRFlowContextModelSnapshot : ModelSnapshot
+    [Migration("20251229120011_RenameNamnToBrfNamn")]
+    partial class RenameNamnToBrfNamn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");

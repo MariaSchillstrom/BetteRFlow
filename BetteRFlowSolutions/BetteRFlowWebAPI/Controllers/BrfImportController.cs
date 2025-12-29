@@ -36,7 +36,7 @@ namespace BetteRFlowWebAPI.Controllers
                 {
                     var brf = new Brf
                     {
-                        Namn = row.Cell(1).GetString(),
+                        BrfNamn = row.Cell(1).GetString(),
                         OrganisationsNummer = row.Cell(2).GetString(),
                         KontaktEmail = row.Cell(3).GetString(),
                         KontaktTelefon = row.Cell(4).GetString(),

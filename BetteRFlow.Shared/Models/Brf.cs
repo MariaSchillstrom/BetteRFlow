@@ -3,7 +3,7 @@
 public class Brf
 {
     public int Id { get; set; }
-    public string Namn { get; set; } = string.Empty;
+    public string BrfNamn { get; set; } = string.Empty;
     public string OrganisationsNummer { get; set; } = string.Empty;
     public string Gatuadress { get; set; } = string.Empty;
     public string Postnummer { get; set; } = string.Empty;
