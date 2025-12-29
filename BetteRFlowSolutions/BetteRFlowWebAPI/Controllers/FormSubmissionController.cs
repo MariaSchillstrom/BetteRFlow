@@ -132,8 +132,13 @@ namespace BetteRFlowWebAPI.Controllers
         {
             try
             {
+                // 1. Hitta matchande BRF via OrganisationsNummer
+                var matchadBrf = await _context.Brfs
+                    .FirstOrDefaultAsync(b => b.OrganisationsNummer == formDto.OrganisationsNummer);
+
                 var formSubmission = new FormSubmission
                 {
+                    BrfId = matchadBrf?.Id,
                     Fastighetsbeteckning = formDto.Fastighetsbeteckning,
                     Fastighetsadress = formDto.Fastighetsadress,
                     FastighetsPostnummer = formDto.FastighetsPostnummer,
@@ -213,12 +218,127 @@ namespace BetteRFlowWebAPI.Controllers
                 _context.FormSubmissions.Add(formSubmission);
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = "Formulär sparat!", id = formSubmission.Id });
+                // 2. Om matchande BRF hittades, jämför och skapa avvikelser
+                if (matchadBrf != null)
+                {
+                    // Uppdatera status på BRF
+                    matchadBrf.FormularInskickat = true;
+                    matchadBrf.FormularDatum = DateTime.UtcNow;
+                    matchadBrf.SenasteFormSubmissionId = formSubmission.Id;
+
+                    // Jämför fält och logga avvikelser
+                    KollaOchLoggaAvvikelser(matchadBrf, formSubmission);
+
+                    await _context.SaveChangesAsync();
+                }
+
+                return Ok(new
+                {
+                    message = "Formulär sparat!",
+                    id = formSubmission.Id,
+                    brfMatchad = matchadBrf != null
+                });
             }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        private void KollaOchLoggaAvvikelser(Brf grunddata, FormSubmission formular)
+        {
+            // Jämför ForeningensNamn
+            if (grunddata.ForeningensNamn != formular.ForeningensNamn)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "ForeningensNamn",
+                    VardeGrunddata = grunddata.ForeningensNamn,
+                    VardeFormular = formular.ForeningensNamn
+                });
+            }
+
+            // Jämför Gatuadress
+            if (grunddata.Gatuadress != formular.Gatuadress)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "Gatuadress",
+                    VardeGrunddata = grunddata.Gatuadress,
+                    VardeFormular = formular.Gatuadress
+                });
+            }
+
+            // Jämför Postnummer
+            if (grunddata.Postnummer != formular.Postnummer)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "Postnummer",
+                    VardeGrunddata = grunddata.Postnummer,
+                    VardeFormular = formular.Postnummer
+                });
+            }
+
+            // Jämför Ort
+            if (grunddata.Ort != formular.Ort)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "Ort",
+                    VardeGrunddata = grunddata.Ort,
+                    VardeFormular = formular.Ort
+                });
+            }
+
+            // Jämför KontaktEmail
+            if (grunddata.KontaktEmail != formular.KontaktEmail)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "KontaktEmail",
+                    VardeGrunddata = grunddata.KontaktEmail,
+                    VardeFormular = formular.KontaktEmail
+                });
+            }
+
+            // Jämför KontaktTelefon (båda nullable)
+            if (grunddata.KontaktTelefon != formular.KontaktTelefon)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "KontaktTelefon",
+                    VardeGrunddata = grunddata.KontaktTelefon ?? "",
+                    VardeFormular = formular.KontaktTelefon ?? ""
+                });
+            }
+
+            // Jämför Hemsida (båda nullable)
+            if (grunddata.Hemsida != formular.Hemsida)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "Hemsida",
+                    VardeGrunddata = grunddata.Hemsida ?? "",
+                    VardeFormular = formular.Hemsida ?? ""
+                });
+            }
+        }
     }
 }
+
+

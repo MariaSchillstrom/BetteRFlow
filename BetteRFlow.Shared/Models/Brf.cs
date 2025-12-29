@@ -20,4 +20,12 @@ public class Brf
     public bool IsActive { get; set; } = true;
 
     public ICollection<FormSubmission>? FormSubmissions { get; set; }
+
+    // Formulärstatus
+    public bool FormularInskickat { get; set; } = false;
+    public DateTime? FormularDatum { get; set; }
+    public int? SenasteFormSubmissionId { get; set; }
+
+    // Navigation property för avvikelser
+    public ICollection<BrfAvvikelse>? Avvikelser { get; set; }
 }
