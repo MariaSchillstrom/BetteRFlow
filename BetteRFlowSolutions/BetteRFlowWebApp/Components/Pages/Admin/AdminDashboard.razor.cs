@@ -20,5 +20,11 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
             Navigation.NavigateTo("/formList");
         }
 
+        private void GoToImport()
+        {
+            Navigation.NavigateTo("/admin/brf/import");
+        }
     }
 }
+
+    
