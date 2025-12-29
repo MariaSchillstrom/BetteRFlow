@@ -40,8 +40,8 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>BRF Namn</th>
-                                <th>Fastighet</th>
+                                <th>Föreningens Namn</th>
+                                <th>Fastighetsbeteckning</th>
                                 <th>Organisationsnummer</th>
                                 <th>Antal Lägenheter</th>
                                 <th>Byggnadsår</th>
@@ -52,9 +52,9 @@
                             @foreach (var form in forms)
                             {
                                 <tr>
-                                    <td>@form.BrfNamn</td>
-                                    <td>@form.Fastighet</td>
-                                    <td>@form.Organisationsnummer</td>
+                                    <td>@form.ForeningensNamn</td>
+                                    <td>@form.Fastighetsbeteckning</td>
+                                    <td>@form.OrganisationsNummer</td>
                                     <td>@form.AntalLägenheter</td>
                                     <td>@form.Byggnadsår</td>
                                     <td>
@@ -75,4 +75,3 @@
         </div>
     </div>
 </div>
-

@@ -50,10 +50,10 @@
                 <div class="col-md-6 mb-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">@brf.BrfNamn</h5>
+                            <h5 class="card-title">@brf.ForeningensNamn</h5>
                             <p class="card-text">
-                                <strong>Fastighet:</strong> @brf.Fastighet<br />
-                                <strong>Org.nr:</strong> @brf.Organisationsnummer<br />
+                                <strong>Fastighet:</strong> @brf.Fastighetsbeteckning<br />
+                                <strong>Org.nr:</strong> @brf.OrganisationsNummer<br />
                                 <strong>Antal lägenheter:</strong> @brf.AntalLägenheter<br />
                                 <strong>Byggnadsår:</strong> @brf.Byggnadsår
                             </p>
@@ -85,15 +85,15 @@
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">@selectedBrf.BrfNamn - Komplett information</h5>
+                        <h5 class="modal-title">@selectedBrf.ForeningensNamn - Komplett information</h5>
                         <button type="button" class="btn-close" @onclick="CloseDetails"></button>
                     </div>
                     <div class="modal-body">
                         <h6>Grunduppgifter</h6>
                         <p>
-                            <strong>Fastighet:</strong> @selectedBrf.Fastighet<br />
-                            <strong>Organisationsnummer:</strong> @selectedBrf.Organisationsnummer<br />
-                            <strong>BRF-namn:</strong> @selectedBrf.BrfNamn<br />
+                            <strong>Fastighet:</strong> @selectedBrf.ForeningensNamn<br />
+                            <strong>Organisationsnummer:</strong> @selectedBrf.OrganisationsNummer<br />
+                            <strong>BRF-namn:</strong> @selectedBrf.ForeningensNamn<br />
                             <strong>Byggnadsår:</strong> @selectedBrf.Byggnadsår<br />
                             <strong>Antal lägenheter:</strong> @selectedBrf.AntalLägenheter<br />
                             <strong>Äkta BRF:</strong> @(selectedBrf.ÄktaBrf ? "Ja" : "Nej")

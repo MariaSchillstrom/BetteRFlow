@@ -36,13 +36,13 @@ namespace BetteRFlowWebAPI.Controllers
                 {
                     var brf = new Brf
                     {
-                        BrfNamn = row.Cell(1).GetString(),
+                        ForeningensNamn = row.Cell(1).GetString(),
                         OrganisationsNummer = row.Cell(2).GetString(),
-                        KontaktEmail = row.Cell(3).GetString(),
-                        KontaktTelefon = row.Cell(4).GetString(),
-                        Gatuadress = row.Cell(5).GetString(),
-                        Postnummer = row.Cell(6).GetString(),
-                        Ort = row.Cell(7).GetString(),
+                        Gatuadress = row.Cell(3).GetString(),           // ÄNDRAT
+                        Postnummer = row.Cell(4).GetString(),           // ÄNDRAT
+                        Ort = row.Cell(5).GetString(),                  // ÄNDRAT
+                        KontaktEmail = row.Cell(6).GetString(),         // ÄNDRAT
+                        KontaktTelefon = row.Cell(7).GetString(),       // ÄNDRAT
                         Hemsida = row.Cell(8).GetString(),
                         IsActive = true
                     };
