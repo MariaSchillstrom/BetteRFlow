@@ -10,7 +10,7 @@ builder.Services.AddSwaggerGen();
 
 // Add DbContext with SQLite
 builder.Services.AddDbContext<BetteRFlowContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 // CORS-konfiguration
