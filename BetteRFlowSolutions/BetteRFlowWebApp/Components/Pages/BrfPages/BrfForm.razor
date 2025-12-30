@@ -123,6 +123,9 @@
                         <InputText @bind-Value="formModel.Ort" class="form-control" id="ort" placeholder="Ort" />
                         <label for="ort">Föreningens ort</label>
                     </div>
+                    
+
+                    
 
                     <div class="form-floating mb-3">
                         <InputNumber @bind-Value="formModel.Byggnadsår" class="form-control" id="byggnadsår" placeholder="Byggnadsår" />
@@ -137,6 +140,26 @@
                     <div class="form-check mb-3">
                         <InputCheckbox @bind-Value="formModel.ÄktaBrf" class="form-check-input" id="äktaBrf" />
                         <label class="form-check-label" for="äktaBrf">Äkta BRF</label>
+                    </div>
+
+                    <!-- Kontaktinformation - DIREKT EFTER Föreningens ort -->
+
+                    <h4 class="mt-4 mb-3">Kontaktinformation</h4>
+
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="formModel.KontaktEmail" class="form-control" id="kontaktEmail" placeholder="Email" type="email" />
+                        <label for="kontaktEmail">Kontakt email *</label>
+                        <ValidationMessage For="@(() => formModel.KontaktEmail)" />
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="formModel.KontaktTelefon" class="form-control" id="kontaktTelefon" placeholder="Telefon" />
+                        <label for="kontaktTelefon">Kontakt telefon</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <InputText @bind-Value="formModel.Hemsida" class="form-control" id="hemsida" placeholder="Hemsida" />
+                        <label for="hemsida">Hemsida</label>
                     </div>
 
                 <!-- Förvaltning -->
@@ -451,23 +474,7 @@
                     <label for="energideklarationDatum">Datum för energideklaration</label>
                 </div>
 
-                <!-- Kontakt -->
-                <h4 class="mt-4 mb-3">Kontaktinformation</h4>
-
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="formModel.KontaktEmail" class="form-control" id="kontaktEmail" placeholder="Email" type="email" />
-                    <label for="kontaktEmail">Kontakt email</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="formModel.KontaktTelefon" class="form-control" id="kontaktTelefon" placeholder="Telefon" />
-                    <label for="kontaktTelefon">Kontakt telefon</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="formModel.Hemsida" class="form-control" id="hemsida" placeholder="Hemsida" />
-                    <label for="hemsida">Hemsida</label>
-                </div>
+                
 
                 <!-- Submit button -->
                 <button type="submit" class="btn btn-primary w-100 mt-4" disabled="@isSubmitting">
