@@ -1,0 +1,107 @@
+﻿@page "/purchase-brf/{id:int}"
+@rendermode InteractiveServer
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IJSRuntime JS
+
+<div class="container mt-4">
+    @if (!purchaseComplete)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h3>Köp BRF-information</h3>
+                <p class="lead">Du är på väg att köpa fullständig information om denna BRF.</p>
+
+                <div class="alert alert-info">
+                    <strong>Pris:</strong> 299 kr
+                </div>
+
+                @if (isProcessing)
+                {
+                    <div class="text-center">
+                        <div class="spinner-border" role="status"></div>
+                        <p>Behandlar betalning...</p>
+                    </div>
+                }
+                else
+                {
+                    <button class="btn btn-success btn-lg" @onclick="ProcessPayment">
+                        💳 Betala med Swish
+                    </button>
+                    <button class="btn btn-secondary ms-2" @onclick="Cancel">
+                        Avbryt
+                    </button>
+                }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body text-center">
+                <h3 class="text-success">✅ Köp genomfört!</h3>
+                <p class="lead">Du har nu tillgång till fullständig information.</p>
+                <p>Transaktions-ID: <strong>@transactionId</strong></p>
+
+                <button class="btn btn-primary mt-3" @onclick="GoToSearch">
+                    Tillbaka till sökning
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool isProcessing = false;
+    private bool purchaseComplete = false;
+    private string transactionId = "";
+
+    private async Task ProcessPayment()
+    {
+        isProcessing = true;
+
+        try
+        {
+            var purchaseDto = new
+            {
+                UserId = 1, // TODO: Hämta från localStorage senare
+                FormSubmissionId = Id,
+                Amount = 299
+            };
+
+            var response = await Http.PostAsJsonAsync("api/purchase", purchaseDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<Dictionary<string, object>>();
+                transactionId = result?["purchaseId"]?.ToString() ?? "N/A";
+                purchaseComplete = true;
+            }
+            else
+            {
+                await JS.InvokeVoidAsync("alert", "Betalning misslyckades!");
+            }
+        }
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("alert", $"Fel: {ex.Message}");
+        }
+        finally
+        {
+            isProcessing = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/sok-brf");
+    }
+
+    private void GoToSearch()
+    {
+        Navigation.NavigateTo("/sok-brf");
+    }
+}
