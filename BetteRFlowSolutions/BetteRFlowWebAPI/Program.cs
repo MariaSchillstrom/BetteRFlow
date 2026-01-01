@@ -39,12 +39,18 @@ using (var scope = app.Services.CreateScope())
     app.UseSwaggerUI();
 
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseRouting();
 app.UseCors("AllowBlazorClient");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();  // ← LÄGG TILL DENNA
 
 app.Run();
 
