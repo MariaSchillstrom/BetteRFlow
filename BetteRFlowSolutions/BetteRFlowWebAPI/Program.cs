@@ -49,5 +49,5 @@ app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
 app.Run();
 
-app.Run();
+
 
