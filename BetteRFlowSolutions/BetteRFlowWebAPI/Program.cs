@@ -13,9 +13,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<BetteRFlowContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
     if (builder.Environment.IsProduction())
     {
-        options.UseNpgsql(connectionString);
+        // HÅRDKODA connection string för att testa
+        var productionConnString = "Host=dpg-d5b68qogjchc73bolsmg-a;Port=5432;Database=betterflow;Username=betterflow_user;Password=dYsraEjzHuz8PiShmuieZWtbD48cd3PQ;SSL Mode=Require;Trust Server Certificate=true;";
+        options.UseNpgsql(productionConnString);
     }
     else
     {
