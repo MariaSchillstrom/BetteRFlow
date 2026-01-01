@@ -38,7 +38,7 @@ using (var scope = app.Services.CreateScope())
     app.UseSwagger();
   
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AllowBlazorClient");
 app.UseAuthentication();
