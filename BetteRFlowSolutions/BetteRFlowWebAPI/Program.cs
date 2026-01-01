@@ -1,5 +1,6 @@
 ﻿using BetteRFlow.Shared.Data;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,17 @@ builder.Services.AddSwaggerGen();
 
 // Add DbContext with SQLite
 builder.Services.AddDbContext<BetteRFlowContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    if (builder.Environment.IsProduction())
+    {
+        options.UseNpgsql(connectionString);
+    }
+    else
+    {
+        options.UseSqlite(connectionString);
+    }
+});
 
 
 // CORS-konfiguration
