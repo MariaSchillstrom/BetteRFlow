@@ -1,1 +1,0 @@
-Test för koppling med jira 
