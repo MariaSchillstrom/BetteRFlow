@@ -13,10 +13,7 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped(sp =>
 {
     var apiUrl = builder.Configuration["ApiUrl"] ?? "https://localhost:7007";
-    return new HttpClient { BaseAddress = new Uri(apiUrl) };
-
-    Console.WriteLine($"[STARTUP] API URL: {apiUrl}");
-
+    Console.WriteLine($"[STARTUP] API URL: {apiUrl}");  // FÖRE return!
     return new HttpClient { BaseAddress = new Uri(apiUrl) };
 });
 
