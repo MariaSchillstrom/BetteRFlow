@@ -62,63 +62,63 @@ namespace BetteRFlowWebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<BrfDto>> GetBrfById(int id)
         {
-            // STEG 1: Validera id
             if (id <= 0)
             {
                 return BadRequest("Ogiltigt ID");
             }
 
-            // STEG 2: Hämta från databas
             var brf = await _context.Brfs.FindAsync(id);
 
-            // STEG 3: Kolla att BRF finns
             if (brf == null)
             {
                 return NotFound($"BRF med ID {id} hittades inte");
             }
 
-            // STEG 4: Konvertera till DTO
             var brfDto = new BrfDto
             {
                 Id = brf.Id,
                 ForeningensNamn = brf.ForeningensNamn,
                 OrganisationsNummer = brf.OrganisationsNummer,
+                Kortnamn = brf.Kortnamn,              // ← LÄGG TILL
                 Gatuadress = brf.Gatuadress,
+                Postnummer = brf.Postnummer,          // ← LÄGG TILL
+                Ort = brf.Ort,                        // ← LÄGG TILL
                 KontaktEmail = brf.KontaktEmail,
                 KontaktTelefon = brf.KontaktTelefon,
-                Hemsida = brf.Hemsida
+                Hemsida = brf.Hemsida,
+                IsActive = brf.IsActive,              // ← LÄGG TILL
+                CreatedAt = brf.CreatedAt             // ← LÄGG TILL
             };
 
             return Ok(brfDto);
         }
 
-        // ============================================
-        // GetAllBrfs - Hämta alla BRF:er
-        // ============================================
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BrfDto>>> GetAllBrfs()
         {
-            // STEG 1: Hämta från databas (bara aktiva)
             var brfs = await _context.Brfs
                 .Where(b => b.IsActive)
                 .ToListAsync();
 
-            // STEG 2: Kolla att det finns BRF:er
             if (!brfs.Any())
             {
                 return Ok(new List<BrfDto>());
             }
 
-            // STEG 3: Konvertera till DTO
             var brfDtos = brfs.Select(b => new BrfDto
             {
                 Id = b.Id,
                 ForeningensNamn = b.ForeningensNamn,
                 OrganisationsNummer = b.OrganisationsNummer,
-                Gatuadress   = b.Gatuadress,
+                Kortnamn = b.Kortnamn,                // ← LÄGG TILL
+                Gatuadress = b.Gatuadress,
+                Postnummer = b.Postnummer,            // ← LÄGG TILL
+                Ort = b.Ort,                          // ← LÄGG TILL
                 KontaktEmail = b.KontaktEmail,
                 KontaktTelefon = b.KontaktTelefon,
-                Hemsida = b.Hemsida
+                Hemsida = b.Hemsida,
+                IsActive = b.IsActive,                // ← LÄGG TILL
+                CreatedAt = b.CreatedAt               // ← LÄGG TILL
             }).ToList();
 
             return Ok(brfDtos);
