@@ -50,7 +50,8 @@
         
         try
         {
-            var response = await Http.PostAsJsonAsync("https://localhost:7007/api/Auth/login", loginModel);
+            var baseUrl = Http.BaseAddress?.ToString() ?? "https://localhost:7007";
+            var response = await Http.PostAsJsonAsync($"{baseUrl}/api/Auth/login", loginModel);
             
             if (response.IsSuccessStatusCode)
             {

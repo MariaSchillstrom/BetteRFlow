@@ -12,14 +12,7 @@ builder.Services.AddMudServices();
 // Lägg till HttpClient HÄR (innan app.Build())
 builder.Services.AddScoped(sp =>
 {
-    var apiUrl = builder.Configuration["ApiUrl"];
-
-    // TVINGA production-URL om ApiUrl är null eller localhost
-    if (string.IsNullOrEmpty(apiUrl) || apiUrl.Contains("localhost"))
-    {
-        apiUrl = "https://betterflow-4.onrender.com";
-    }
-
+    var apiUrl = builder.Configuration["ApiUrl"] ?? "https://localhost:7007";
     return new HttpClient { BaseAddress = new Uri(apiUrl) };
 });
 
@@ -36,6 +29,7 @@ if (!app.Environment.IsProduction())
 {
     app.UseHttpsRedirection();
 }
+
 app.UseStaticFiles();
 app.UseAntiforgery();
 
