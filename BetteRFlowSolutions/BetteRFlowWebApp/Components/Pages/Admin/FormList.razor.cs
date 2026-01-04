@@ -20,7 +20,9 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
 
             try
             {
-                var response = await Http.GetAsync("api/formsubmission");
+                var http = ClientFactory.CreateClient("ApiClient");
+
+                var response = await http.GetAsync("api/formsubmission");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -40,6 +42,7 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
                 isLoading = false;
             }
         }
+
 
         private void ViewDetails(int formId)
         {

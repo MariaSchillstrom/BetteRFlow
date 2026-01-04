@@ -1,6 +1,6 @@
 ﻿@page "/admin/avvikelser"
 @rendermode InteractiveServer
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 @inject IJSRuntime JS
 
 <PageTitle>Avvikelser - Granskning</PageTitle>
@@ -46,10 +46,12 @@
                                 <td><span class="badge bg-warning">@avvikelse.VardeFormular</span></td>
                                 <td>@avvikelse.SkapadDatum.ToString("yyyy-MM-dd HH:mm")</td>
                                 <td>
-                                    <button class="btn btn-sm btn-success me-1" @onclick="() => Godkann(avvikelse.Id)">
+                                    <button class="btn btn-sm btn-success me-1"
+                                            @onclick="() => Godkann(avvikelse.Id)">
                                         ✓ Godkänn
                                     </button>
-                                    <button class="btn btn-sm btn-danger" @onclick="() => Avvisa(avvikelse.Id)">
+                                    <button class="btn btn-sm btn-danger"
+                                            @onclick="() => Avvisa(avvikelse.Id)">
                                         ✗ Avvisa
                                     </button>
                                 </td>
@@ -74,13 +76,17 @@
     private async Task LoadAvvikelser()
     {
         isLoading = true;
+
         try
         {
-            avvikelser = await Http.GetFromJsonAsync<List<AvvikelseDto>>("https://localhost:7007/api/avvikelser/ogranskade");
+            var http = ClientFactory.CreateClient("ApiClient");
+
+            avvikelser = await http.GetFromJsonAsync<List<AvvikelseDto>>(
+                "api/avvikelser/ogranskade");
         }
         catch (Exception ex)
         {
-            await JS.InvokeVoidAsync("console.error", "Fel vid laddning:", ex.Message);
+            await JS.InvokeVoidAsync("console.error", ex.Message);
         }
         finally
         {
@@ -92,7 +98,11 @@
     {
         try
         {
-            var response = await Http.PostAsync($"https://localhost:7007/api/avvikelser/{avvikelseId}/godkann", null);
+            var http = ClientFactory.CreateClient("ApiClient");
+
+            var response = await http.PostAsync(
+                $"api/avvikelser/{avvikelseId}/godkann", null);
+
             if (response.IsSuccessStatusCode)
             {
                 await LoadAvvikelser();
@@ -108,7 +118,11 @@
     {
         try
         {
-            var response = await Http.PostAsync($"https://localhost:7007/api/avvikelser/{avvikelseId}/avvisa", null);
+            var http = ClientFactory.CreateClient("ApiClient");
+
+            var response = await http.PostAsync(
+                $"api/avvikelser/{avvikelseId}/avvisa", null);
+
             if (response.IsSuccessStatusCode)
             {
                 await LoadAvvikelser();

@@ -1,6 +1,6 @@
 ﻿@page "/purchase-brf/{id:int}"
 @rendermode InteractiveServer
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
 
@@ -72,7 +72,9 @@
                 Amount = 299
             };
 
-            var response = await Http.PostAsJsonAsync("api/purchase", purchaseDto);
+            var http = ClientFactory.CreateClient("ApiClient");
+            var response = await http.PostAsJsonAsync("api/purchase", purchaseDto);
+
 
             if (response.IsSuccessStatusCode)
             {
