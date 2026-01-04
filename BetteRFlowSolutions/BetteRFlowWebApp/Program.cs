@@ -10,10 +10,18 @@ builder.Services.AddRazorComponents()
 builder.Services.AddMudServices();
 
 // Lägg till HttpClient HÄR (innan app.Build())
-builder.Services.AddScoped(sp => new HttpClient
+builder.Configuration.AddEnvironmentVariables();
+
+builder.Services.AddHttpClient("ApiClient", client =>
 {
-    BaseAddress = new Uri("https://localhost:7007")  // ← Ändra till 7007!
+    var apiUrl = builder.Configuration["ApiUrl"];
+
+    if (string.IsNullOrWhiteSpace(apiUrl))
+        throw new Exception("ApiUrl is not configured");
+
+    client.BaseAddress = new Uri(apiUrl);
 });
+
 
 var app = builder.Build();
 
