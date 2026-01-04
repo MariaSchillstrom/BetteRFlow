@@ -1,12 +1,15 @@
 ﻿@page "/admin/brf/import"
 @rendermode InteractiveServer
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 @inject IJSRuntime JS
 
 <h3>Importera BRF:er från Excel</h3>
 
 <InputFile OnChange="OnFileSelected" accept=".xlsx" />
-<button class="btn btn-primary mt-2" @onclick="UploadFile" disabled="@(selectedFile == null || isUploading)">
+
+<button class="btn btn-primary mt-2"
+        @onclick="UploadFile"
+        disabled="@(selectedFile == null || isUploading)">
     @if (isUploading)
     {
         <span>Laddar upp...</span>
@@ -35,22 +38,28 @@
 
     private async Task UploadFile()
     {
-        if (selectedFile == null) return;
+        if (selectedFile == null)
+            return;
 
         isUploading = true;
         message = "Laddar upp...";
 
         try
         {
+            var http = ClientFactory.CreateClient("ApiClient");
+
             using var content = new MultipartFormDataContent();
-            using var fileContent = new StreamContent(selectedFile.OpenReadStream(maxAllowedSize: 10485760));
+            using var fileContent = new StreamContent(
+                selectedFile.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024));
 
             content.Add(fileContent, "file", selectedFile.Name);
 
-            var response = await Http.PostAsync("api/brfimport/upload", content);
+            var response = await http.PostAsync("api/brfimport/upload", content);
             var result = await response.Content.ReadAsStringAsync();
 
-            message = response.IsSuccessStatusCode ? result : $"Fel: {result}";
+            message = response.IsSuccessStatusCode
+                ? result
+                : $"Fel: {result}";
         }
         catch (Exception ex)
         {
