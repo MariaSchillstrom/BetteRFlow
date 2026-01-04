@@ -6,18 +6,19 @@ namespace BetteRFlow.Shared.Models
     {
         public int Id { get; set; }
 
-        // Vilken mäklare köpte?
-        public int UserId { get; set; }
-        public User? User { get; set; }
+        // FEJK-KÖP → tillåter null
+        public int? UserId { get; set; }
 
-        // Vilket formulär köptes?
-        public int FormSubmissionId { get; set; }
-        public FormSubmission? FormSubmission { get; set; }
+        public int? FormSubmissionId { get; set; }
 
-        // Betalning
+
         public decimal Amount { get; set; }
-        public DateTime PurchaseDate { get; set; } = DateTime.UtcNow;
-        public string PaymentStatus { get; set; } = "Pending";
-        public string? TransactionId { get; set; }
+
+
+        public DateTime PurchaseDate { get; set; }
+
+        public string PaymentStatus { get; set; } = "";
+
+        public string TransactionId { get; set; } = "";
     }
 }

@@ -67,13 +67,14 @@
         {
             var purchaseDto = new
             {
-                UserId = 1, // TODO: Hämta från localStorage senare
+                UserId = (int?)null,
                 FormSubmissionId = Id,
                 Amount = 299
             };
 
+
             var http = ClientFactory.CreateClient("ApiClient");
-            var response = await http.PostAsJsonAsync("api/purchase", purchaseDto);
+            var response = await http.PostAsJsonAsync("api/Purchase", purchaseDto);
 
 
             if (response.IsSuccessStatusCode)
@@ -84,8 +85,13 @@
             }
             else
             {
-                await JS.InvokeVoidAsync("alert", "Betalning misslyckades!");
+                var body = await response.Content.ReadAsStringAsync();
+                await JS.InvokeVoidAsync(
+                    "alert",
+                    $"Status: {response.StatusCode}\n\n{body}"
+                );
             }
+
         }
         catch (Exception ex)
         {

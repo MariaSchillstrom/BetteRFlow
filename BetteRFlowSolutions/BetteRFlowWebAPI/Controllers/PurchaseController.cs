@@ -22,13 +22,15 @@ namespace BetteRFlowWebAPI.Controllers
             // Fake purchase - ingen riktig betalning
             var purchase = new Purchase
             {
-                UserId = purchaseDto.UserId,
-                FormSubmissionId = purchaseDto.FormSubmissionId,
+                UserId = null,
+                FormSubmissionId = null, // 🔥 VIKTIGASTE RADEN
                 Amount = purchaseDto.Amount,
                 PurchaseDate = DateTime.UtcNow,
-                PaymentStatus = "Completed", // Fake - markera som klar direkt
-                TransactionId = Guid.NewGuid().ToString() // Fake transaction ID
+                PaymentStatus = "Completed",
+                TransactionId = Guid.NewGuid().ToString()
             };
+
+
 
             _context.Purchases.Add(purchase);
             await _context.SaveChangesAsync();
