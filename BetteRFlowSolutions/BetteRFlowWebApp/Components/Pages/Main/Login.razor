@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 @inject NavigationManager Navigation
 @using BetteRFlow.Shared.DTOs
 @inject IJSRuntime JS
@@ -50,7 +50,10 @@
         
         try
         {
-            var response = await Http.PostAsJsonAsync("https://localhost:7007/api/Auth/login", loginModel);
+            var http = ClientFactory.CreateClient("ApiClient");
+            var response = await http.PostAsJsonAsync(
+                "api/Auth/login", loginModel);
+
             
             if (response.IsSuccessStatusCode)
             {

@@ -1,7 +1,7 @@
 ﻿@page "/register"
 @rendermode InteractiveServer
 @using BetteRFlow.Shared.DTOs
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 @inject NavigationManager Navigation
 
 <PageTitle>Register</PageTitle>
@@ -109,8 +109,11 @@
 
         try
         {
-            // Register new user
-            var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+            var http = ClientFactory.CreateClient("ApiClient");
+            var response = await http.PostAsJsonAsync(
+                "api/auth/register", registerModel);
+
+
 
             if (response.IsSuccessStatusCode)
             {
