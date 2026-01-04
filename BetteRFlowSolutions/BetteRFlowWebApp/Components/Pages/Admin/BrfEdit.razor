@@ -1,8 +1,6 @@
 ﻿@page "/admin/brf/edit/{Id:int}"
-@inject HttpClient Http
-@inject NavigationManager Navigation
+
 @using BetteRFlow.Shared.DTOs
-@using BetteRFlow.Shared.Models
 
 <div class="container mt-4">
     <h3>Redigera BRF</h3>
@@ -10,9 +8,7 @@
     @if (isLoading)
     {
         <div class="text-center my-5">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Laddar...</span>
-            </div>
+            <div class="spinner-border"></div>
         </div>
     }
     else if (!string.IsNullOrEmpty(errorMessage))
@@ -30,64 +26,52 @@
             <ValidationSummary />
 
             <div class="mb-3">
-                <label class="form-label">Föreningens namn *</label>
+                <label>Föreningens namn</label>
                 <InputText @bind-Value="brfDto.ForeningensNamn" class="form-control" />
-                <ValidationMessage For="@(() => brfDto.ForeningensNamn)" />
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Organisationsnummer *</label>
+                <label>Organisationsnummer</label>
                 <InputText @bind-Value="brfDto.OrganisationsNummer" class="form-control" />
-                <ValidationMessage For="@(() => brfDto.OrganisationsNummer)" />
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Gatuadress *</label>
+                <label>Gatuadress</label>
                 <InputText @bind-Value="brfDto.Gatuadress" class="form-control" />
-                <ValidationMessage For="@(() => brfDto.Gatuadress)" />
             </div>
 
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Postnummer *</label>
+                <div class="col-md-4">
+                    <label>Postnummer</label>
                     <InputText @bind-Value="brfDto.Postnummer" class="form-control" />
-                    <ValidationMessage For="@(() => brfDto.Postnummer)" />
                 </div>
-
-                <div class="col-md-8 mb-3">
-                    <label class="form-label">Ort *</label>
+                <div class="col-md-8">
+                    <label>Ort</label>
                     <InputText @bind-Value="brfDto.Ort" class="form-control" />
-                    <ValidationMessage For="@(() => brfDto.Ort)" />
                 </div>
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Kontakt-email *</label>
-                <InputText @bind-Value="brfDto.KontaktEmail" class="form-control" type="email" />
-                <ValidationMessage For="@(() => brfDto.KontaktEmail)" />
+                <label>Email</label>
+                <InputText @bind-Value="brfDto.KontaktEmail" class="form-control" />
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Telefon</label>
+                <label>Telefon</label>
                 <InputText @bind-Value="brfDto.KontaktTelefon" class="form-control" />
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Hemsida</label>
+                <label>Hemsida</label>
                 <InputText @bind-Value="brfDto.Hemsida" class="form-control" />
             </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
-                    @if (isSubmitting)
-                    {
-                        <span class="spinner-border spinner-border-sm me-2"></span>
-                    }
-                    Uppdatera BRF
-                </button>
-                <button type="button" class="btn btn-secondary" @onclick="Cancel">Avbryt</button>
-            </div>
+            <button class="btn btn-primary" disabled="@isSubmitting">
+                Uppdatera
+            </button>
+            <button type="button" class="btn btn-secondary ms-2" @onclick="Cancel">
+                Avbryt
+            </button>
         </EditForm>
     }
 </div>
-

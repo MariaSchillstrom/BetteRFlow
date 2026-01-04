@@ -23,7 +23,10 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
             {
                 await JS.InvokeVoidAsync("console.log", "Skapar POST till API...");
 
-                var response = await Http.PostAsJsonAsync("https://localhost:7007/api/Brf", brfDto);
+                var http = ClientFactory.CreateClient("ApiClient");
+
+                var response = await http.PostAsJsonAsync(
+                    "api/Brf", brfDto);
 
                 await JS.InvokeVoidAsync("console.log", "Response:", response.StatusCode);
 
@@ -49,6 +52,7 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
                 isSubmitting = false;
             }
         }
+
 
         private void Cancel()
         {

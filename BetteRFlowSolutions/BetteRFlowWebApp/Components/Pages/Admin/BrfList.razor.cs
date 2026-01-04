@@ -23,17 +23,19 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
 
             try
             {
-                brfList = await Http.GetFromJsonAsync<List<Brf>>("https://localhost:7007/api/Brf");
+                var http = ClientFactory.CreateClient("ApiClient");
+                brfList = await http.GetFromJsonAsync<List<Brf>>("api/Brf");
             }
             catch (Exception ex)
             {
-                errorMessage = $"Kunde inte ladda BRF:er: {ex.Message}";
+                errorMessage = ex.Message;
             }
             finally
             {
                 isLoading = false;
             }
         }
+
 
         private void CreateNew()
         {

@@ -1,4 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
+using BetteRFlow.Shared.DTOs;
+using BetteRFlow.Shared.Models;
 
 namespace BetteRFlowWebApp.Components.Pages.Admin
 {
@@ -7,7 +10,10 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
         [Parameter]
         public int Id { get; set; }
 
-        private BrfDto brfDto = new BrfDto();
+        [Inject] public IHttpClientFactory ClientFactory { get; set; } = default!;
+        [Inject] public NavigationManager Navigation { get; set; } = default!;
+
+        private BrfDto brfDto = new();
         private bool isLoading = true;
         private bool isSubmitting = false;
         private bool success = false;
@@ -25,7 +31,8 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
 
             try
             {
-                var brf = await Http.GetFromJsonAsync<Brf>($"https://localhost:7007/api/Brf/{Id}");
+                var http = ClientFactory.CreateClient("ApiClient");
+                var brf = await http.GetFromJsonAsync<Brf>($"api/Brf/{Id}");
 
                 if (brf != null)
                 {
@@ -44,7 +51,7 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
             }
             catch (Exception ex)
             {
-                errorMessage = $"Kunde inte ladda BRF: {ex.Message}";
+                errorMessage = ex.Message;
             }
             finally
             {
@@ -59,23 +66,23 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
 
             try
             {
-                var response = await Http.PutAsJsonAsync($"https://localhost:7007/api/Brf/{Id}", brfDto);
+                var http = ClientFactory.CreateClient("ApiClient");
+                var response = await http.PutAsJsonAsync($"api/Brf/{Id}", brfDto);
 
                 if (response.IsSuccessStatusCode)
                 {
                     success = true;
-                    await Task.Delay(1500);
+                    await Task.Delay(1000);
                     Navigation.NavigateTo("/admin/brf");
                 }
                 else
                 {
-                    var error = await response.Content.ReadAsStringAsync();
-                    errorMessage = $"Kunde inte uppdatera BRF: {error}";
+                    errorMessage = await response.Content.ReadAsStringAsync();
                 }
             }
             catch (Exception ex)
             {
-                errorMessage = $"Ett fel uppstod: {ex.Message}";
+                errorMessage = ex.Message;
             }
             finally
             {

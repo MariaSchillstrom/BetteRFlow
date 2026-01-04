@@ -3,7 +3,7 @@
 @using BetteRFlow.Shared.DTOs
 @using System.Text.Json
 @inject IJSRuntime JS
-@inject HttpClient Http
+@inject IHttpClientFactory ClientFactory
 @inject NavigationManager Navigation
 
 <PageTitle>BRF Formulär</PageTitle>
@@ -15,7 +15,8 @@
             @if (!string.IsNullOrEmpty(userName))
             {
                 <div class="alert alert-info">
-                    <strong>Välkommen @userName!</strong> Du är inloggad som @UserRole.
+                    <strong>Välkommen @userName!</strong> Du är inloggad som private string userRole = "";
+
                 </div>
             }
 
