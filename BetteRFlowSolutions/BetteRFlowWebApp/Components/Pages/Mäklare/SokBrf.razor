@@ -1,26 +1,26 @@
 ﻿@page "/sok-brf"
 @rendermode InteractiveServer
-@using System.Text.Json
+
 @using BetteRFlow.Shared.DTOs
+@inject IHttpClientFactory ClientFactory
 @inject IJSRuntime JS
-@inject HttpClient Http
-@inject NavigationManager Navigator;
+@inject NavigationManager Navigator
 
 <PageTitle>Sök BRF</PageTitle>
 
 <div class="container mt-4">
     <h1>Sök BRF</h1>
-    <p>Sök efter BRF:er i systemet</p>
+    <p>Sök efter BRF:er som har skickat in formulär</p>
 
-    <button class="btn btn-secondary mb-3" @onclick="LoadAllBrfs">Visa alla BRF:er</button>
+    <button class="btn btn-secondary mb-3" @onclick="LoadAllBrfs">
+        Visa alla BRF:er
+    </button>
 
-    @* SÖKRUTA *@
     <div class="card mb-4">
         <div class="card-body">
             <div class="input-group">
-                <input type="text"
-                       class="form-control"
-                       placeholder="Sök på BRF-namn, fastighet eller organisationsnummer..."
+                <input class="form-control"
+                       placeholder="Sök på namn, fastighet eller org.nr"
                        @bind="searchTerm"
                        @bind:event="oninput" />
                 <button class="btn btn-primary" @onclick="HandleSearch">
@@ -30,41 +30,39 @@
         </div>
     </div>
 
-    @* LADDNINGSINDIKATOR *@
     @if (isLoading)
     {
         <div class="text-center">
-            <div class="spinner-border" role="status">
-                <span class="visually-hidden">Laddar...</span>
-            </div>
+            <div class="spinner-border"></div>
         </div>
     }
 
-    @* RESULTAT *@
-    @if (searchResults != null && searchResults.Any())
+    @if (!isLoading && searchResults != null && searchResults.Any())
     {
-        <h3>Sökresultat (@searchResults.Count st)</h3>
+        <h4>Resultat (@searchResults.Count st)</h4>
+
         <div class="row">
             @foreach (var brf in searchResults)
             {
                 <div class="col-md-6 mb-3">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">@brf.ForeningensNamn</h5>
-                            <p class="card-text">
+                            <h5>@brf.ForeningensNamn</h5>
+
+                            <p>
                                 <strong>Fastighet:</strong> @brf.Fastighetsbeteckning<br />
                                 <strong>Org.nr:</strong> @brf.OrganisationsNummer<br />
-                                <strong>Antal lägenheter:</strong> @brf.AntalLägenheter<br />
-                                <strong>Byggnadsår:</strong> @brf.Byggnadsår
+                                <strong>Byggnadsår:</strong> @brf.Byggnadsår<br />
+                                <strong>Antal lägenheter:</strong> @brf.AntalLägenheter
                             </p>
-                            <button class="btn btn-info" @onclick="() => ShowDetails(brf)">
+
+                            <button class="btn btn-info me-2" @onclick="() => ShowDetails(brf)">
                                 Visa detaljer
                             </button>
-                           
-                            <button class="btn btn-info" @onclick="() => Purchase(brf)">
+
+                            <button class="btn btn-success" @onclick="() => Purchase(brf)">
                                 Köp uppgifter
                             </button>
-
                         </div>
                     </div>
                 </div>
@@ -78,204 +76,30 @@
         </div>
     }
 
-    @* DETALJVY *@
     @if (selectedBrf != null)
     {
-        <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal show d-block" style="background: rgba(0,0,0,.5)">
             <div class="modal-dialog modal-xl modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">@selectedBrf.ForeningensNamn - Komplett information</h5>
-                        <button type="button" class="btn-close" @onclick="CloseDetails"></button>
+                        <h5 class="modal-title">@selectedBrf.ForeningensNamn</h5>
+                        <button class="btn-close" @onclick="CloseDetails"></button>
                     </div>
+
                     <div class="modal-body">
-                        <h6>Grunduppgifter</h6>
                         <p>
-                            <strong>Fastighet:</strong> @selectedBrf.ForeningensNamn<br />
-                            <strong>Organisationsnummer:</strong> @selectedBrf.OrganisationsNummer<br />
-                            <strong>BRF-namn:</strong> @selectedBrf.ForeningensNamn<br />
-                            <strong>Byggnadsår:</strong> @selectedBrf.Byggnadsår<br />
-                            <strong>Antal lägenheter:</strong> @selectedBrf.AntalLägenheter<br />
-                            <strong>Äkta BRF:</strong> @(selectedBrf.ÄktaBrf ? "Ja" : "Nej")
-                        </p>
-
-                        <h6 class="mt-3">Förvaltning</h6>
-                        <p>
-                            <strong>Ekonomisk förvaltare:</strong> @selectedBrf.EkonomiskFörvaltare<br />
-                            <strong>Fastighetsförvaltare:</strong> @selectedBrf.FastighetsFörvaltare
-                        </p>
-
-                        <h6 class="mt-3">Medlemskap</h6>
-                        <p>
-                            <strong>Medlemskapsrutin:</strong> @selectedBrf.MedlemskapsRutin<br />
-                            <strong>Juridisk person får förvärva:</strong> @(selectedBrf.JuridiskPersonFårFörvärva ? "Ja" : "Nej")<br />
-                            @if (!string.IsNullOrEmpty(selectedBrf.JuridiskPersonKommentar))
-                            {
-                                <strong>Kommentar:</strong> @selectedBrf.JuridiskPersonKommentar
-
-                                <br />
-                            }
-                            <strong>Beslut om medlemskap:</strong> @selectedBrf.BeslutOmMedlemskap<br />
-                            <strong>Medlemsansökan skickas till:</strong> @selectedBrf.MedlemsansökanSkickasTill<br />
-                            <strong>Delat ägande tillåtet:</strong> @(selectedBrf.DelatÄgande ? "Ja" : "Nej")<br />
-                            <strong>Minsta andel:</strong> @selectedBrf.MinstaAndel<br />
-                            <strong>Överlåtelseavgift:</strong> @selectedBrf.Överlåtelseavgift kr
-                        </p>
-
-                        <h6 class="mt-3">Månadsavgift inkluderar</h6>
-                        <p>
-                            @if (selectedBrf.AvgiftInnefattarVärme)
-                            {
-                                <span>✓ Värme<br /></span>
-                            }
-                            @if (selectedBrf.AvgiftInnefattarVarmvatten)
-                            {
-                                <span>✓ Varmvatten<br /></span>
-                            }
-                            @if (selectedBrf.AvgiftInnefattarKallvatten)
-                            {
-                                <span>✓ Kallvatten<br /></span>
-                            }
-                            @if (selectedBrf.AvgiftInnefattarKabelTV)
-                            {
-                                <span>✓ Kabel-TV<br /></span>
-                            }
-                            @if (selectedBrf.AvgiftInnefattarBredband)
-                            {
-                                <span>✓ Bredband<br /></span>
-                            }
-                            @if (selectedBrf.AvgiftInnefattarHemförsäkring)
-                            {
-                                <span>✓ Hemförsäkring<br /></span>
-                            }
-                            @if (selectedBrf.AvgiftInnefattarKällare)
-                            {
-                                <span>✓ Källare<br /></span>
-                            }
-                            @if (!string.IsNullOrEmpty(selectedBrf.AvgiftInnefattarAnnat))
-                            {
-                                <strong>Övrigt:</strong> @selectedBrf.AvgiftInnefattarAnnat
-
-                                <br />
-                            }
-                            <strong>Senaste avgiftsförändring:</strong> @selectedBrf.SenasteAvgiftsförändring
-                        </p>
-
-                        <h6 class="mt-3">Bredband och teknik</h6>
-                        <p>
-                            <strong>Bredbandsleverantör:</strong> @selectedBrf.Bredbandsleverantör<br />
-                            <strong>Bredbandshastighet:</strong> @selectedBrf.Bredbandshastighet<br />
-                            <strong>Kundservice:</strong> @selectedBrf.BredbandKundservice<br />
-                            <strong>Uppvärmning:</strong> @selectedBrf.Uppvärmning<br />
-                            <strong>Ventilation:</strong> @selectedBrf.Ventilation<br />
-                            <strong>Elavtal:</strong> @selectedBrf.Elavtal<br />
-                            @if (!string.IsNullOrEmpty(selectedBrf.ElavtalKommentar))
-                            {
-                                <strong>Kommentar elavtal:</strong> @selectedBrf.ElavtalKommentar
-
-                                <br />
-                            }
-                        </p>
-
-                        <h6 class="mt-3">Parkering</h6>
-                        <p>
-                            <strong>Antal garageplatser:</strong> @selectedBrf.AntalGarageplatser<br />
-                            <strong>Antal parkeringsplatser:</strong> @selectedBrf.AntalParkeringsplatser<br />
-                            <strong>Antal laddplatser:</strong> @selectedBrf.AntalLaddplatser<br />
-                            <strong>Fri höjd garage:</strong> @selectedBrf.FriHöjdGarage m<br />
-                            <strong>Elplintar på mark:</strong> @(selectedBrf.ElplintarPåMark ? "Ja" : "Nej")<br />
-                            <strong>Kostnad parkeringsplats:</strong> @selectedBrf.KostnadParkeringsplats kr/mån<br />
-                            <strong>Kostnad garageplats:</strong> @selectedBrf.KostnadGarageplats kr/mån<br />
-                            <strong>Kostnad garageplats med el:</strong> @selectedBrf.KostnadGarageplatsElektricitet kr/mån<br />
-                            <strong>Laddkostnad:</strong> @selectedBrf.Laddkostnad<br />
-                            <strong>Kontakt parkering:</strong> @selectedBrf.ParkeringKontakt
-                        </p>
-
-                        <h6 class="mt-3">Gemensamma utrymmen</h6>
-                        <p>
-                            @if (selectedBrf.Cykelförråd)
-                            {
-                                <span>✓ Cykelförråd<br /></span>
-                            }
-                            @if (selectedBrf.Barnvagnsförråd)
-                            {
-                                <span>✓ Barnvagnsförråd<br /></span>
-                            }
-                            @if (selectedBrf.Gästlägenhet)
-                            {
-                                <span>✓ Gästlägenhet<br /></span>
-                            }
-                            @if (selectedBrf.Tvättstuga)
-                            {
-                                <span>✓ Tvättstuga<br /></span>
-                            }
-                            @if (selectedBrf.Bastu)
-                            {
-                                <span>✓ Bastu<br /></span>
-                            }
-                            @if (selectedBrf.Gym)
-                            {
-                                <span>✓ Gym<br /></span>
-                            }
-                            @if (selectedBrf.Festlokal)
-                            {
-                                <span>✓ Festlokal<br /></span>
-                            }
-                            @if (!string.IsNullOrEmpty(selectedBrf.GemensammaUtrymmennAnnat))
-                            {
-                                <strong>Övrigt:</strong> @selectedBrf.GemensammaUtrymmennAnnat
-
-                                <br />
-                            }
-                            <strong>Extra lokaler:</strong> @selectedBrf.ExtraLokaler<br />
-                            @if (!string.IsNullOrEmpty(selectedBrf.ExtraLokalerKommentar))
-                            {
-                                <strong>Kommentar:</strong> @selectedBrf.ExtraLokalerKommentar
-
-                                <br />
-                            }
-                            <strong>Städning gemensamma utrymmen:</strong> @selectedBrf.StädningGemensamma
-                        </p>
-
-                        <h6 class="mt-3">Nycklar och överlämning</h6>
-                        <p>
-                            <strong>Nyckelöverlämning:</strong> @selectedBrf.NyckelÖverlämning<br />
-                            <strong>Vad ska överlämnas:</strong> @selectedBrf.VadSkasÖverlämnas<br />
-                            <strong>Adress:</strong> @selectedBrf.AdressNyckelÖverlämning
-                        </p>
-
-                        <h6 class="mt-3">Andrahandsuthyrning</h6>
-                        <p>
-                            <strong>Kräver godkännande:</strong> @(selectedBrf.AndrahandsuthyrningKrävergodkännande ? "Ja" : "Nej")<br />
-                            <strong>Avgift:</strong> @selectedBrf.AndrahandsuthyrningAvgift<br />
-                            <strong>Ansökan skickas till:</strong> @selectedBrf.AndrahandsuthyrningAnsökanTill<br />
-                            @if (!string.IsNullOrEmpty(selectedBrf.AndrahandsuthyrningVillkorUrl))
-                            {
-                                <strong>Länk till villkor:</strong> <a href="@selectedBrf.AndrahandsuthyrningVillkorUrl" target="_blank">@selectedBrf.AndrahandsuthyrningVillkorUrl</a>
-
-                                <br />
-                            }
-                        </p>
-
-                        <h6 class="mt-3">Reparationer och energi</h6>
-                        <p>
-                            <strong>Planerade reparationer:</strong> @selectedBrf.PlanerardeReparationer<br />
-                            <strong>Energideklaration finns:</strong> @(selectedBrf.Energideklaration ? "Ja" : "Nej")<br />
-                            <strong>Datum energideklaration:</strong> @selectedBrf.EnergideklarationDatum
-                        </p>
-
-                        <h6 class="mt-3">Kontaktinformation</h6>
-                        <p>
+                            <strong>Fastighetsbeteckning:</strong> @selectedBrf.Fastighetsbeteckning<br />
+                            <strong>Adress:</strong> @selectedBrf.Gatuadress<br />
+                            <strong>Postort:</strong> @selectedBrf.Postnummer @selectedBrf.Ort<br />
                             <strong>Email:</strong> @selectedBrf.KontaktEmail<br />
-                            <strong>Telefon:</strong> @selectedBrf.KontaktTelefon<br />
-                            @if (!string.IsNullOrEmpty(selectedBrf.Hemsida))
-                            {
-                                <strong>Hemsida:</strong> <a href="@selectedBrf.Hemsida" target="_blank">@selectedBrf.Hemsida</a>
-                            }
+                            <strong>Telefon:</strong> @selectedBrf.KontaktTelefon
                         </p>
                     </div>
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @onclick="CloseDetails">Stäng</button>
+                        <button class="btn btn-secondary" @onclick="CloseDetails">
+                            Stäng
+                        </button>
                     </div>
                 </div>
             </div>
@@ -285,10 +109,30 @@
 
 @code {
     private string searchTerm = "";
-    private List<FormDto>? searchResults = null;
-    private FormDto? selectedBrf = null;
+    private List<FormDto>? searchResults;
+    private FormDto? selectedBrf;
     private bool isLoading = false;
     private bool hasSearched = false;
+
+    private async Task LoadAllBrfs()
+    {
+        isLoading = true;
+        hasSearched = true;
+
+        try
+        {
+            var http = ClientFactory.CreateClient("ApiClient");
+            searchResults = await http.GetFromJsonAsync<List<FormDto>>("api/formsubmission");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
 
     private async Task HandleSearch()
     {
@@ -297,16 +141,13 @@
 
         try
         {
-            var response = await Http.GetAsync($"api/formsubmission/search?searchTerm={searchTerm}");
-
-            if (response.IsSuccessStatusCode)
-            {
-                searchResults = await response.Content.ReadFromJsonAsync<List<FormDto>>();
-            }
+            var http = ClientFactory.CreateClient("ApiClient");
+            searchResults = await http.GetFromJsonAsync<List<FormDto>>(
+                $"api/formsubmission/search?searchTerm={searchTerm}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Sökfel: {ex.Message}");
+            Console.WriteLine(ex.Message);
         }
         finally
         {
@@ -323,39 +164,9 @@
     {
         selectedBrf = null;
     }
+
     private void Purchase(FormDto brf)
     {
         Navigator.NavigateTo($"/purchase-brf/{brf.Id}");
     }
-
-    private async Task LoadAllBrfs()
-    {
-        isLoading = true;
-        hasSearched = true;
-        searchTerm = "";
-
-        try
-        {
-            var response = await Http.GetAsync("api/formsubmission/search");
-
-            if (response.IsSuccessStatusCode)
-            {
-                searchResults = await response.Content.ReadFromJsonAsync<List<FormDto>>();
-                await JS.InvokeVoidAsync("console.log", $"Hittade {searchResults?.Count ?? 0} BRF:er");
-            }
-            else
-            {
-                await JS.InvokeVoidAsync("console.log", "Fel vid hämtning:", response.StatusCode);
-            }
-        }
-        catch (Exception ex)
-        {
-            await JS.InvokeVoidAsync("console.log", "Exception:", ex.Message);
-        }
-        finally
-        {
-            isLoading = false;
-        }
-    }
 }
- 
