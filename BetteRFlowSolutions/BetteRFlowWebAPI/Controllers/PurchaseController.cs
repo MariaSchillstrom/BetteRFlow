@@ -22,9 +22,9 @@ namespace BetteRFlowWebAPI.Controllers
             // Fake purchase - ingen riktig betalning
             var purchase = new Purchase
             {
-                UserId = null,
-                FormSubmissionId = null, // 🔥 VIKTIGASTE RADEN
-                Amount = purchaseDto.Amount,
+                UserId = 9,              // ✅ Mäklaren
+                FormSubmissionId = 2,    // ✅ ID som finns i produktion
+                Amount = 299,
                 PurchaseDate = DateTime.UtcNow,
                 PaymentStatus = "Completed",
                 TransactionId = Guid.NewGuid().ToString()
