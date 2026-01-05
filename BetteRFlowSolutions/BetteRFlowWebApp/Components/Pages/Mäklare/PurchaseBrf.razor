@@ -67,10 +67,13 @@
         {
             var purchaseDto = new
             {
-                UserId = 1,              // hårdkodat demo-id (mäklare)
+                UserId = 1,
                 FormSubmissionId = Id,
-                Amount = 299
+                Amount = 299,
+                PurchaseDate = DateTime.UtcNow,
+                PaymentStatus = "Completed"
             };
+
             var http = ClientFactory.CreateClient("ApiClient");
             var response = await http.PostAsJsonAsync("api/Purchase", purchaseDto);
 
