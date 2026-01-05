@@ -13,7 +13,9 @@
 
 * 2.1 Översikt
 * 2.2 Problem som löses
-* 2.3 Arkitekturval
+* 2.3 Användarroller&#x20;
+* 2.4 Roll och behörighetsmodell&#x20;
+* 2.5 Säkerhetsprinciper i produktdesignen
 
 #### 3. Verktyg och Teknologier
 
@@ -94,3 +96,20 @@ _(Den stora felsökningsdelen)_
 4. Roller och fördelar med verktygen&#x20;
 5. Scenario- Hur verktygen samarbetar
 6. Sammanfattning
+
+### Teknisk rapport del 2 (17/12-5/1)
+
+1. Produkten
+2. Verktyg och teknologier
+3. Projektarkitektur
+4. Applikationens komponenter
+5. Flöden
+6. Testning
+7. Produktion/lokal körning
+8. Framtida utveckling
+9. Problem och lösningar
+
+
+
+
+
