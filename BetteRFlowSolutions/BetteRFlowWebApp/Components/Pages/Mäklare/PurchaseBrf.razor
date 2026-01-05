@@ -67,12 +67,10 @@
         {
             var purchaseDto = new
             {
-                UserId = (int?)null,
+                UserId = 1,              // hårdkodat demo-id (mäklare)
                 FormSubmissionId = Id,
                 Amount = 299
             };
-
-
             var http = ClientFactory.CreateClient("ApiClient");
             var response = await http.PostAsJsonAsync("api/Purchase", purchaseDto);
 
