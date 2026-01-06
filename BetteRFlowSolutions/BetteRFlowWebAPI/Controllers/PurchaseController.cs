@@ -23,7 +23,7 @@ namespace BetteRFlowWebAPI.Controllers
             var purchase = new Purchase
             {
                 UserId = 9,              // ✅ Mäklaren
-                FormSubmissionId = 2,    // ✅ ID som finns i produktion
+                FormSubmissionId = 7,    // ✅ ID som finns i produktion
                 Amount = 299,
                 PurchaseDate = DateTime.UtcNow,
                 PaymentStatus = "Completed",
