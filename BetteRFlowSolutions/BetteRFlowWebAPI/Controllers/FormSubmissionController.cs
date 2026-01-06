@@ -321,15 +321,35 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Jämför KontaktTelefon (båda nullable)
-            if (grunddata.KontaktTelefon != formular.KontaktTelefon)
+            // Jämför KontaktTelefon - normalisera först
+            var grunddataTelefon = string.IsNullOrWhiteSpace(grunddata.KontaktTelefon) ? "" : grunddata.KontaktTelefon;
+            var formularTelefon = string.IsNullOrWhiteSpace(formular.KontaktTelefon) ? "" : formular.KontaktTelefon;
+
+            if (grunddataTelefon != formularTelefon)
             {
                 _context.BrfAvvikelser.Add(new BrfAvvikelse
                 {
                     BrfId = grunddata.Id,
                     FormSubmissionId = formular.Id,
                     Faltnamn = "KontaktTelefon",
-                    VardeGrunddata = grunddata.KontaktTelefon ?? "",
-                    VardeFormular = formular.KontaktTelefon ?? ""
+                    VardeGrunddata = grunddataTelefon,
+                    VardeFormular = formularTelefon
+                });
+            }
+
+            // Jämför Hemsida - normalisera först
+            var grunddataHemsida = string.IsNullOrWhiteSpace(grunddata.Hemsida) ? "" : grunddata.Hemsida;
+            var formularHemsida = string.IsNullOrWhiteSpace(formular.Hemsida) ? "" : formular.Hemsida;
+
+            if (grunddataHemsida != formularHemsida)
+            {
+                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                {
+                    BrfId = grunddata.Id,
+                    FormSubmissionId = formular.Id,
+                    Faltnamn = "Hemsida",
+                    VardeGrunddata = grunddataHemsida,
+                    VardeFormular = formularHemsida
                 });
             }
 
