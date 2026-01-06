@@ -229,6 +229,14 @@ namespace BetteRFlowWebAPI.Controllers
                     // Jämför fält och logga avvikelser
                     KollaOchLoggaAvvikelser(matchadBrf, formSubmission);
 
+                    var harOgranskedeAvvikelser = await _context.BrfAvvikelser
+    .AnyAsync(a => a.BrfId == matchadBrf.Id && !a.Granskad);
+
+                    if (!harOgranskedeAvvikelser)
+                    {
+                        matchadBrf.IsActive = true;
+                    }
+                                        
                     await _context.SaveChangesAsync();
                 }
 
