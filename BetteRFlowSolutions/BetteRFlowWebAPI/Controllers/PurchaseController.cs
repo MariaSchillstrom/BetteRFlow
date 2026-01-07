@@ -19,23 +19,27 @@ namespace BetteRFlowWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePurchase([FromBody] PurchaseDto purchaseDto)
         {
-            // Fake purchase - ingen riktig betalning
-            var purchase = new Purchase
+            try
             {
-                UserId = 9,              // ✅ Mäklaren
-                FormSubmissionId = 7,    // ✅ ID som finns i produktion
-                Amount = 299,
-                PurchaseDate = DateTime.UtcNow,
-                PaymentStatus = "Completed",
-                TransactionId = Guid.NewGuid().ToString()
-            };
+                var purchase = new Purchase
+                {
+                    UserId = purchaseDto.UserId,
+                    FormSubmissionId = purchaseDto.FormSubmissionId,
+                    Amount = purchaseDto.Amount,
+                    PurchaseDate = DateTime.UtcNow,
+                    PaymentStatus = "Completed",
+                    TransactionId = Guid.NewGuid().ToString()
+                };
 
+                _context.Purchases.Add(purchase);
+                await _context.SaveChangesAsync();
 
-
-            _context.Purchases.Add(purchase);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Köp genomfört!", purchaseId = purchase.Id });
+                return Ok(new { message = "Köp genomfört!", purchaseId = purchase.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

@@ -55,20 +55,48 @@
     [Parameter]
     public int Id { get; set; }
 
+    private int currentUserId = 0;
     private bool isProcessing = false;
     private bool purchaseComplete = false;
     private string transactionId = "";
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Hämta inloggad användares ID från localStorage
+        try
+        {
+            var userJson = await JS.InvokeAsync<string>("localStorage.getItem", "user");
+            if (!string.IsNullOrEmpty(userJson))
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(userJson);
+                if (doc.RootElement.TryGetProperty("id", out var idElement))
+                {
+                    currentUserId = idElement.GetInt32();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fel vid hämtning av userId: {ex.Message}");
+        }
+    }
+
     private async Task ProcessPayment()
     {
+        if (currentUserId == 0)
+        {
+            await JS.InvokeVoidAsync("alert", "Du måste vara inloggad för att köpa!");
+            return;
+        }
+
         isProcessing = true;
 
         try
         {
             var purchaseDto = new
             {
-                UserId = 1,
-                FormSubmissionId = Id,
+                UserId = currentUserId,      // ✅ Dynamisk!
+                FormSubmissionId = Id,       // ✅ Dynamisk!
                 Amount = 299,
                 PurchaseDate = DateTime.UtcNow,
                 PaymentStatus = "Completed"
@@ -76,7 +104,6 @@
 
             var http = ClientFactory.CreateClient("ApiClient");
             var response = await http.PostAsJsonAsync("api/Purchase", purchaseDto);
-
 
             if (response.IsSuccessStatusCode)
             {
@@ -87,12 +114,8 @@
             else
             {
                 var body = await response.Content.ReadAsStringAsync();
-                await JS.InvokeVoidAsync(
-                    "alert",
-                    $"Status: {response.StatusCode}\n\n{body}"
-                );
+                await JS.InvokeVoidAsync("alert", $"Status: {response.StatusCode}\n\n{body}");
             }
-
         }
         catch (Exception ex)
         {
