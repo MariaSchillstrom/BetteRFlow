@@ -248,73 +248,88 @@ namespace BetteRFlowWebAPI.Controllers
         private void KollaOchLoggaAvvikelser(Brf grunddata, FormSubmission formular)
         {
             // Jämför ForeningensNamn
-            if (grunddata.ForeningensNamn != formular.ForeningensNamn)
+            var grunddataForeningNamn = grunddata.ForeningensNamn ?? "";
+            var formularForeningNamn = formular.ForeningensNamn ?? "";
+
+            if (grunddataForeningNamn != formularForeningNamn)
             {
                 _context.BrfAvvikelser.Add(new BrfAvvikelse
                 {
                     BrfId = grunddata.Id,
                     FormSubmissionId = formular.Id,
                     Faltnamn = "ForeningensNamn",
-                    VardeGrunddata = grunddata.ForeningensNamn,
-                    VardeFormular = formular.ForeningensNamn
+                    VardeGrunddata = grunddataForeningNamn,
+                    VardeFormular = formularForeningNamn
                 });
             }
 
             // Jämför Gatuadress
-            if (grunddata.Gatuadress != formular.Gatuadress)
+            var grunddataGatuadress = grunddata.Gatuadress ?? "";
+            var formularGatuadress = formular.Gatuadress ?? "";
+
+            if (grunddataGatuadress != formularGatuadress)
             {
                 _context.BrfAvvikelser.Add(new BrfAvvikelse
                 {
                     BrfId = grunddata.Id,
                     FormSubmissionId = formular.Id,
                     Faltnamn = "Gatuadress",
-                    VardeGrunddata = grunddata.Gatuadress,
-                    VardeFormular = formular.Gatuadress
+                    VardeGrunddata = grunddataGatuadress,
+                    VardeFormular = formularGatuadress
                 });
             }
 
             // Jämför Postnummer
-            if (grunddata.Postnummer != formular.Postnummer)
+            var grunddataPostnummer = grunddata.Postnummer ?? "";
+            var formularPostnummer = formular.Postnummer ?? "";
+
+            if (grunddataPostnummer != formularPostnummer)
             {
                 _context.BrfAvvikelser.Add(new BrfAvvikelse
                 {
                     BrfId = grunddata.Id,
                     FormSubmissionId = formular.Id,
                     Faltnamn = "Postnummer",
-                    VardeGrunddata = grunddata.Postnummer,
-                    VardeFormular = formular.Postnummer
+                    VardeGrunddata = grunddataPostnummer,
+                    VardeFormular = formularPostnummer
                 });
             }
 
             // Jämför Ort
-            if (grunddata.Ort != formular.Ort)
+            var grunddataOrt = grunddata.Ort ?? "";
+            var formularOrt = formular.Ort ?? "";
+
+            if (grunddataOrt != formularOrt)
             {
                 _context.BrfAvvikelser.Add(new BrfAvvikelse
                 {
                     BrfId = grunddata.Id,
                     FormSubmissionId = formular.Id,
                     Faltnamn = "Ort",
-                    VardeGrunddata = grunddata.Ort,
-                    VardeFormular = formular.Ort
+                    VardeGrunddata = grunddataOrt,
+                    VardeFormular = formularOrt
                 });
             }
 
             // Jämför KontaktEmail
-            if (grunddata.KontaktEmail != formular.KontaktEmail)
+            var grunddataEmail = grunddata.KontaktEmail ?? "";
+            var formularEmail = formular.KontaktEmail ?? "";
+
+            if (grunddataEmail != formularEmail)
             {
                 _context.BrfAvvikelser.Add(new BrfAvvikelse
                 {
                     BrfId = grunddata.Id,
                     FormSubmissionId = formular.Id,
                     Faltnamn = "KontaktEmail",
-                    VardeGrunddata = grunddata.KontaktEmail,
-                    VardeFormular = formular.KontaktEmail
+                    VardeGrunddata = grunddataEmail,
+                    VardeFormular = formularEmail
                 });
             }
 
-            // Jämför KontaktTelefon - normalisera först (fixa null/tom sträng)
-            var grunddataTelefon = string.IsNullOrWhiteSpace(grunddata.KontaktTelefon) ? "" : grunddata.KontaktTelefon;
-            var formularTelefon = string.IsNullOrWhiteSpace(formular.KontaktTelefon) ? "" : formular.KontaktTelefon;
+            // Jämför KontaktTelefon
+            var grunddataTelefon = grunddata.KontaktTelefon ?? "";
+            var formularTelefon = formular.KontaktTelefon ?? "";
 
             if (grunddataTelefon != formularTelefon)
             {
@@ -328,9 +343,9 @@ namespace BetteRFlowWebAPI.Controllers
                 });
             }
 
-            // Jämför Hemsida - normalisera först (fixa null/tom sträng)
-            var grunddataHemsida = string.IsNullOrWhiteSpace(grunddata.Hemsida) ? "" : grunddata.Hemsida;
-            var formularHemsida = string.IsNullOrWhiteSpace(formular.Hemsida) ? "" : formular.Hemsida;
+            // Jämför Hemsida
+            var grunddataHemsida = grunddata.Hemsida ?? "";
+            var formularHemsida = formular.Hemsida ?? "";
 
             if (grunddataHemsida != formularHemsida)
             {
@@ -346,5 +361,3 @@ namespace BetteRFlowWebAPI.Controllers
         }
     }
 }
-
-
