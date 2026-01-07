@@ -23,6 +23,19 @@ namespace BetteRFlowWebAPI.Controllers
             return _context.FormSubmissions.ToList();
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FormSubmission>> GetFormSubmissionById(int id)
+        {
+            var formSubmission = await _context.FormSubmissions.FindAsync(id);
+
+            if (formSubmission == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(formSubmission);
+        }
+
         [HttpGet("search")]
         public async Task<ActionResult<List<FormDto>>> SearchBrf([FromQuery] string? searchTerm)
         {
@@ -366,6 +379,10 @@ namespace BetteRFlowWebAPI.Controllers
                     VardeFormular = formularHemsida
                 });
             }
+
+
+
+            
         }
     }
 }

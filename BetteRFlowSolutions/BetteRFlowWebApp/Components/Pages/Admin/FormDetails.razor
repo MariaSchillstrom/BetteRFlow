@@ -1,0 +1,89 @@
+﻿@page "/forms/{id:int}"
+@rendermode InteractiveServer
+@using BetteRFlow.Shared.Models
+@inject IHttpClientFactory ClientFactory
+@inject NavigationManager Navigation
+
+<PageTitle>Formulärdetaljer</PageTitle>
+
+<div class="container mt-4">
+    <h2>Formulärdetaljer</h2>
+
+    @if (isLoading)
+    {
+        <div class="text-center">
+            <div class="spinner-border"></div>
+        </div>
+    }
+    else if (formSubmission == null)
+    {
+        <div class="alert alert-danger">Formulär hittades inte!</div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <h4>@formSubmission.ForeningensNamn</h4>
+
+                <h5 class="mt-4">Fastighet</h5>
+                <p><strong>Fastighetsbeteckning:</strong> @formSubmission.Fastighetsbeteckning</p>
+                <p><strong>Adress:</strong> @formSubmission.Fastighetsadress</p>
+                <p><strong>Postnummer:</strong> @formSubmission.FastighetsPostnummer</p>
+                <p><strong>Ort:</strong> @formSubmission.FastighetsOrt</p>
+
+                <h5 class="mt-4">Förening</h5>
+                <p><strong>Organisationsnummer:</strong> @formSubmission.OrganisationsNummer</p>
+                <p><strong>Gatuadress:</strong> @formSubmission.Gatuadress</p>
+                <p><strong>Postnummer:</strong> @formSubmission.Postnummer</p>
+                <p><strong>Ort:</strong> @formSubmission.Ort</p>
+                <p><strong>Email:</strong> @formSubmission.KontaktEmail</p>
+                <p><strong>Telefon:</strong> @(formSubmission.KontaktTelefon ?? "-")</p>
+                <p><strong>Hemsida:</strong> @(formSubmission.Hemsida ?? "-")</p>
+
+                <h5 class="mt-4">Detaljer</h5>
+                <p><strong>Byggnadsår:</strong> @formSubmission.Byggnadsår</p>
+                <p><strong>Antal lägenheter:</strong> @formSubmission.AntalLägenheter</p>
+                <p><strong>Äkta BRF:</strong> @(formSubmission.ÄktaBrf ? "Ja" : "Nej")</p>
+
+                <!-- Lägg till fler fält här om du vill visa mer -->
+            </div>
+        </div>
+
+        <button class="btn btn-secondary mt-3" @onclick="GoBack">Tillbaka</button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private FormSubmission? formSubmission;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var http = ClientFactory.CreateClient("ApiClient");
+            var response = await http.GetAsync($"api/formsubmission/{Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                formSubmission = await response.Content.ReadFromJsonAsync<FormSubmission>();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fel: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/formList");
+    }
+}
