@@ -22,6 +22,7 @@
   * [5. Scenario - Hur verktygen samarbetar](verktyg/5.-scenario-hur-verktygen-samarbetar.md)
   * [6. Sammanfattning](verktyg/6.-sammanfattning.md)
 * [Teknisk Rapport 2](teknisk-rapport-2/README.md)
+  * [Innehållsförteckning](teknisk-rapport-2/innehallsforteckning.md)
   * [1. Produkten](teknisk-rapport-2/1.-produkten.md)
   * [2. Verktyg och teknologier](teknisk-rapport-2/2.-verktyg-och-teknologier.md)
   * [3. Projektarkitektur](teknisk-rapport-2/3.-projektarkitektur.md)

@@ -1,5 +1,6 @@
 ---
 description: Rapporten avser arbete gjort i projektet efter 16/12.
+coverY: 0
 ---
 
 # Teknisk Rapport 2
