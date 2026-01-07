@@ -35,7 +35,7 @@ namespace BetteRFlowWebAPI.Controllers
             // STEG 2: Sätt tidsstämplar
             newBrf.CreatedAt = DateTime.UtcNow;
             newBrf.UpdatedAt = DateTime.UtcNow;
-            newBrf.IsActive = true;
+            newBrf.IsActive = false;
 
             // STEG 3: Spara i databas
             _context.Brfs.Add(newBrf);
