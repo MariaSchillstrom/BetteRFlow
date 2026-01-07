@@ -98,27 +98,20 @@ namespace BetteRFlowWebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BrfDto>>> GetAllBrfs()
         {
-            // STEG 1: Hämta från databas (bara aktiva)
-            var brfs = await _context.Brfs
-                .Where(b => b.IsActive)
-                .ToListAsync();
+            // HÄMTA ALLA BRF:er (både aktiva och inaktiva)
+            var brfs = await _context.Brfs.ToListAsync();
 
-            // STEG 2: Kolla att det finns BRF:er
-            if (!brfs.Any())
-            {
-                return Ok(new List<BrfDto>());
-            }
-
-            // STEG 3: Konvertera till DTO
+            // Konvertera till DTO
             var brfDtos = brfs.Select(b => new BrfDto
             {
                 Id = b.Id,
                 ForeningensNamn = b.ForeningensNamn,
                 OrganisationsNummer = b.OrganisationsNummer,
-                Gatuadress   = b.Gatuadress,
+                Gatuadress = b.Gatuadress,
                 KontaktEmail = b.KontaktEmail,
                 KontaktTelefon = b.KontaktTelefon,
-                Hemsida = b.Hemsida
+                Hemsida = b.Hemsida,
+                IsActive = b.IsActive  // ✅ VIKTIGT: Lägg till denna rad!
             }).ToList();
 
             return Ok(brfDtos);
