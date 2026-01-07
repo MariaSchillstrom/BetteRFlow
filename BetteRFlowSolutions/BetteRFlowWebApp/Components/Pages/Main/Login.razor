@@ -63,6 +63,7 @@
                 {
                     var jsonObject = System.Text.Json.JsonSerializer.Serialize(new
                     {
+                        id = user.Id,        // ✅ LÄGG TILL DENNA RAD!
                         name = user.Fornamn,
                         email = user.Email,
                         role = user.Role
