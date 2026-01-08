@@ -16,6 +16,7 @@ namespace BetteRFlow.Shared.DTOs
         public DateTime? LastLogin { get; set; }
         public int? BrfId { get; set; }
         public Realtor? Realtor { get; set; }
+        public string? Firma { get; set; }
     }
     
 }

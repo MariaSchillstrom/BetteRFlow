@@ -18,9 +18,11 @@ namespace BetteRFlowWebAPI.Controllers
         }
 
         // GET: api/user
+        // GET: api/user
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
+            // ✅ LÄGG TILL Include för att hämta Realtor-data
             var users = await _context.Users.ToListAsync();
 
             if (users == null || !users.Any())
@@ -36,7 +38,9 @@ namespace BetteRFlowWebAPI.Controllers
                 Email = user.Email,
                 Role = user.Role.ToString(),
                 IsActive = user.IsActive,
-                LastLogin = user.LastLogin
+                LastLogin = user.LastLogin,
+                CreatedAt = user.CreatedAt,        // ✅ LÄGG TILL
+                Firma = user.Firma        // ✅ LÄGG TILL
             });
 
             return Ok(userDtos);
