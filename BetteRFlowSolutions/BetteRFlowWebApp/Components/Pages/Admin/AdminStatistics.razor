@@ -1,0 +1,24 @@
+﻿@page "/admin/statistics"
+@using Microsoft.EntityFrameworkCore
+@rendermode InteractiveServer
+@inject BetteRFlow.Shared.Data.BetteRFlowContext Db
+
+<h2>📊 Statistik</h2>
+
+<p>Sidbesök totalt: <strong>@TotalPageViews</strong></p>
+<p>Sidbesök idag: <strong>@PageViewsToday</strong></p>
+
+@code {
+    int TotalPageViews;
+    int PageViewsToday;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var today = DateTime.UtcNow.Date;
+
+        TotalPageViews = await Db.PageViews.CountAsync();
+        PageViewsToday = await Db.PageViews
+            .CountAsync(p => p.CreatedAt >= today);
+    }
+}
+
