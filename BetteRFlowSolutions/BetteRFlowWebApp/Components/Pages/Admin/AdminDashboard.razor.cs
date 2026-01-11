@@ -26,7 +26,13 @@ namespace BetteRFlowWebApp.Components.Pages.Admin
 
         }
         private void GoToAvvikelser() => Navigation.NavigateTo("/admin/avvikelser");
-    }
+
+        private void GoToStatistics()
+        {
+            Navigation.NavigateTo("/admin/statistics");
+        }
+}
 }
 
-    
+
+
