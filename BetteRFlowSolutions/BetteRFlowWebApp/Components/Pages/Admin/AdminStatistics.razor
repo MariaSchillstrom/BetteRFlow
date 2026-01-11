@@ -1,18 +1,42 @@
 ﻿@page "/admin/statistics"
+@inject IHttpClientFactory HttpClientFactory
 @rendermode InteractiveServer
 
 <h2>📊 Statistik</h2>
 
-<p>
-    Statistik samlas in löpande i backend och lagras i databasen.
-</p>
+@if (isLoading)
+{
+    <p>Laddar statistik…</p>
+}
+else
+{
+    <ul>
+        <li><strong>Totalt antal sidbesök:</strong> @TotalPageViews</li>
+        <li><strong>Sidbesök idag:</strong> @PageViewsToday</li>
+    </ul>
+}
 
-<ul>
-    <li>Sidbesök loggas automatiskt</li>
-    <li>Användaraktivitet kopplas till roller</li>
-    <li>Data lagras i PostgreSQL (Render)</li>
-</ul>
+@code {
+    private int TotalPageViews;
+    private int PageViewsToday;
+    private bool isLoading = true;
 
-<p class="text-muted">
-    (Siffror visas förenklat i denna vy för demo.)
-</p>
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient("ApiClient");
+
+        var stats = await client.GetFromJsonAsync<StatsDto>(
+            "api/admin/statistics");
+
+        TotalPageViews = stats!.TotalPageViews;
+        PageViewsToday = stats.PageViewsToday;
+
+        isLoading = false;
+    }
+
+    private class StatsDto
+    {
+        public int TotalPageViews { get; set; }
+        public int PageViewsToday { get; set; }
+    }
+}
