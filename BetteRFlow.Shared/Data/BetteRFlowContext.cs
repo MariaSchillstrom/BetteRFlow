@@ -21,4 +21,8 @@ public class BetteRFlowContext : DbContext
     public DbSet<User> Users { get; set; }
 
     public DbSet<BrfAvvikelse> BrfAvvikelser { get; set; }
+
+    public DbSet<PageView> PageViews { get; set; }
+    public DbSet<AppEvent> AppEvents { get; set; }
+
 }

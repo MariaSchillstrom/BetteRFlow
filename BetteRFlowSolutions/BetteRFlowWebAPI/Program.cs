@@ -1,4 +1,5 @@
 ﻿using BetteRFlow.Shared.Data;
+using BetteRFlow.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Npgsql.EntityFrameworkCore.PostgreSQL;
 
@@ -12,17 +13,11 @@ builder.Services.AddSwaggerGen();
 // Add DbContext
 builder.Services.AddDbContext<BetteRFlowContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    if (builder.Environment.IsProduction())
-    {
-        var productionConnString = "Host=dpg-d5b68qogjchc73bolsmg-a;Port=5432;Database=betterflow;Username=betterflow_user;Password=dYsraEjzHuz8PiShmuieZWtbD48cd3PQ;SSL Mode=Require;Trust Server Certificate=true;";
-        options.UseNpgsql(productionConnString);
-    }
-    else
-    {
-        options.UseSqlite(connectionString);
-    }
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    );
 });
+
 
 // CORS-konfiguration
 builder.Services.AddCors(options =>
@@ -79,7 +74,31 @@ app.UseRouting();
 app.UseCors("AllowBlazorClient");
 app.UseAuthentication();
 app.UseAuthorization();
+
+// ✅ SIDBESÖKS-LOGGNING (RÄTT PLATS)
+app.Use(async (context, next) =>
+{
+    using var scope = context.RequestServices.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<BetteRFlowContext>();
+
+    if (!context.Request.Path.StartsWithSegments("/_blazor") &&
+        !context.Request.Path.StartsWithSegments("/swagger"))
+    {
+        db.PageViews.Add(new PageView
+        {
+            Path = context.Request.Path
+        });
+
+        await db.SaveChangesAsync();
+    }
+
+    await next();
+});
+
 app.MapControllers();
-app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
+app.MapGet("/", () => Results.Redirect("/swagger"))
+   .ExcludeFromDescription();
 
 app.Run();
+
+
