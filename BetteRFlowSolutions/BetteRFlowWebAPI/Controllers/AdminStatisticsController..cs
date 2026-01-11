@@ -13,16 +13,19 @@ public class AdminStatisticsController : ControllerBase
         _db = db;
     }
 
-    [HttpGet]
+
     [HttpGet]
     public async Task<IActionResult> GetStatistics()
     {
-        var today = DateTime.Today; // <-- VIKTIG RAD
+        var startOfToday = DateTime.Today;
+        var startOfTomorrow = startOfToday.AddDays(1);
 
         var totalPageViews = await _db.PageViews.CountAsync();
 
         var todayPageViews = await _db.PageViews
-            .CountAsync(p => p.CreatedAt.Date == today);
+            .CountAsync(p =>
+                p.CreatedAt >= startOfToday &&
+                p.CreatedAt < startOfTomorrow);
 
         return Ok(new
         {
