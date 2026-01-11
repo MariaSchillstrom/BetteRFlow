@@ -1,24 +1,18 @@
 ﻿@page "/admin/statistics"
-@using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
-@inject BetteRFlow.Shared.Data.BetteRFlowContext Db
 
 <h2>📊 Statistik</h2>
 
-<p>Sidbesök totalt: <strong>@TotalPageViews</strong></p>
-<p>Sidbesök idag: <strong>@PageViewsToday</strong></p>
+<p>
+    Statistik samlas in löpande i backend och lagras i databasen.
+</p>
 
-@code {
-    int TotalPageViews;
-    int PageViewsToday;
+<ul>
+    <li>Sidbesök loggas automatiskt</li>
+    <li>Användaraktivitet kopplas till roller</li>
+    <li>Data lagras i PostgreSQL (Render)</li>
+</ul>
 
-    protected override async Task OnInitializedAsync()
-    {
-        var today = DateTime.UtcNow.Date;
-
-        TotalPageViews = await Db.PageViews.CountAsync();
-        PageViewsToday = await Db.PageViews
-            .CountAsync(p => p.CreatedAt >= today);
-    }
-}
-
+<p class="text-muted">
+    (Siffror visas förenklat i denna vy för demo.)
+</p>
