@@ -37,8 +37,8 @@ app.UseStaticFiles();
 app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode()
-    .AddAdditionalAssemblies(typeof(BetteRFlowWebApp.Components.Pages.Admin.AdminDashboard).Assembly);
+    .AddInteractiveServerRenderMode();
+
 
 
 app.Run();
