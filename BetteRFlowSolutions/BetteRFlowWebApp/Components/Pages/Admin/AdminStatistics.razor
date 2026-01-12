@@ -14,6 +14,14 @@ else
         <li><strong>Totalt antal sidbesök:</strong> @TotalPageViews</li>
         <li><strong>Sidbesök idag:</strong> @PageViewsToday</li>
     </ul>
+
+    <div class="alert alert-info mt-3">
+        <strong>ℹ️ Om statistiken</strong><br />
+        Statistiken lagras i <strong>UTC</strong> i databasen.<br />
+        Dagssummering baseras därför på serverns dygn, inte lokal tid.<br />
+        <em>Nästa steg är att lägga ett tidszonslager per användare.</em>
+    </div>
+}
 }
 
 @code {
