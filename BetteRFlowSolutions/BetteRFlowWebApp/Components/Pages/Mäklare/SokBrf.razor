@@ -2,11 +2,10 @@
 @rendermode InteractiveServer
 
 @using BetteRFlow.Shared.DTOs
+@using System.Linq
 @inject IHttpClientFactory ClientFactory
 @inject IJSRuntime JS
 @inject NavigationManager Navigator
-@using System.Linq
-
 
 <PageTitle>Sök BRF</PageTitle>
 
@@ -62,9 +61,19 @@
                                 Visa detaljer
                             </button>
 
-                            <button class="btn btn-success" @onclick="() => Purchase(brf)">
-                                Köp uppgifter
-                            </button>
+                            @* 🔒 KÖP – endast om BRF är aktiv *@
+                            @if (brf.IsActive)
+                            {
+                                <button class="btn btn-success" @onclick="() => Purchase(brf)">
+                                    Köp uppgifter
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary" disabled>
+                                    Ej tillgänglig
+                                </button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -144,7 +153,6 @@
         try
         {
             var http = ClientFactory.CreateClient("ApiClient");
-
             var all = await http.GetFromJsonAsync<List<FormDto>>("api/brf/active");
 
             searchResults = all?
