@@ -269,8 +269,8 @@ namespace BetteRFlowWebAPI.Controllers
         private void KollaOchLoggaAvvikelser(Brf grunddata, FormSubmission formular)
         {
             // Jämför ForeningensNamn
-            var grunddataForeningNamn = grunddata.ForeningensNamn ?? "";
-            var formularForeningNamn = formular.ForeningensNamn ?? "";
+            var grunddataForeningNamn = (grunddata.ForeningensNamn ?? "").Trim();
+            var formularForeningNamn = (formular.ForeningensNamn ?? "").Trim();
 
             if (grunddataForeningNamn != formularForeningNamn)
             {
@@ -285,8 +285,8 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Jämför Gatuadress
-            var grunddataGatuadress = grunddata.Gatuadress ?? "";
-            var formularGatuadress = formular.Gatuadress ?? "";
+            var grunddataGatuadress = (grunddata.Gatuadress ?? "").Trim();
+            var formularGatuadress = (formular.Gatuadress ?? "").Trim();
 
             if (grunddataGatuadress != formularGatuadress)
             {
@@ -301,8 +301,8 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Jämför Postnummer
-            var grunddataPostnummer = grunddata.Postnummer ?? "";
-            var formularPostnummer = formular.Postnummer ?? "";
+            var grunddataPostnummer = (grunddata.Postnummer ?? "").Trim();
+            var formularPostnummer = (formular.Postnummer ?? "").Trim();
 
             if (grunddataPostnummer != formularPostnummer)
             {
@@ -317,8 +317,8 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Jämför Ort
-            var grunddataOrt = grunddata.Ort ?? "";
-            var formularOrt = formular.Ort ?? "";
+            var grunddataOrt = (grunddata.Ort ?? "").Trim();
+            var formularOrt = (formular.Ort ?? "").Trim();
 
             if (grunddataOrt != formularOrt)
             {
@@ -333,8 +333,8 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Jämför KontaktEmail
-            var grunddataEmail = grunddata.KontaktEmail ?? "";
-            var formularEmail = formular.KontaktEmail ?? "";
+            var grunddataEmail = (grunddata.KontaktEmail ?? "").Trim();
+            var formularEmail = (formular.KontaktEmail ?? "").Trim();
 
             if (grunddataEmail != formularEmail)
             {
@@ -349,8 +349,8 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Jämför KontaktTelefon
-            var grunddataTelefon = grunddata.KontaktTelefon ?? "";
-            var formularTelefon = formular.KontaktTelefon ?? "";
+            var grunddataTelefon = (grunddata.KontaktTelefon ?? "").Trim();
+            var formularTelefon = (formular.KontaktTelefon ?? "").Trim();
 
             if (grunddataTelefon != formularTelefon)
             {
@@ -365,8 +365,8 @@ namespace BetteRFlowWebAPI.Controllers
             }
 
             // Jämför Hemsida
-            var grunddataHemsida = grunddata.Hemsida ?? "";
-            var formularHemsida = formular.Hemsida ?? "";
+            var grunddataHemsida = (grunddata.Hemsida ?? "").Trim();
+            var formularHemsida = (formular.Hemsida ?? "").Trim();
 
             if (grunddataHemsida != formularHemsida)
             {
@@ -379,10 +379,6 @@ namespace BetteRFlowWebAPI.Controllers
                     VardeFormular = formularHemsida
                 });
             }
-
-
-
-            
         }
     }
 }
