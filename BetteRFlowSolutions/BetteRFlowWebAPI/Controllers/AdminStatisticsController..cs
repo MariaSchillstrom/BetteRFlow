@@ -17,15 +17,12 @@ public class AdminStatisticsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetStatistics()
     {
-        var startOfToday = DateTime.Today;
-        var startOfTomorrow = startOfToday.AddDays(1);
+        var todayUtc = DateTime.UtcNow.Date;
 
         var totalPageViews = await _db.PageViews.CountAsync();
 
         var todayPageViews = await _db.PageViews
-            .CountAsync(p =>
-                p.CreatedAt >= startOfToday &&
-                p.CreatedAt < startOfTomorrow);
+            .CountAsync(p => p.CreatedAt >= todayUtc);
 
         return Ok(new
         {
@@ -34,3 +31,6 @@ public class AdminStatisticsController : ControllerBase
         });
     }
 }
+
+
+
