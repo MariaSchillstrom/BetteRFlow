@@ -17,7 +17,7 @@ namespace BetteRFlowWebAPI.Controllers
         }
 
         [HttpGet("ogranskade")]
-        public async Task<ActionResult<List<object>>> GetOgranskaде()
+        public async Task<ActionResult<List<object>>> GetOgranskade()
         {
             try
             {
@@ -93,6 +93,17 @@ namespace BetteRFlowWebAPI.Controllers
 
                 await _context.SaveChangesAsync();
 
+                // KOLLA OM DET FINNS FLER OGRANSKADE AVVIKELSER
+                var harFlerAvvikelser = await _context.BrfAvvikelser
+                    .AnyAsync(a => a.BrfId == avvikelse.BrfId && !a.Granskad);
+
+                // OM INGA FLER OGRANSKADE AVVIKELSER → SÄTT AKTIV
+                if (!harFlerAvvikelser && brf != null)
+                {
+                    brf.IsActive = true;
+                    await _context.SaveChangesAsync();
+                }
+
                 return Ok(new { message = "Avvikelse godkänd och grunddata uppdaterad" });
             }
             catch (Exception ex)
@@ -106,7 +117,9 @@ namespace BetteRFlowWebAPI.Controllers
         {
             try
             {
-                var avvikelse = await _context.BrfAvvikelser.FindAsync(id);
+                var avvikelse = await _context.BrfAvvikelser
+                    .Include(a => a.Brf)
+                    .FirstOrDefaultAsync(a => a.Id == id);
 
                 if (avvikelse == null)
                     return NotFound();
@@ -115,6 +128,17 @@ namespace BetteRFlowWebAPI.Controllers
                 avvikelse.Granskad = true;
 
                 await _context.SaveChangesAsync();
+
+                // KOLLA OM DET FINNS FLER OGRANSKADE AVVIKELSER
+                var harFlerAvvikelser = await _context.BrfAvvikelser
+                    .AnyAsync(a => a.BrfId == avvikelse.BrfId && !a.Granskad);
+
+                // OM INGA FLER OGRANSKADE AVVIKELSER → SÄTT AKTIV
+                if (!harFlerAvvikelser && avvikelse.Brf != null)
+                {
+                    avvikelse.Brf.IsActive = true;
+                    await _context.SaveChangesAsync();
+                }
 
                 return Ok(new { message = "Avvikelse avvisad, grunddata behålls" });
             }
