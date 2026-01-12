@@ -37,7 +37,9 @@ namespace BetteRFlowWebAPI.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<List<FormDto>>> SearchBrf([FromQuery] string? searchTerm)
         {
-            IQueryable<FormSubmission> query = _context.FormSubmissions;
+            IQueryable<FormSubmission> query = _context.FormSubmissions
+                .Include(f => f.Brf)
+                .Where(f => f.Brf != null && f.Brf.IsActive == true);
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
