@@ -61,7 +61,6 @@
                                 Visa detaljer
                             </button>
 
-                            @* 🔒 KÖP – endast om BRF är aktiv *@
                             @if (brf.IsActive)
                             {
                                 <button class="btn btn-success" @onclick="() => Purchase(brf)">
@@ -133,7 +132,8 @@
         try
         {
             var http = ClientFactory.CreateClient("ApiClient");
-            searchResults = await http.GetFromJsonAsync<List<FormDto>>("api/brf/active");
+            var all = await http.GetFromJsonAsync<List<FormDto>>("api/FormSubmission/search");
+            searchResults = all?.Where(b => b.IsActive == true).ToList();
         }
         catch (Exception ex)
         {
@@ -153,9 +153,10 @@
         try
         {
             var http = ClientFactory.CreateClient("ApiClient");
-            var all = await http.GetFromJsonAsync<List<FormDto>>("api/brf/active");
+            var all = await http.GetFromJsonAsync<List<FormDto>>("api/FormSubmission/search");
 
             searchResults = all?
+                .Where(b => b.IsActive == true)
                 .Where(b =>
                     b.ForeningensNamn?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
                     b.Fastighetsbeteckning?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
