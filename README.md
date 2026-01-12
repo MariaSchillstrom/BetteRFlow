@@ -180,7 +180,7 @@ User (1) ──────────── (1) Brf
 
 #### **Brf** - Bostadsrättsförening (grunddata)
 - Referensdata som admin skapar (manuellt eller via Excel)
-- Organisationsnummer (unikt, 10 siffror utan bindestreck)
+- Organisationsnummer (unikt, 10 siffror med eller utan utan bindestreck just nu)
 - Grundläggande information: Namn, adress, kontaktuppgifter
 - Status: `IsActive` (aktiveras automatiskt vid formulärmatchning)
 - Navigation: FormSubmissions, BrfAvvikelser
@@ -202,6 +202,7 @@ User (1) ──────────── (1) Brf
   - Granskad (false tills admin hanterat)
 - Kräver administrativ granskning för godkännande/avvisning
 - Kärnfunktion för datakvalitetssäkring
+  
 
 #### **Purchase** - Mäklarköp av fastighetsdata
 - Koppling: UserId (mäklare), FormSubmissionId
@@ -250,7 +251,7 @@ User (1) ──────────── (1) Brf
 - **Databas**: PostgreSQL (managed by Render)
 
 ### CI/CD Pipeline
-1. Push till GitHub (main branch)
+1. Push till GitHub (devnew branch)
 2. Render detekterar commit
 3. Auto-build av Docker containers
 4. Auto-deploy till produktion
@@ -269,6 +270,9 @@ User (1) ──────────── (1) Brf
 ---
 
 ## 💻 Lokal körning
+
+### ⚠️ Viktigt meddelande
+Projektet är primärt optimerat för produktion (Render). Lokal installation kan kräva felsökning och anpassningar. **För testning rekommenderas live-versionen: https://betterflow-3.onrender.com**
 
 ### Förutsättningar
 - .NET 8 SDK
@@ -312,15 +316,23 @@ dotnet run
 
 ### Första körningen
 1. Kör Backend först (skapar databas)
-2. Starta Frontend
-3. Registrera en BRF/Mäklare via UI
-4. Skapa admin manuellt i SQLite (via DB Browser for SQLite):
+2. Migrations kan behöva köras manuellt: `dotnet ef database update`
+3. Starta Frontend
+4. Registrera en BRF/Mäklare via UI
+5. Skapa admin manuellt i SQLite (via DB Browser for SQLite):
 ```sql
    INSERT INTO Users (Fornamn, Efternamn, Email, Password, Role, IsActive)
    VALUES ('Admin', 'User', 'admin@betterflow.se', '[BCrypt-hash]', 2, 1);
 ```
 
----
+### Kända problem vid lokal körning
+- **Databas-skillnader**: SQLite (lokal) vs PostgreSQL (produktion) kan ge olika beteende
+- **Migrations**: Måste köras manuellt lokalt
+- **Connection strings**: Kan behöva anpassas i appsettings.json
+- **Testdata**: Saknas lokalt, måste skapas manuellt eller importeras
+
+**Vid problem:** Använd live-versionen, fungerar till 31/1 -2026, eller kontakta utvecklaren för support.
+
 
 ## 📚 API-dokumentation
 
@@ -423,7 +435,7 @@ För långsiktig skalbarhet skulle en migration till Blazor WebAssembly för pub
 - **Del 1**: Arbete fram till 16/12 (initial implementation)
 - **Del 2**: Arbete 17/12-10/1 (avvikelsesystem, deployment, förbättringar, statistik)
 
-## Verktygsrapport 
+### Verktygsrapport 
 
 ### Versionering
 - **v1.0**: Initial release med kärnfunktionalitet
