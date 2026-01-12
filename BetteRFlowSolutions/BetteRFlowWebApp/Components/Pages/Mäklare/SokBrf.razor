@@ -5,6 +5,8 @@
 @inject IHttpClientFactory ClientFactory
 @inject IJSRuntime JS
 @inject NavigationManager Navigator
+@using System.Linq
+
 
 <PageTitle>Sök BRF</PageTitle>
 
@@ -122,7 +124,7 @@
         try
         {
             var http = ClientFactory.CreateClient("ApiClient");
-            searchResults = await http.GetFromJsonAsync<List<FormDto>>("api/formsubmission");
+            searchResults = await http.GetFromJsonAsync<List<FormDto>>("api/brf/active");
         }
         catch (Exception ex)
         {
@@ -142,8 +144,16 @@
         try
         {
             var http = ClientFactory.CreateClient("ApiClient");
-            searchResults = await http.GetFromJsonAsync<List<FormDto>>(
-                $"api/formsubmission/search?searchTerm={searchTerm}");
+
+            var all = await http.GetFromJsonAsync<List<FormDto>>("api/brf/active");
+
+            searchResults = all?
+                .Where(b =>
+                    b.ForeningensNamn?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+                    b.Fastighetsbeteckning?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true ||
+                    b.OrganisationsNummer?.Contains(searchTerm) == true
+                )
+                .ToList();
         }
         catch (Exception ex)
         {
