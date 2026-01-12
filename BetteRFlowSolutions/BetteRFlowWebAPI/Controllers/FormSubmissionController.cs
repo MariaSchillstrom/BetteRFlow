@@ -127,7 +127,8 @@ namespace BetteRFlowWebAPI.Controllers
                 EnergideklarationDatum = f.EnergideklarationDatum,
                 KontaktEmail = f.KontaktEmail,
                 KontaktTelefon = f.KontaktTelefon,
-                Hemsida = f.Hemsida
+                Hemsida = f.Hemsida,
+                IsActive = f.Brf?.IsActive ?? false
             }).ToList();
 
             return Ok(formDtos);
