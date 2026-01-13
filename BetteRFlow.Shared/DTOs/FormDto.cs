@@ -30,6 +30,8 @@ namespace BetteRFlow.Shared.DTOs
         public string? KontaktTelefon { get; set; }
         public string? Hemsida { get; set; }
 
+        public bool IsActive { get; set; }
+
         public int? Byggnadsår { get; set; }
         public int? AntalLägenheter { get; set; }
         public bool ÄktaBrf { get; set; }

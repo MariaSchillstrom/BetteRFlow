@@ -29,9 +29,7 @@ namespace BetteRFlowWebAPI.Controllers
             var formSubmission = await _context.FormSubmissions.FindAsync(id);
 
             if (formSubmission == null)
-            {
                 return NotFound();
-            }
 
             return Ok(formSubmission);
         }
@@ -39,105 +37,101 @@ namespace BetteRFlowWebAPI.Controllers
         [HttpGet("search")]
         public async Task<ActionResult<List<FormDto>>> SearchBrf([FromQuery] string? searchTerm)
         {
-            try
+            IQueryable<FormSubmission> query = _context.FormSubmissions
+                .Include(f => f.Brf)
+                .Where(f => f.Brf != null && f.Brf.IsActive == true);
+
+            if (!string.IsNullOrEmpty(searchTerm))
             {
-                IQueryable<FormSubmission> query = _context.FormSubmissions;
-
-                if (!string.IsNullOrEmpty(searchTerm))
-                {
-                    query = query.Where(f =>
-                        (f.ForeningensNamn != null && f.ForeningensNamn.Contains(searchTerm)) ||
-                        (f.Fastighetsbeteckning != null && f.Fastighetsbeteckning.Contains(searchTerm)) ||
-                        (f.OrganisationsNummer != null && f.OrganisationsNummer.Contains(searchTerm))
-                    );
-                }
-
-                var results = await query.ToListAsync();
-
-                var formDtos = results.Select(f => new FormDto
-                {
-                    Id = f.Id,
-                    Fastighetsbeteckning = f.Fastighetsbeteckning,
-                    Fastighetsadress = f.Fastighetsadress,
-                    FastighetsPostnummer = f.FastighetsPostnummer,
-                    FastighetsOrt = f.FastighetsOrt,
-                    OrganisationsNummer = f.OrganisationsNummer,
-                    ForeningensNamn = f.ForeningensNamn,
-                    Kortnamn = f.Kortnamn,
-                    Gatuadress = f.Gatuadress,
-                    Postnummer = f.Postnummer,
-                    Ort = f.Ort,
-                    Byggnadsår = f.Byggnadsår,
-                    AntalLägenheter = f.AntalLägenheter,
-                    ÄktaBrf = f.ÄktaBrf,
-                    EkonomiskFörvaltare = f.EkonomiskFörvaltare,
-                    FastighetsFörvaltare = f.FastighetsFörvaltare,
-                    MedlemskapsRutin = f.MedlemskapsRutin,
-                    JuridiskPersonFårFörvärva = f.JuridiskPersonFårFörvärva,
-                    JuridiskPersonKommentar = f.JuridiskPersonKommentar,
-                    BeslutOmMedlemskap = f.BeslutOmMedlemskap,
-                    MedlemsansökanSkickasTill = f.MedlemsansökanSkickasTill,
-                    DelatÄgande = f.DelatÄgande,
-                    MinstaAndel = f.MinstaAndel,
-                    Överlåtelseavgift = f.Överlåtelseavgift,
-                    AvgiftInnefattarVärme = f.AvgiftInnefattarVärme,
-                    AvgiftInnefattarVarmvatten = f.AvgiftInnefattarVarmvatten,
-                    AvgiftInnefattarKallvatten = f.AvgiftInnefattarKallvatten,
-                    AvgiftInnefattarKabelTV = f.AvgiftInnefattarKabelTV,
-                    AvgiftInnefattarBredband = f.AvgiftInnefattarBredband,
-                    AvgiftInnefattarHemförsäkring = f.AvgiftInnefattarHemförsäkring,
-                    AvgiftInnefattarKällare = f.AvgiftInnefattarKällare,
-                    AvgiftInnefattarAnnat = f.AvgiftInnefattarAnnat,
-                    SenasteAvgiftsförändring = f.SenasteAvgiftsförändring,
-                    Bredbandsleverantör = f.Bredbandsleverantör,
-                    Bredbandshastighet = f.Bredbandshastighet,
-                    BredbandKundservice = f.BredbandKundservice,
-                    Uppvärmning = f.Uppvärmning,
-                    Ventilation = f.Ventilation,
-                    Elavtal = f.Elavtal,
-                    ElavtalKommentar = f.ElavtalKommentar,
-                    AntalGarageplatser = f.AntalGarageplatser,
-                    AntalParkeringsplatser = f.AntalParkeringsplatser,
-                    AntalLaddplatser = f.AntalLaddplatser,
-                    FriHöjdGarage = f.FriHöjdGarage,
-                    ElplintarPåMark = f.ElplintarPåMark,
-                    KostnadParkeringsplats = f.KostnadParkeringsplats,
-                    KostnadGarageplats = f.KostnadGarageplats,
-                    KostnadGarageplatsElektricitet = f.KostnadGarageplatsElektricitet,
-                    Laddkostnad = f.Laddkostnad,
-                    ParkeringKontakt = f.ParkeringKontakt,
-                    Cykelförråd = f.Cykelförråd,
-                    Barnvagnsförråd = f.Barnvagnsförråd,
-                    Gästlägenhet = f.Gästlägenhet,
-                    Tvättstuga = f.Tvättstuga,
-                    Bastu = f.Bastu,
-                    Gym = f.Gym,
-                    Festlokal = f.Festlokal,
-                    GemensammaUtrymmennAnnat = f.GemensammaUtrymmennAnnat,
-                    ExtraLokaler = f.ExtraLokaler,
-                    ExtraLokalerKommentar = f.ExtraLokalerKommentar,
-                    StädningGemensamma = f.StädningGemensamma,
-                    NyckelÖverlämning = f.NyckelÖverlämning,
-                    VadSkasÖverlämnas = f.VadSkasÖverlämnas,
-                    AdressNyckelÖverlämning = f.AdressNyckelÖverlämning,
-                    AndrahandsuthyrningKrävergodkännande = f.AndrahandsuthyrningKrävergodkännande,
-                    AndrahandsuthyrningAvgift = f.AndrahandsuthyrningAvgift,
-                    AndrahandsuthyrningAnsökanTill = f.AndrahandsuthyrningAnsökanTill,
-                    AndrahandsuthyrningVillkorUrl = f.AndrahandsuthyrningVillkorUrl,
-                    PlanerardeReparationer = f.PlanerardeReparationer,
-                    Energideklaration = f.Energideklaration,
-                    EnergideklarationDatum = f.EnergideklarationDatum,
-                    KontaktEmail = f.KontaktEmail,
-                    KontaktTelefon = f.KontaktTelefon,
-                    Hemsida = f.Hemsida
-                }).ToList();
-
-                return Ok(formDtos);
+                query = query.Where(f =>
+                    (f.ForeningensNamn != null && f.ForeningensNamn.Contains(searchTerm)) ||
+                    (f.Fastighetsbeteckning != null && f.Fastighetsbeteckning.Contains(searchTerm)) ||
+                    (f.OrganisationsNummer != null && f.OrganisationsNummer.Contains(searchTerm))
+                );
             }
-            catch (Exception ex)
+
+            var results = await query.ToListAsync();
+
+            var formDtos = results.Select(f => new FormDto
             {
-                return BadRequest(new { message = ex.Message });
-            }
+                Id = f.Id,
+                Fastighetsbeteckning = f.Fastighetsbeteckning,
+                Fastighetsadress = f.Fastighetsadress,
+                FastighetsPostnummer = f.FastighetsPostnummer,
+                FastighetsOrt = f.FastighetsOrt,
+                OrganisationsNummer = f.OrganisationsNummer,
+                ForeningensNamn = f.ForeningensNamn,
+                Kortnamn = f.Kortnamn,
+                Gatuadress = f.Gatuadress,
+                Postnummer = f.Postnummer,
+                Ort = f.Ort,
+                Byggnadsår = f.Byggnadsår,
+                AntalLägenheter = f.AntalLägenheter,
+                ÄktaBrf = f.ÄktaBrf,
+                EkonomiskFörvaltare = f.EkonomiskFörvaltare,
+                FastighetsFörvaltare = f.FastighetsFörvaltare,
+                MedlemskapsRutin = f.MedlemskapsRutin,
+                JuridiskPersonFårFörvärva = f.JuridiskPersonFårFörvärva,
+                JuridiskPersonKommentar = f.JuridiskPersonKommentar,
+                BeslutOmMedlemskap = f.BeslutOmMedlemskap,
+                MedlemsansökanSkickasTill = f.MedlemsansökanSkickasTill,
+                DelatÄgande = f.DelatÄgande,
+                MinstaAndel = f.MinstaAndel,
+                Överlåtelseavgift = f.Överlåtelseavgift,
+                AvgiftInnefattarVärme = f.AvgiftInnefattarVärme,
+                AvgiftInnefattarVarmvatten = f.AvgiftInnefattarVarmvatten,
+                AvgiftInnefattarKallvatten = f.AvgiftInnefattarKallvatten,
+                AvgiftInnefattarKabelTV = f.AvgiftInnefattarKabelTV,
+                AvgiftInnefattarBredband = f.AvgiftInnefattarBredband,
+                AvgiftInnefattarHemförsäkring = f.AvgiftInnefattarHemförsäkring,
+                AvgiftInnefattarKällare = f.AvgiftInnefattarKällare,
+                AvgiftInnefattarAnnat = f.AvgiftInnefattarAnnat,
+                SenasteAvgiftsförändring = f.SenasteAvgiftsförändring,
+                Bredbandsleverantör = f.Bredbandsleverantör,
+                Bredbandshastighet = f.Bredbandshastighet,
+                BredbandKundservice = f.BredbandKundservice,
+                Uppvärmning = f.Uppvärmning,
+                Ventilation = f.Ventilation,
+                Elavtal = f.Elavtal,
+                ElavtalKommentar = f.ElavtalKommentar,
+                AntalGarageplatser = f.AntalGarageplatser,
+                AntalParkeringsplatser = f.AntalParkeringsplatser,
+                AntalLaddplatser = f.AntalLaddplatser,
+                FriHöjdGarage = f.FriHöjdGarage,
+                ElplintarPåMark = f.ElplintarPåMark,
+                KostnadParkeringsplats = f.KostnadParkeringsplats,
+                KostnadGarageplats = f.KostnadGarageplats,
+                KostnadGarageplatsElektricitet = f.KostnadGarageplatsElektricitet,
+                Laddkostnad = f.Laddkostnad,
+                ParkeringKontakt = f.ParkeringKontakt,
+                Cykelförråd = f.Cykelförråd,
+                Barnvagnsförråd = f.Barnvagnsförråd,
+                Gästlägenhet = f.Gästlägenhet,
+                Tvättstuga = f.Tvättstuga,
+                Bastu = f.Bastu,
+                Gym = f.Gym,
+                Festlokal = f.Festlokal,
+                GemensammaUtrymmennAnnat = f.GemensammaUtrymmennAnnat,
+                ExtraLokaler = f.ExtraLokaler,
+                ExtraLokalerKommentar = f.ExtraLokalerKommentar,
+                StädningGemensamma = f.StädningGemensamma,
+                NyckelÖverlämning = f.NyckelÖverlämning,
+                VadSkasÖverlämnas = f.VadSkasÖverlämnas,
+                AdressNyckelÖverlämning = f.AdressNyckelÖverlämning,
+                AndrahandsuthyrningKrävergodkännande = f.AndrahandsuthyrningKrävergodkännande,
+                AndrahandsuthyrningAvgift = f.AndrahandsuthyrningAvgift,
+                AndrahandsuthyrningAnsökanTill = f.AndrahandsuthyrningAnsökanTill,
+                AndrahandsuthyrningVillkorUrl = f.AndrahandsuthyrningVillkorUrl,
+                PlanerardeReparationer = f.PlanerardeReparationer,
+                Energideklaration = f.Energideklaration,
+                EnergideklarationDatum = f.EnergideklarationDatum,
+                KontaktEmail = f.KontaktEmail,
+                KontaktTelefon = f.KontaktTelefon,
+                Hemsida = f.Hemsida,
+                IsActive = f.Brf?.IsActive ?? false
+            }).ToList();
+
+            return Ok(formDtos);
         }
 
         [HttpPost]
@@ -145,7 +139,6 @@ namespace BetteRFlowWebAPI.Controllers
         {
             try
             {
-                // 1. Hitta matchande BRF via OrganisationsNummer
                 var matchadBrf = await _context.Brfs
                     .FirstOrDefaultAsync(b => b.OrganisationsNummer == formDto.OrganisationsNummer);
 
@@ -231,34 +224,25 @@ namespace BetteRFlowWebAPI.Controllers
                 _context.FormSubmissions.Add(formSubmission);
                 await _context.SaveChangesAsync();
 
-                // 2. Om matchande BRF hittades, jämför och skapa avvikelser
                 if (matchadBrf != null)
                 {
-                    // Uppdatera status på BRF
                     matchadBrf.FormularInskickat = true;
                     matchadBrf.FormularDatum = DateTime.UtcNow;
                     matchadBrf.SenasteFormSubmissionId = formSubmission.Id;
 
-                    // Jämför fält och logga avvikelser
                     KollaOchLoggaAvvikelser(matchadBrf, formSubmission);
 
-                    var harOgranskedeAvvikelser = await _context.BrfAvvikelser
-    .AnyAsync(a => a.BrfId == matchadBrf.Id && !a.Granskad);
+                    await _context.SaveChangesAsync();
 
-                    if (!harOgranskedeAvvikelser)
-                    {
-                        matchadBrf.IsActive = true;
-                    }
-                                        
+                    var harOgranskadeAvvikelser = await _context.BrfAvvikelser
+                        .AnyAsync(a => a.BrfId == matchadBrf.Id && !a.Granskad);
+
+                    matchadBrf.IsActive = !harOgranskadeAvvikelser;
+
                     await _context.SaveChangesAsync();
                 }
 
-                return Ok(new
-                {
-                    message = "Formulär sparat!",
-                    id = formSubmission.Id,
-                    brfMatchad = matchadBrf != null
-                });
+                return Ok(new { message = "Formulär sparat" });
             }
             catch (Exception ex)
             {
@@ -268,117 +252,31 @@ namespace BetteRFlowWebAPI.Controllers
 
         private void KollaOchLoggaAvvikelser(Brf grunddata, FormSubmission formular)
         {
-            // Jämför ForeningensNamn
-            var grunddataForeningNamn = (grunddata.ForeningensNamn ?? "").Trim();
-            var formularForeningNamn = (formular.ForeningensNamn ?? "").Trim();
-
-            if (grunddataForeningNamn != formularForeningNamn)
+            void Check(string fält, string? g, string? f)
             {
-                _context.BrfAvvikelser.Add(new BrfAvvikelse
+                g = (g ?? "").Trim();
+                f = (f ?? "").Trim();
+
+                if (g != f)
                 {
-                    BrfId = grunddata.Id,
-                    FormSubmissionId = formular.Id,
-                    Faltnamn = "ForeningensNamn",
-                    VardeGrunddata = grunddataForeningNamn,
-                    VardeFormular = formularForeningNamn
-                });
+                    _context.BrfAvvikelser.Add(new BrfAvvikelse
+                    {
+                        BrfId = grunddata.Id,
+                        FormSubmissionId = formular.Id,
+                        Faltnamn = fält,
+                        VardeGrunddata = g,
+                        VardeFormular = f
+                    });
+                }
             }
 
-            // Jämför Gatuadress
-            var grunddataGatuadress = (grunddata.Gatuadress ?? "").Trim();
-            var formularGatuadress = (formular.Gatuadress ?? "").Trim();
-
-            if (grunddataGatuadress != formularGatuadress)
-            {
-                _context.BrfAvvikelser.Add(new BrfAvvikelse
-                {
-                    BrfId = grunddata.Id,
-                    FormSubmissionId = formular.Id,
-                    Faltnamn = "Gatuadress",
-                    VardeGrunddata = grunddataGatuadress,
-                    VardeFormular = formularGatuadress
-                });
-            }
-
-            // Jämför Postnummer
-            var grunddataPostnummer = (grunddata.Postnummer ?? "").Trim();
-            var formularPostnummer = (formular.Postnummer ?? "").Trim();
-
-            if (grunddataPostnummer != formularPostnummer)
-            {
-                _context.BrfAvvikelser.Add(new BrfAvvikelse
-                {
-                    BrfId = grunddata.Id,
-                    FormSubmissionId = formular.Id,
-                    Faltnamn = "Postnummer",
-                    VardeGrunddata = grunddataPostnummer,
-                    VardeFormular = formularPostnummer
-                });
-            }
-
-            // Jämför Ort
-            var grunddataOrt = (grunddata.Ort ?? "").Trim();
-            var formularOrt = (formular.Ort ?? "").Trim();
-
-            if (grunddataOrt != formularOrt)
-            {
-                _context.BrfAvvikelser.Add(new BrfAvvikelse
-                {
-                    BrfId = grunddata.Id,
-                    FormSubmissionId = formular.Id,
-                    Faltnamn = "Ort",
-                    VardeGrunddata = grunddataOrt,
-                    VardeFormular = formularOrt
-                });
-            }
-
-            // Jämför KontaktEmail
-            var grunddataEmail = (grunddata.KontaktEmail ?? "").Trim();
-            var formularEmail = (formular.KontaktEmail ?? "").Trim();
-
-            if (grunddataEmail != formularEmail)
-            {
-                _context.BrfAvvikelser.Add(new BrfAvvikelse
-                {
-                    BrfId = grunddata.Id,
-                    FormSubmissionId = formular.Id,
-                    Faltnamn = "KontaktEmail",
-                    VardeGrunddata = grunddataEmail,
-                    VardeFormular = formularEmail
-                });
-            }
-
-            // Jämför KontaktTelefon
-            var grunddataTelefon = (grunddata.KontaktTelefon ?? "").Trim();
-            var formularTelefon = (formular.KontaktTelefon ?? "").Trim();
-
-            if (grunddataTelefon != formularTelefon)
-            {
-                _context.BrfAvvikelser.Add(new BrfAvvikelse
-                {
-                    BrfId = grunddata.Id,
-                    FormSubmissionId = formular.Id,
-                    Faltnamn = "KontaktTelefon",
-                    VardeGrunddata = grunddataTelefon,
-                    VardeFormular = formularTelefon
-                });
-            }
-
-            // Jämför Hemsida
-            var grunddataHemsida = (grunddata.Hemsida ?? "").Trim();
-            var formularHemsida = (formular.Hemsida ?? "").Trim();
-
-            if (grunddataHemsida != formularHemsida)
-            {
-                _context.BrfAvvikelser.Add(new BrfAvvikelse
-                {
-                    BrfId = grunddata.Id,
-                    FormSubmissionId = formular.Id,
-                    Faltnamn = "Hemsida",
-                    VardeGrunddata = grunddataHemsida,
-                    VardeFormular = formularHemsida
-                });
-            }
+            Check("ForeningensNamn", grunddata.ForeningensNamn, formular.ForeningensNamn);
+            Check("Gatuadress", grunddata.Gatuadress, formular.Gatuadress);
+            Check("Postnummer", grunddata.Postnummer, formular.Postnummer);
+            Check("Ort", grunddata.Ort, formular.Ort);
+            Check("KontaktEmail", grunddata.KontaktEmail, formular.KontaktEmail);
+            Check("KontaktTelefon", grunddata.KontaktTelefon, formular.KontaktTelefon);
+            Check("Hemsida", grunddata.Hemsida, formular.Hemsida);
         }
     }
 }
