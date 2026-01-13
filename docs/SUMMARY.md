@@ -1,7 +1,7 @@
 # Table of contents
 
 * [BetteRFlow](README.md)
-* [Table of contents](<README (1).md>)
+* [Table of contents](readme-1.md)
 * [Teknisk Rapport 1 fram till 16/12](teknisk-rapport-1-fram-till-16-12/README.md)
   * [1. Inledning](teknisk-rapport-1-fram-till-16-12/1.-inledning.md)
   * [2. Produkten](teknisk-rapport-1-fram-till-16-12/2.-produkten.md)
