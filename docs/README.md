@@ -1,4 +1,5 @@
 ---
+icon: rotate
 layout:
   width: default
   title:
