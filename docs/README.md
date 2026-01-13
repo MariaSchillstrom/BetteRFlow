@@ -27,6 +27,6 @@ layout:
 
 <p align="center"></p>
 
-<p align="center"><strong>Maria Schillström.</strong><br>HT 2025<br>.NET-Utvecklare, Campus Mölndal<br>Examensarbete</p>
+<p align="center"><strong>Maria Schillström</strong><br>HT 2025<br>.NET-Utvecklare, Campus Mölndal<br>Examensarbete</p>
 
 <p align="center"></p>
